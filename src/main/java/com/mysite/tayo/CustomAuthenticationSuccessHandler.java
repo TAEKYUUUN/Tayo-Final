@@ -32,7 +32,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
             if (member.getIsConfirmed() == null) {
-                response.sendRedirect("/");
+                response.sendRedirect("/mainpage");
             } else {
             	response.sendRedirect("/member/certification");
             }

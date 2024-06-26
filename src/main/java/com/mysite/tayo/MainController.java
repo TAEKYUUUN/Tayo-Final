@@ -11,4 +11,9 @@ public class MainController {
 	public String hello() {
 		return "for(int i=YG; i<=취업; i++)는 할 수 있다!";
 	}
+	
+	@GetMapping("/mainpage")
+	public String mainpage() {
+		return "mainpage";
+	}
 }
