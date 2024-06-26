@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/chat.css}">
+	
+  </head>
+  <body>
+    <div class="chat-wr">
+      <header>
+        <div>
+          <img src="/img/chat_profile.png" alt="" />
+          <span>채팅방명</span>
+        </div>
+        <div>
+          <img src="/img/chat_search_icon.png" alt="" />
+          <img src="/img/chat_menu_icon.png" alt="" />
+        </div>
+      </header>
+      <button class="small-notice-button">
+        <img src="/img/chat-notice-icon.png" alt="" />
+      </button>
+      <div class="notice-box">
+        <div class="notice-top">
+          <i><img src="/img/chat-notice-icon.png" alt="" /></i>
+          <div class="notice-content">
+            <div class="chat-notice">네 저도 잘 부탁드려요.</div>
+            <div class="author">
+              <strong class="notice-content-user-name">상대방</strong>
+              <em class="notice-content-date">2024-06-21 11:44</em>
+            </div>
+          </div>
+          <button>
+            <img src="/img/under_arrow_pupple.png" alt="" />
+          </button>
+        </div>
+        <div class="notice-bottom">
+          <button class="button-quit">다시 보지 않기</button>
+          <button class="button-samll">접어두기</button>
+        </div>
+      </div>
+      <ul class="chat-container">
+        <div class="chat-date">
+          <span>2024-06-20 (목)</span>
+        </div>
+        <li class="left-section">
+          <div class="user-picture">
+            <img src="/img/chat_profile.png" alt="" />
+          </div>
+          <div class="user-section">
+            <div class="user-title">
+              <span><strong>상대방</strong></span>
+            </div>
+            <div class="chat-left clearfix">
+              <div class="chat-txt-wr">
+                <div class="chat-txt">
+                  <div>안녕하세요! 저는 김연우 라고 합니다.</div>
+                </div>
+                <div class="chat-btns">
+                  <div class="chat-read">1</div>
+                  <div>
+                    <div class="chat-btn-wrap">
+                      <button>
+                        <img src="/img/chat-btn-left.png" alt="" />
+                      </button>
+                      <div class="medal-more-wrap">
+                        <button>
+                          <img src="/img/chat-btn-right.png" alt="" />
+                        </button>
+                        <ul class="modal-more">
+                          <li class="copy"><button>복사</button></li>
+                          <li class="notice"><button>공지설정</button></li>
+                          <li class="delete-only-for-me">
+                            <button class="del">나에게서만 삭제</button>
+                          </li>
+                          <li class="delete-all">
+                            <button class="del">전체삭제</button>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="user-time">오전 9:14</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="right-section">
+          <div>
+            <div class="chat-right clearfix">
+              <div class="chat-txt-wr">
+                <div class="chat-btns">
+                  <div>
+                    <div class="chat-btn-wrap">
+                      <button>
+                        <img src="/img/chat-btn-left.png" alt="" />
+                      </button>
+                      <div class="medal-more-wrap">
+                        <button>
+                          <img src="/img/chat-btn-right.png" alt="" />
+                        </button>
+                        <ul class="modal-more">
+                          <li class="copy"><button>복사</button></li>
+                          <li class="notice"><button>공지설정</button></li>
+                          <li class="delete-only-for-me">
+                            <button class="del">나에게서만 삭제</button>
+                          </li>
+                          <li class="delete-all">
+                            <button class="del">전체삭제</button>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="user-time">오전 9:15</div>
+                  </div>
+                  <div class="chat-read">1</div>
+                </div>
+                <div class="chat-txt">
+                  <div>안녕하세요! 저는 이태호 라고 합니다.</div>
+                  <div>앞으로 잘부탁 드려요</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="left-section">
+          <div class="user-picture">
+            <img src="/img/chat_profile.png" alt="" />
+          </div>
+          <div class="user-section">
+            <div class="user-title">
+              <span><strong>상대방</strong></span>
+            </div>
+            <div class="chat-left clearfix">
+              <div class="chat-txt-wr">
+                <div class="chat-txt">
+                  <div>네 저도 잘 부탁드려요.</div>
+                </div>
+                <div class="chat-btns">
+                  <div class="chat-read">1</div>
+                  <div>
+                    <div class="chat-btn-wrap">
+                      <button>
+                        <img src="/img/chat-btn-left.png" alt="" />
+                      </button>
+                      <div class="medal-more-wrap">
+                        <button>
+                          <img src="/img/chat-btn-right.png" alt="" />
+                        </button>
+                        <ul class="modal-more">
+                          <li class="copy"><button>복사</button></li>
+                          <li class="notice"><button>공지설정</button></li>
+                          <li class="delete-only-for-me">
+                            <button class="del">나에게서만 삭제</button>
+                          </li>
+                          <li class="delete-all">
+                            <button class="del">전체삭제</button>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="user-time">오전 9:14</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <div class="chat-out">
+          <span> 이태호님이 공지사항을 등록하였습니다. </span>
+        </div>
+        <li class="right-section">
+          <div>
+            <div class="chat-right clearfix">
+              <div class="chat-txt-wr">
+                <div class="chat-btns">
+                  <div>
+                    <div class="chat-btn-wrap">
+                      <button>
+                        <img src="/img/chat-btn-left.png" alt="" />
+                      </button>
+                      <div class="medal-more-wrap">
+                        <button>
+                          <img src="/img/chat-btn-right.png" alt="" />
+                        </button>
+                        <ul class="modal-more">
+                          <li class="copy"><button>복사</button></li>
+                          <li class="notice"><button>공지설정</button></li>
+                          <li class="delete-only-for-me">
+                            <button class="del">나에게서만 삭제</button>
+                          </li>
+                          <li class="delete-all">
+                            <button class="del">전체삭제</button>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="user-time">오전 9:15</div>
+                  </div>
+                  <div class="chat-read">1</div>
+                </div>
+                <div class="reply-box">
+                  <div class="chat-txt-reply">
+                    <strong>상대방에게 답장</strong>
+                    <p>네 저도 잘부탁 드려요</p>
+                  </div>
+                  <div class="chat-txt">답장기능 테스트 메시지</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="left-section">
+          <div class="user-picture">
+            <img src="/img/chat_profile.png" alt="" />
+          </div>
+          <div class="user-section">
+            <div class="user-title">
+              <span><strong>상대방</strong></span>
+            </div>
+            <div class="chat-left clearfix">
+              <div class="chat-txt-wr">
+                <div class="reply-box">
+                  <div class="chat-txt-reply">
+                    <strong>이태호에게 답장</strong>
+                    <p>안녕하세요! 저는 이태호 라고 합니다.</p>
+                    <p>앞으로 잘부탁 드려요</p>
+                  </div>
+                  <div class="chat-txt">답장기능 테스트 메시지</div>
+                </div>
+                <div class="chat-btns">
+                  <div class="chat-read">1</div>
+                  <div>
+                    <div class="chat-btn-wrap">
+                      <button>
+                        <img src="/img/chat-btn-left.png" alt="" />
+                      </button>
+                      <div class="medal-more-wrap">
+                        <button>
+                          <img src="/img/chat-btn-right.png" alt="" />
+                        </button>
+                        <ul class="modal-more">
+                          <li class="copy"><button>복사</button></li>
+                          <li class="notice"><button>공지설정</button></li>
+                          <li class="delete-only-for-me">
+                            <button class="del">나에게서만 삭제</button>
+                          </li>
+                          <li class="delete-all">
+                            <button class="del">전체삭제</button>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="user-time">오전 9:14</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+      <footer>
+        <div>
+          <div class="btn-wr">
+            <button>
+              <img src="/img/chat_emote_icon.png" alt="" />
+            </button>
+            <button>
+              <img src="/img/chat_clip_icon.png" alt="" />
+            </button>
+          </div>
+          <div class="write-wr">
+            <div
+              class="create-post-content"
+              contenteditable="true"
+              placeholder="메시지를 입력하세요. 
+(멘션 @ / 줄바꿈 Shift + Enter)"
+              spellcheck="false"
+            ></div>
+            <button class="btn-chat-enter">전송</button>
+          </div>
+        </div>
+      </footer>
+      <div class="chat-menu">
+        <div class="dimmed"></div>
+        <article>
+          <div class="menu-container">
+            <div class="menu-top">
+              <ul class="menu-btns">
+                <li>
+                  <i><img src="/img/menu-image-icon.svg" alt="" /></i>
+                  <span>이미지</span>
+                </li>
+                <li>
+                  <i><img src="/img/menu-file-icon.svg" alt="" /></i>
+                  <span>파일</span>
+                </li>
+                <li>
+                  <i><img src="/img/menu-links-icon.svg" alt="" /></i>
+                  <span>링크</span>
+                </li>
+                <li>
+                  <i><img src="/img/menu-noties-icon.svg" alt="" /></i>
+                  <span>공지</span>
+                </li>
+              </ul>
+            </div>
+            <div class="menu-contents">
+              <button class="btn-type-01">초대하기</button>
+              <div>
+                <b>참여자</b>
+                <span>(2)</span>
+              </div>
+              <ul>
+                <span class="participants-title">
+                  <em>관리자</em>
+                  <span>(1)</span>
+                </span>
+                <li class="participants-list">
+                  <div>
+                    <span><img src="/img/chat_profile.png" alt="" /></span>
+                    <dl>
+                      <dt><strong>이태호</strong> <em>대표</em></dt>
+                      <dd>
+                        <strong>tayo</strong>
+                        <span>부서</span>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div></div>
+                  <ul></ul>
+                </li>
+              </ul>
+            </div>
+            <div class="menu-bottom"></div>
+          </div>
+          <div class="menu-container" style="display: none"></div>
+        </article>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Window</title>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/chatRoom.css}">
+</head>
+<body>
+
+<button class="chat-button" onclick="toggleChatWindow()">채팅 열기</button>
+
+<div class="chat-window" id="chatWindow">
+    <div class="chat-window-header">
+        <h2>채팅</h2>
+        <button onclick="toggleChatWindow()">✕</button>
+    </div>
+    <div class="chat-search">
+        <input type="text" placeholder="이름, 채팅방명 검색">
+    </div>
+    <div class="chat-list">
+        <div th:each="chat : ${chatList}" class="chat-list-item" onclick="openChatWindow()">
+            <img src="https://via.placeholder.com/40" alt="User">
+            <div>
+                <div th:each="chatmember : ${chat.chatMemberList}">
+                    <span th:if="${chatmember.member.memberIdx == 1}">
+                        <span th:if="${chatmember.chatName != null}" th:text="${chatmember.chatName}"></span>
+                        <span th:unless="${chatmember.chatName != null}" th:each="memberName : ${chat.chatMemberList}">
+                            <span th:if="${memberName.member.memberIdx != 1}" th:text="${memberName.member.name}"></span>
+                        </span>
+                    </span>
+                </div>
+                <span>아이사 반</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleChatWindow() {
+        var chatWindow = document.getElementById('chatWindow');
+        if (chatWindow.style.display === 'none' || chatWindow.style.display === '') {
+            chatWindow.style.display = 'flex';
+        } else {
+            chatWindow.style.display = 'none';
+        }
+    }
+
+    function openChatWindow() {
+        window.open('', 'ChatWindow', 'width=450,height=800');
+    }
+</script>
+
+</body>
+</html>
