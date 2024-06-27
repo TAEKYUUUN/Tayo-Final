@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mysite.tayo.entity.Company;
 import com.mysite.tayo.entity.Member;
-import com.mysite.tayo.repository.MemberRepository;
 import com.mysite.tayo.service.CompanyService;
 
 import lombok.RequiredArgsConstructor;

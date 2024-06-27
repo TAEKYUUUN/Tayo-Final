@@ -80,6 +80,7 @@ public class MemberController {
 	public String login() {
 		return "LoginPage";
 	}
+	
 	@GetMapping("/list")
 	public String list(Model model) {
 		List<Member> memberList = this.memberService.getList();

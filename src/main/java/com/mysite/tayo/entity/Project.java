@@ -4,6 +4,7 @@ import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,7 +26,7 @@ public class Project {
     @Column(name = "project_idx")
 	private Long projectIdx;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_idx", referencedColumnName = "company_idx")
 	private Company company;
 	
@@ -51,8 +52,11 @@ public class Project {
 	private Integer withoutConfirm;
 	
 	@Column(name = "creator_idx")
-	private Integer creatorIdx;
+	private Long creatorIdx;
 	
 	@Column(name = "used_template")
 	private Integer usedTemplate;
+	
+	@Column(name = "color")
+	private String color;
 }
