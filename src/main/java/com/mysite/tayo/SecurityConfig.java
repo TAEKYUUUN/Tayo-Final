@@ -20,6 +20,7 @@ import com.mysite.tayo.repository.MemberRepository;
 public class SecurityConfig {
 //	주석주석
 //	주석주석
+//	주석주석
 	 private final MemberRepository memberRepository;
 
 	    public SecurityConfig(MemberRepository memberRepository) {
