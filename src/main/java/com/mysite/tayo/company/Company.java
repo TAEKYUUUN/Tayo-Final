@@ -2,17 +2,19 @@ package com.mysite.tayo.company;
 
 
 import java.util.Date;
-import java.util.List;
+
+import org.checkerframework.common.aliasing.qual.Unique;
 
 import com.mysite.tayo.member.Member;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -32,8 +34,10 @@ public class Company {
 	@Column(name="company_name", length=100)
 	private String companyName;
 	
-	@Column(name="company_manager_idx")
-	private Integer companyManagerIdx;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "member_idx")
+	private Member manager;
+	
 	
 	@Column(name="payment")
 	private Integer payment;
@@ -44,6 +48,7 @@ public class Company {
 	@Column(name="LOGO", length=100)
 	private String logo;
 	
+	@Unique
 	@Column(name="URL", length=100)
 	private String url;
 	

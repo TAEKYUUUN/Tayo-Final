@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+	<html lang="ko">
+		<head>
+			<meta charset="UTF-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+			<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+			<title>Tayo</title>
+			<link rel="stylesheet" type="text/css" th:href="@{/css/dashboard.css}">
+		</head>
+<body>
+    <div id="div_side1">
+       <div id="div_organization_logo">
+          <div id="div_logo_box"><img src="https://flow.team/flow-renewal/assets/images/logo/logo-flow.svg"/></div>
+       </div>
+       <div id="div_new_project">
+          <div id="div_newprj_button"><img src="img/newprj_button.png"/></div>
+       </div>
+       <div id="div_left_menu1">
+          <div><img src="img/home_icon.png"/>대시보드</div><br/>
+          <div><img src="img/myprj_icon.png"/>내 프로젝트</div><br/>
+          <div><img src="img/company_open_icon.png"/>회사 공개 프로젝트</div><br/>
+          <div><img src="img/more_icon.png"/>더보기</div><br/>
+       </div>
+       <div id="div_left_menu2">
+          <div id="div_collection_btn">모아보기<img src="img/left_btn.png"/></div>
+          <div id="div_recent_update_btn">최근 업데이트<img src="img/left_btn.png"/></div>
+          <div id="div_prj_folder_btn">프로젝트 폴더<img src="img/left_btn.png"/></div>
+       </div>
+       <div id="div_left_menu3">
+          <div><img src="img/invite_emp.png"/>직원 초대</div>
+          <div>
+			<a th:href="@{/member/list}">
+				<img src="img/admin.png"/>어드민
+			</a>
+		  </div>
+       </div>
+       <div id="div_left_menu4">
+          <img src="img/guide.png"/>
+          <span>이용가이드</span>
+       </div>
+    </div>
+    <div id="div_side2">
+       <div id="div_header">
+           <div class="left-container">
+               <div id="div_consultant"><img src="img/consultant.png"/><span>오프라인 타요 설명회 →</span></div>
+               <div id="div_pay"><img src="img/pay_button.png"/></div>
+           </div>
+           <div id="div_top_searchbar">
+               <div id="div_main_searchbox">
+                   <img src="img/top_search_icon.png"/>
+                   <div id="div_input_search">검색</div>
+               </div>
+               <div id="div_search_option">옵션</div>
+           </div>
+           <div id="div_top_right_menu">
+              <div id="div_top_hirearchy"><img src="img/hirearchy.png"/></div>
+              <div id="div_top_chat"><img src="img/chat.png"/></div>
+              <div id="div_top_alarm"><img src="img/alarm.png"/></div>
+              <div id="div_profile"><img src="https://flow.team/flow-renewal/assets/images/profile-default.svg"/></div>
+           </div>
+       </div>
+       <div id="div_content">
+          <div id="div_introwrap">
+             <div id="div_profile_name">
+                <div id="div_profile">우태균님 즐거운 오후입니다.😊</div>
+                <div id="div_status_input"><div>·</div>프로필 상태 메세지를 입력해보세요.</div>
+             </div>
+             <div id="div_right_box">
+                <div id="div_right_time">
+                   <span>2024년 5월 30일 목요일</span>
+                </div>
+                <div id="div_right_content">
+                   <img src="img/setting_btn.png"/>
+                   <div id="div_setwidget_btn"><img src="img/set_widget.png"/>위젯 설정</div>
+                </div>
+             </div>
+          </div>
+          <div id="div_widgetwrap">
+             <div id="div_myproject">
+                <h3 class="widget_large_h3">
+                   <span class="widget_large_title">내 프로젝트</span>
+                   <span class="widget_large_category">최근 프로젝트</span>
+                </h3>
+                <div class="div_large_widget">
+                   <div id="new_prj_default"><span id="prj_icon_box">+</span>새 프로젝트</div>
+                   <div class="div_prj_item"><span class="prj_icon_box_blue"></span>[타요] 이용가이드</div>
+                   <div class="div_prj_item"><span class="prj_icon_box_yellow"></span>[타요] YG Academy</div>
+                   <div class="div_prj_item"><span class="prj_icon_box_pink"></span>for조 Project</div>
+                   <div class="div_prj_item"><span class="prj_icon_box_blue"></span>UAE 협약 프로젝트</div>
+                </div>
+             </div>
+             <div id="div_mymember">
+                <h3 class="widget_small_h3">
+                   <span class="widget_small_title">구성원</span>
+                   <span class="widget_small_category">최근 협업 순</span>
+                </h3>
+                <div class="div_small_widget">
+                   <div id="member_invite">
+                      <span id="new_member_box">+</span>직원 초대
+                   </div>
+                   <div class="member_item">
+                      <span class="member_profile">
+                         <img src="https://flow.team/flow-renewal/assets/images/profile-default.png"/>
+                      </span>
+                      <div class="member_info">
+                         <div class="member_name">우태균</div>
+                         <div class="member_company_org">YG Academy | 과장</div>
+                      </div>
+                   </div>
+                   <div class="member_item">
+                      <span class="member_profile">
+                         <img src="https://flow.team/flow-renewal/assets/images/profile-default.png"/>
+                      </span>
+                      <div class="member_info">
+                         <div class="member_name">김민성</div>
+                         <div class="member_company_org">YG Academy | 대리</div>
+                      </div>
+                   </div>
+                </div>
+             </div>
+             <div id="div_mywork">
+                <h3 class="widget_large_h3">
+                   <span class="widget_large_title">내가 담당중인 업무</span>
+                   <span class="widget_large_category">이번 주</span>
+                </h3>
+                <div class="div_large_widget">
+                   <div id="tab_title">
+                      <div id="tab_1">예정된 업무 <span>0</span></div>
+                      <div id="tab_2">지연된 업무 <span>4</span></div>
+                   </div>
+                   <div id="div_worklist">예정된 업무가 없습니다.</div>
+                </div>
+             </div>
+             <div id="div_memo">
+                <h3 class="widget_small_h3">
+                   <span class="widget_small_title">메모장</span>
+                </h3>
+                <div class="div_small_widget">
+                   <div class="div_memo_widget">내용을 입력해주세요.</div>
+                </div>
+             </div>
+          </div>
+       </div>
+    </div>
+</body>
+</html>

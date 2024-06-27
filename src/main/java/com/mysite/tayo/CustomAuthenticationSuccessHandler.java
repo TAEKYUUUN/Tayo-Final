@@ -31,10 +31,12 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
-            if (member.getIsConfirmed() == null) {
-                response.sendRedirect("/mainpage");
+            if (member.getIsConfirmed() != null && member.getIsConfirmed() == 1) {
+                response.sendRedirect("/member/certification");
+            } else if(member.getCompany() == null) {
+            	response.sendRedirect("/createOrJoinCompany");
             } else {
-            	response.sendRedirect("/member/certification");
+            	response.sendRedirect("/dashboard");
             }
         } else {
             response.sendRedirect("/member/login?error=true");

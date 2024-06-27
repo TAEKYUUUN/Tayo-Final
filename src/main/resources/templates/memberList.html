@@ -173,21 +173,21 @@
 			</thead>
 			<tbody>
 				<tr th:each="member : ${memberList}">
-					<td><input type="checkbox" style="margin:0; cursor:pointer;"></td>
-					<td th:text="${member.company.companyName}"></td>
-					<td th:text="${member.name}" class="trName"></td>
-					<td th:text="${member.organization.organizationName}" class="trOrganizationName"></td>
-					<td th:text="${member.rankName}" class="trRankName"></td>
-					<td th:text="${member.email}" class="trId"></td>
-					<td th:text="${member.phone}" class="trPhone"></td>
-					<td th:text="${member.registDate}"></td>
-					<td th:text="${member.password}" class="trPw" style="display:none"></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
+				    <td><input type="checkbox" style="margin:0; cursor:pointer;"></td>
+				    <td th:text="${#strings.defaultString(member.company?.companyName, '')}"></td>
+				    <td th:text="${member.name}" class="trName"></td>
+				    <td th:text="${#strings.defaultString(member.organization?.organizationName, '')}" class="trOrganizationName"></td>
+				    <td th:text="${#strings.defaultString(member.rankName, '')}" class="trRankName"></td>
+				    <td th:text="${member.email}" class="trId"></td>
+				    <td th:text="${#strings.defaultString(member.phone, '')}" class="trPhone"></td>
+				    <td th:text="${member.registDate}"></td>
+				    <td th:text="${member.password}" class="trPw" style="display:none"></td>
+				    <td></td>
+				    <td></td>
+				    <td></td>
+				    <td></td>
+				    <td></td>
+				    <td></td>
 				</tr>
 				
 			</tbody>
