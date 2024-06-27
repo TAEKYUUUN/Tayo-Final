@@ -8,8 +8,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import com.mysite.tayo.member.Member;
-import com.mysite.tayo.member.MemberRepository;
+import com.mysite.tayo.entity.Member;
+import com.mysite.tayo.repository.MemberRepository;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
