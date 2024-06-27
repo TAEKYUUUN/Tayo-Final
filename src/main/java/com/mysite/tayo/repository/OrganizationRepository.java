@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.mysite.tayo.entity.Organization;
 
 public interface OrganizationRepository extends JpaRepository<Organization,Long>{
-	Optional<Organization> findByorganizationName(String organizationName);
+	Optional<Organization> findByOrganizationName(String organizationName);
 }

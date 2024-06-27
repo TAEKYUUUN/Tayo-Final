@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -72,11 +74,13 @@ public class MemberService {
     
     public void update(String name, String email, String pw, String org, String rank,  String phone) {
     	Optional<Member> member = this.memberRepository.findByEmail(email);
-    	Optional<Organization> organization = organizationRepository.findById((long) 1);
+    	Optional<Organization> organization = organizationRepository.findByOrganizationName(org);
     	if(member.isPresent()) {
     		member.get().setName(name);
         	member.get().setPassword(passwordEncoder.encode(pw));
-    		member.get().setOrganization(organization.get());
+    		if(organization.isPresent()) {
+    			member.get().setOrganization(organization.get());
+    		}
     		member.get().setRankName(rank);
     		member.get().setPhone(phone);
     		this.memberRepository.save(member.get());
@@ -102,5 +106,12 @@ public class MemberService {
     	} else {
     		throw new DataNotFoundException("에러");
     	}
+    }
+    
+    public Member infoFromLogin(Authentication authentication) {
+    	User user = (User) authentication.getPrincipal();  
+        String email = user.getUsername();
+        Optional<Member> optionalMember = findMemberByEmail(email);
+        return optionalMember.get();
     }
 }
