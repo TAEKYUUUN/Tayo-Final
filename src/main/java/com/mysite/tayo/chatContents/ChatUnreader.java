@@ -1,10 +1,15 @@
 package com.mysite.tayo.chatContents;
 
+import com.mysite.tayo.member.Member;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -21,11 +26,17 @@ public class ChatUnreader {
 	@Column(name = "chat_unreader_idx")
 	private Long chatUnreaderIdx;
 	
-	@Column(name = "chat_contents_idx")
-	private Integer chatContentsIdx;
-	
 	@Column(name = "unreader_idx")
 	private Integer unreaderIdx;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "chat_contents_idx")
+	private ChatContents chatContents;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "member_idx")
+	private Member member;
+	
 	
 	
 }

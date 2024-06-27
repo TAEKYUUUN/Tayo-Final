@@ -2,6 +2,8 @@ package com.mysite.tayo.chat;
 
 import java.util.List;
 
+import com.mysite.tayo.chatContents.ChatContents;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,6 +36,7 @@ public class Chat {
 	@OneToMany(mappedBy = "chat", cascade = CascadeType.REMOVE) 
     private List<ChatMember> chatMemberList; 
 	
-	
+	@OneToMany(mappedBy = "chat", cascade = CascadeType.REMOVE)
+	private List<ChatContents> chatContentsList;
 	
 }

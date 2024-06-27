@@ -1,6 +1,7 @@
 package com.mysite.tayo.chat;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,19 +13,23 @@ import lombok.RequiredArgsConstructor;
 @Controller
 public class ChatController {
 
-	private final ChatRepository chatRepository;
 	
+	private final ChatService chatService;
 	
-	@GetMapping("/chat")
-	public String chat(Model model) {
-		return "chat";
-	}
 	
 	@GetMapping("/chatRoom")
-	public String chatRoom(Model model) {
-		List<Chat> chatList = this.chatRepository.findByChatMemberListMemberMemberIdx(1L);
-		model.addAttribute("chatList", chatList);	
+	public String chat(Model model) {
+		Optional<Chat> _chatList = this.chatService.getId();
+		Chat chatList = _chatList.get();
+		model.addAttribute("chatList", chatList);
 		return "chatRoom";
+	}
+	
+	@GetMapping("/chat")
+	public String chatRoom(Model model) {
+		List<Chat> chatList = this.chatService.getList();
+		model.addAttribute("chatList", chatList);	
+		return "chat";
 	}
 	
 	

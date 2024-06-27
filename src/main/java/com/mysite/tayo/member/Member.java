@@ -89,4 +89,6 @@ public class Member {
     private List<ChatMember> chatMemberList;
     
     
+    
+    
 }
