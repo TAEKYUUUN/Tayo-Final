@@ -1,11 +1,16 @@
 package com.mysite.tayo.project;
 
 import java.util.Date;
+
+import com.mysite.tayo.company.Company;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -22,8 +27,9 @@ public class Project {
     @Column(name = "project_idx")
 	private Long projectIdx;
 	
-	@Column(name = "company_idx")
-	private Integer companyIdx;
+	@ManyToOne
+    @JoinColumn(name = "company_idx", referencedColumnName = "company_idx")
+	private Company company;
 	
 	@Column(name = "project_name", length = 100)
 	private String projectName;
@@ -45,24 +51,6 @@ public class Project {
 	
 	@Column(name = "without_confirm")
 	private Integer withoutConfirm;
-	
-	@Column(name = "can_write_post")
-	private Integer canWritePost;
-	
-	@Column(name = "can_revise_post")
-	private Integer canRevisePost;
-	
-	@Column(name = "can_see_post")
-	private Integer canSeePost;
-	
-	@Column(name = "can_write_comments")
-	private Integer canWriteComments;
-	
-	@Column(name = "can_see_file")
-	private Integer canSeeFile;
-	
-	@Column(name = "can_download")
-	private Integer canDownload;
 	
 	@Column(name = "creator_idx")
 	private Integer creatorIdx;

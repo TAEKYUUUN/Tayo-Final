@@ -85,8 +85,8 @@ public class Member {
 	 @Column(name="set_auto_logout")
 	 private Integer setAutoLogout;
     
-    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
-    private List<ChatMember> chatMemberList;
-    
+	 @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+	 private List<ChatMember> chatMemberList;
+	    
     
 }

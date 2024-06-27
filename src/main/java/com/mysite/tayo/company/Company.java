@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.mysite.tayo.member.Member;
+import com.mysite.tayo.project.Project;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -62,4 +63,6 @@ public class Company {
 	@Column(name="business_number")
 	private Integer businessNumber;
 	
+	@OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Project> projects;
 }
