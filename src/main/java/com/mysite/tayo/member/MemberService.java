@@ -23,6 +23,10 @@ public class MemberService {
 	private final CompanyRepository companyRepository;
 	private final PasswordEncoder passwordEncoder;
 	
+	public Optional<Member> findMemberByEmail(String email){
+		 return memberRepository.findByEmail(email);
+	}
+	
     public List<Member> getList() {
         return this.memberRepository.findAll();
     }

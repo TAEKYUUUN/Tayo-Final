@@ -1,34 +1,5 @@
 <link rel="stylesheet" type="text/css" th:href="@{/css/mainpage.css}">
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const navItems = document.querySelectorAll('.js_nav');
-    const navMenus = document.querySelectorAll('.nav_menu');
-
-    navItems.forEach((item, index) => {
-      let timeout;
-      item.addEventListener('mouseenter', () => {
-        clearTimeout(timeout);
-        navMenus[index].classList.add('show');
-      });
-
-      item.addEventListener('mouseleave', () => {
-        timeout = setTimeout(() => {
-          navMenus[index].classList.remove('show');
-        }, 100);
-      }); 
-
-      navMenus[index].addEventListener('mouseenter', () => {
-        clearTimeout(timeout);
-      });
-
-      navMenus[index].addEventListener('mouseleave', () => {
-        timeout = setTimeout(() => {
-          navMenus[index].classList.remove('show');
-        }, 100);
-      });
-    });
-  });
-</script>
+<script th:src="@{/js/mainpage.js}"></script>
 <header>
       <nav>
         <div id="header1">
@@ -337,7 +308,7 @@
               <img src="/img/doip.png" alt="" />
               도입 문의
             </a>
-            <a class="header_login_box" href="https://flow.team/signin.act">
+            <a class="header_login_box" th:href="@{/member/login}">
               로그인
             </a>
             <a class="header_gaip_box" href=""> 무료 회원가입 </a>

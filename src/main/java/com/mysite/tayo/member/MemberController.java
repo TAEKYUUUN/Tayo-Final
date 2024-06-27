@@ -24,14 +24,12 @@ import lombok.RequiredArgsConstructor;
 @Controller
 public class MemberController {
 	private final MemberService memberService;
-	private final MemberRepository memberRepository;
 	
 	@GetMapping("/certification")
 	public String certification() {
 		return "certification";
 	}
 	
-	//제작중
 	@PostMapping("/certification")
 	public String certificationCheck(
 			@RequestParam("digit1") String digit1, 
@@ -47,7 +45,7 @@ public class MemberController {
 			    && !(authentication.getPrincipal() instanceof String)) {
 				 User user = (User) authentication.getPrincipal();  
 		         email = user.getUsername();
-		         Optional<Member> optionalMember = memberRepository.findByEmail(email);
+		         Optional<Member> optionalMember = memberService.findMemberByEmail(email);
 		         if(optionalMember.isPresent()) {
 		        	 Member member = optionalMember.get();
 		        	 certificationNumber = member.getCertificationNumber() + "";
