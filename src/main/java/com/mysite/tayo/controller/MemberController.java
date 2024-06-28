@@ -47,13 +47,8 @@ public class MemberController {
 		String certificationNumber = "";
 			if (authentication != null && authentication.isAuthenticated() 
 			    && !(authentication.getPrincipal() instanceof String)) {
-				 User user = (User) authentication.getPrincipal();  
-		         email = user.getUsername();
-		         Optional<Member> optionalMember = memberService.findMemberByEmail(email);
-		         if(optionalMember.isPresent()) {
-		        	 Member member = optionalMember.get();
+		        	 Member member = memberService.infoFromLogin(authentication);
 		        	 certificationNumber = member.getCertificationNumber() + "";
-		         }
 		         
 			} else {
 				HttpSession session = request.getSession();
@@ -80,6 +75,7 @@ public class MemberController {
 	public String login() {
 		return "LoginPage";
 	}
+	
 	@GetMapping("/list")
 	public String list(Model model) {
 		List<Member> memberList = this.memberService.getList();
