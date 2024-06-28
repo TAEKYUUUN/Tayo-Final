@@ -43,6 +43,8 @@
       </div>
       <ul 	th:each="chat : ${chatList}" 
 	  		class="chat-container">
+		
+		
 		<div th:each="chatContents, innerIterStat : ${chat.chatContentsList}">
 			<div th:if="${innerIterStat.index == 0 or
 					 	#dates.format(chatContents.time, 'yyyy-MM-dd') != 
@@ -52,7 +54,7 @@
 					 ' (' + #dates.format(chatContents.time, 'E') + ')'}"></span>
                 </div>
             </div>
-		    <li th:if="${chatContents.member.memberIdx != 1 }" 
+		    <li th:if="${chatContents.member.memberIdx != 1 and chatContents.isReply == null }" 
 				class="left-section">
 		      <div class="user-picture">
 		        <img src="/img/chat_profile.png" alt="" />
@@ -64,7 +66,9 @@
 		        <div class="chat-left clearfix">
 		          <div class="chat-txt-wr">
 		            <div class="chat-txt">
-		              <div th:text="${chatContents.text}"></div>
+						<div th:if="${chatContents.text != null}" th:text="${chatContents.text}"></div>
+						<div th:if="${chatContents.hasFile != null}" th:text="${chatContents.hasFile}"></div>
+						<div th:if="${chatContents.emote != null}" th:text="${chatContents.emote}"></div>
 		            </div>
 		            <div class="chat-btns">
 		              <div 	th:if="${#lists.size(chatContents.chatUnreaderList) > 0}"
@@ -99,7 +103,8 @@
 		        </div>
 		      </div>
 		    </li>
-		    <li th:if="${chatContents.member.memberIdx == 1 }" 
+		    <li th:if="${chatContents.member.memberIdx == 1 and 
+									chatContents.isReply == null }" 
 				class="right-section">
 		      <div>
 		        <div class="chat-right clearfix">
@@ -127,7 +132,7 @@
 		                  </div>
 		                </div>
 		                <div	th:text="${#dates.format(chatContents.time, 'a h:mm')}" 
-								class="user-time">오전 9:15</div>
+								class="user-time"></div>
 		              </div>
 		              <div 	th:if="${#lists.size(chatContents.chatUnreaderList) > 0}"
 					  		th:text="${#lists.size(chatContents.chatUnreaderList)}"
@@ -142,94 +147,62 @@
 		        </div>
 		      </div>
 		    </li>
+			
+			<li	th:if="${chatContents.member.memberIdx == 1 and chatContents.isReply != null}"  
+				class="right-section">
+			  <div>
+			    <div class="chat-right clearfix">
+			      <div class="chat-txt-wr">
+			        <div class="chat-btns">
+			          <div>
+			            <div class="chat-btn-wrap">
+			              <button>
+			                <img src="/img/chat-btn-left.png" alt="" />
+			              </button>
+			              <div class="medal-more-wrap">
+			                <button>
+			                  <img src="/img/chat-btn-right.png" alt="" />
+			                </button>
+			                <ul class="modal-more">
+			                  <li class="copy"><button>복사</button></li>
+			                  <li class="notice"><button>공지설정</button></li>
+			                  <li class="delete-only-for-me">
+			                    <button class="del">나에게서만 삭제</button>
+			                  </li>
+			                  <li class="delete-all">
+			                    <button class="del">전체삭제</button>
+			                  </li>
+			                </ul>
+			              </div>
+			            </div>
+						<div	th:text="${#dates.format(chatContents.time, 'a h:mm')}" 
+								class="user-time"></div>
+			          </div>
+			          <div 	th:if="${#lists.size(chatContents.chatUnreaderList) > 0}"
+					  		th:text="${#lists.size(chatContents.chatUnreaderList)}"
+					  		class="chat-read"></div>
+			        </div>
+			        <div class="reply-box">
+			          <div th:if="${chatContents.isReply.chatContentsIdx == 1}" class="chat-txt-reply">
+			            <strong th:text="${chatContents.isReply.member.name} +'님에게 답장'">상대방에게 답장</strong>
+			            <p th:text="${chatContents.isReply.text}">네 저도 잘부탁 드려요</p>
+			          </div>
+			          <div class="chat-txt">				  
+						<div th:if="${chatContents.text != null}" th:text="${chatContents.text}"></div>
+					  	<div th:if="${chatContents.hasFile != null}" th:text="${chatContents.hasFile}"></div>
+					  	<div th:if="${chatContents.emote != null}" th:text="${chatContents.emote}"></div></div>
+			        </div>
+			      </div>
+			    </div>
+			  </div>
+			</li>
 		</div>
-        <li class="left-section">
-          <div class="user-picture">
-            <img src="/img/chat_profile.png" alt="" />
-          </div>
-          <div class="user-section">
-            <div class="user-title">
-              <span><strong>상대방</strong></span>
-            </div>
-            <div class="chat-left clearfix">
-              <div class="chat-txt-wr">
-                <div class="chat-txt">
-                  <div>네 저도 잘 부탁드려요.</div>
-                </div>
-                <div class="chat-btns">
-                  <div class="chat-read">1</div>
-                  <div>
-                    <div class="chat-btn-wrap">
-                      <button>
-                        <img src="/img/chat-btn-left.png" alt="" />
-                      </button>
-                      <div class="medal-more-wrap">
-                        <button>
-                          <img src="/img/chat-btn-right.png" alt="" />
-                        </button>
-                        <ul class="modal-more">
-                          <li class="copy"><button>복사</button></li>
-                          <li class="notice"><button>공지설정</button></li>
-                          <li class="delete-only-for-me">
-                            <button class="del">나에게서만 삭제</button>
-                          </li>
-                          <li class="delete-all">
-                            <button class="del">전체삭제</button>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div class="user-time">오전 9:14</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </li>
-        <div class="chat-out">
-          <span> 이태호님이 공지사항을 등록하였습니다. </span>
-        </div>
-        <li class="right-section">
-          <div>
-            <div class="chat-right clearfix">
-              <div class="chat-txt-wr">
-                <div class="chat-btns">
-                  <div>
-                    <div class="chat-btn-wrap">
-                      <button>
-                        <img src="/img/chat-btn-left.png" alt="" />
-                      </button>
-                      <div class="medal-more-wrap">
-                        <button>
-                          <img src="/img/chat-btn-right.png" alt="" />
-                        </button>
-                        <ul class="modal-more">
-                          <li class="copy"><button>복사</button></li>
-                          <li class="notice"><button>공지설정</button></li>
-                          <li class="delete-only-for-me">
-                            <button class="del">나에게서만 삭제</button>
-                          </li>
-                          <li class="delete-all">
-                            <button class="del">전체삭제</button>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div class="user-time">오전 9:15</div>
-                  </div>
-                  <div class="chat-read">1</div>
-                </div>
-                <div class="reply-box">
-                  <div class="chat-txt-reply">
-                    <strong>상대방에게 답장</strong>
-                    <p>네 저도 잘부탁 드려요</p>
-                  </div>
-                  <div class="chat-txt">답장기능 테스트 메시지</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </li>
+
+		<div class="chat-out">
+		  <span> 이태호님이 공지사항을 등록하였습니다. </span>
+		</div>
+		
+
         <li class="left-section">
           <div class="user-picture">
             <img src="/img/chat_profile.png" alt="" />
