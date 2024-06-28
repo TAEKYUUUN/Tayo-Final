@@ -2,9 +2,12 @@ package com.mysite.tayo.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -21,11 +24,13 @@ public class ProjectMember {
     @Column(name = "project_member_idx")
 	private Long projectMemberIdx;
 	
-	@Column(name = "member_idx")
-	private Integer memberIdx;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "member_idx")
+	private Member member;
 	
-	@Column(name = "project_idx")
-	private Integer projectIdx;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "project_idx")
+	private Project project;
 	
 	@Column(name = "is_manager")
 	private Integer isManager;
@@ -36,14 +41,12 @@ public class ProjectMember {
 	@Column(name = "hide")
 	private Integer hide;
 	
-	@Column(name = "set_mainpage")
-	private Integer setMainPage;
-	
 	@Column(name = "alarm")
 	private Integer alarm;
 	
-	@Column(name = "company_idx")
-	private Integer companyIdx;
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_idx", referencedColumnName = "company_idx")
+	private Company company;
 	
 	@Column(name = "is_confirmed")
 	private Integer isConfirmed;

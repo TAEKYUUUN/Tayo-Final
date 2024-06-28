@@ -28,7 +28,7 @@ public class ChatContents {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "chat_contents_seq")
 	@SequenceGenerator(name = "chat_contents_seq", sequenceName = "CHAT_CONTENTS_SEQ", allocationSize = 1)
 	@Column(name = "chat_contents_idx")
-	private Long chat_contents_idx;
+	private Long chatContentsIdx;
 	
 	@Lob
 	@Column(name = "text", columnDefinition = "CLOB")
@@ -46,8 +46,6 @@ public class ChatContents {
 	@Column(name = "notice")
 	private Integer notice;
 	
-	@Column(name = "is_reply")
-	private Integer isReply;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "chat_idx")
@@ -60,14 +58,9 @@ public class ChatContents {
 	@OneToMany(mappedBy = "chatContents", cascade = CascadeType.REMOVE)
 	private List<ChatUnreader> chatUnreaderList;
 	
-	
-	
-	
-	
-	
-	
-	
-	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "is_reply")
+	private ChatContents isReply;
 	
 	
 	

@@ -11,40 +11,40 @@
         <div class="form_container">
         	<button class="back_button" onclick="history.back()">&#8592; 뒤로가기</button>
             <h1>새 프로젝트 만들기</h1>
-            <form action="">
+            <form action="/createNewProject" method="post">
 	            <div class="form_group">
 	                <label for="title">프로젝트 이름</label>
 	                <input type="text" id="title" placeholder="제목을 입력하세요." name="projectName">
 	            </div>
 	            <h4 style="margin:0px;">메인 탭 설정</h4>
 	            <div class="tabs">
-	                <input type="radio" id="tab-feed" name="main_tab" value="feed" class="main_tab_radio" checked>
+	                <input type="radio" id="tab-feed" name="main_tab" value="1" class="main_tab_radio" checked>
 				    <label for="tab-feed" class="main_tab active">피드</label>
 				    
-				    <input type="radio" id="tab-task" name="main_tab" value="task" class="main_tab_radio">
+				    <input type="radio" id="tab-task" name="main_tab" value="2" class="main_tab_radio">
 				    <label for="tab-task" class="main_tab">업무</label>
 				    
-				    <input type="radio" id="tab-gantt" name="main_tab" value="gantt" class="main_tab_radio">
+				    <input type="radio" id="tab-gantt" name="main_tab" value="3" class="main_tab_radio">
 				    <label for="tab-gantt" class="main_tab">간트차트</label>
 				    
-				    <input type="radio" id="tab-calendar" name="main_tab" value="calender" class="main_tab_radio">
+				    <input type="radio" id="tab-calendar" name="main_tab" value="4" class="main_tab_radio">
 				    <label for="tab-calendar" class="main_tab">캘린더</label>
 				    
-				    <input type="radio" id="tab-files" name="main_tab" value="files" class="main_tab_radio">
+				    <input type="radio" id="tab-files" name="main_tab" value="5" class="main_tab_radio">
 				    <label for="tab-files" class="main_tab">파일</label>
 	            </div>
 	            <div class="settings">
 	                <div class="options">
 	                	회사 공개로 설정
 	                    <label class="switch" style="margin-top:4px;">
-				            <input type="checkbox" name="companyProject" checked>
+				            <input type="checkbox" name="companyProject" value="1" checked>
 				            <span class="slider round"></span>
 	           		 	</label>
 	                </div>
 	                <div class="options">
 	                	관리자 승인 후 참여 가능	
 	                	<label class="switch" style="margin-top:4px;">
-				            <input type="checkbox" name="needConfirm" checked>
+				            <input type="checkbox" name="needConfirm" value="1" checked>
 				            <span class="slider round"></span>
 	           		 	</label>
 	                </div>

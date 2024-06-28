@@ -1,7 +1,6 @@
 package com.mysite.tayo.entity;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public enum MemberRole {

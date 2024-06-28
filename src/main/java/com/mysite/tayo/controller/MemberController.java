@@ -78,26 +78,4 @@ public class MemberController {
 	public String login() {
 		return "LoginPage";
 	}
-	
-	
-	@PostMapping("/regist")
-	public String registMember(
-			@Valid MemberCreateForm memberCreateForm, BindingResult bindingResult,  HttpServletRequest request
-			) {
-		if(bindingResult.hasErrors()) {
-			return "Regist";
-		}
-		if(!memberCreateForm.getPassword().equals(memberCreateForm.getCheckpw())) {
-			bindingResult.rejectValue("checkpw", "passwordInCorrect", "2개의 패스워드가 일치하지 않습니다.");
-			return "Regist";
-		}
-		int randomNumber = (int)(Math.random()*900000)+100000;
-		memberService.registMember(memberCreateForm.getName(), memberCreateForm.getEmail(), memberCreateForm.getPassword(), randomNumber);
-		HttpSession session = request.getSession();
-		session.setAttribute("certificationNumber", randomNumber);
-		session.setAttribute("email", memberCreateForm.getEmail());
-		
-		return "redirect:/member/certification";
-	}
-	
 }
