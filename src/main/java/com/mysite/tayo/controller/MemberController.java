@@ -33,7 +33,10 @@ public class MemberController {
 	public String certification() {
 		return "certification";
 	}
-	
+	@GetMapping("/regist")
+	public String regist(MemberCreateForm memberCreateForm) {
+		return "Regist";
+	}
 	@PostMapping("/certification")
 	public String certificationCheck(
 			@RequestParam("digit1") String digit1, 
@@ -75,41 +78,7 @@ public class MemberController {
 	public String login() {
 		return "LoginPage";
 	}
-	@GetMapping("/list")
-	public String list(Model model) {
-		List<Member> memberList = this.memberService.getList();
-		model.addAttribute("memberList", memberList);
-		return "memberList";
-	}
 	
-	@GetMapping("/regist")
-	public String regist(MemberCreateForm memberCreateForm) {
-		return "Regist";
-	}
-	
-	@GetMapping("/AddAll")
-	public String memberAddAll() {
-		return "memberAddAll";
-	}
-	
-	@PostMapping("/list")
-	public String addMember(
-            @RequestParam("popupName") String name,
-            @RequestParam("popupEmail") String email,
-            @RequestParam("popupPw") String pw,
-            @RequestParam("popupOrg") String org,
-            @RequestParam("popupRank") String rank,
-            @RequestParam("popupPhone") String phone) {
-		Optional<Member> member = memberService.existTest(email);
-		
-		if(member.isPresent()) {
-			memberService.update(name, email, pw, org, rank, phone);
-		}
-		else {
-			memberService.create(name, email, pw, org, rank, phone);
-		}
-		return "redirect:/member/list";
-	}
 	
 	@PostMapping("/regist")
 	public String registMember(

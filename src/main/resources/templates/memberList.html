@@ -111,7 +111,7 @@
 												<button id="addbutton1">구성원 개별 등록</button>
 											</li>
 											<li>
-												<a th:href="@{/member/AddAll}">
+												<a th:href="@{/Admin/AddAll}">
 													<button id="addbutton1">구성원 일괄 등록</button>
 												</a>
 											</li>
@@ -273,7 +273,7 @@
 				</table>
 		</div>
 		<div id="div_backgroundfull" style="display:none;"></div>
-			<form action="/member/list" method="post">
+			<form action="/Admin/list" method="post">
 			<div id="div_insertpopup" style="display:none;" class="insertpopup">
 				<div id="div_insertpopuphead" >
 					<div id="div_logoinserttitle">사용자 등록 <a id="exitlogoedit"></a></div>
@@ -322,7 +322,7 @@
 			</div>
 			</form>
 			<div id="div_insertpopup" style="display:none;" class="editpopup">
-				<form action="/member/list" method="post">
+				<form action="/Admin/list" method="post">
 							<div id="div_insertpopuphead" >
 								<div id="div_logoinserttitle">사용자 수정 <a id="exitlogoedit"></a></div>
 							</div>
