@@ -1,6 +1,7 @@
 package com.mysite.tayo.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,4 +16,6 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMember, Lo
 	
 	@Query("SELECT count(*) FROM ProjectMember WHERE project.id = :projectIdx")
 	Long countProjectMember(@Param("projectIdx") Long projectIdx);
+	
+	Optional<ProjectMember> findByProjectProjectIdxAndMemberMemberIdx(Long projectIdx, Long memberIdx);
 }

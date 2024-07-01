@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Tayo - 회사 공개 프로젝트</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/companyOpenProject.css}">
+	<script th:src="@{/js/companyOpenProject.js}"></script>
+</head>
+<body>
+    <div id="div_side1">
+    	<div id="div_organization_logo">
+    		<div id="div_logo_box"><img src="https://flow.team/flow-renewal/assets/images/logo/logo-flow.svg"/></div>
+    	</div>
+    	<div id="div_new_project">
+    		<div id="div_newprj_button"><img src="img/newprj_btn_dark.png"/></div>
+    	</div>
+    	<div id="div_left_menu1">
+    		<div id="div_toDashboard" th:data-href="@{dashboard}"><img src="img/hom_dark_icon.png"/>대시보드</div><br/>
+    		<div id="div_toProjectlist" th:data-href="@{projectlist}"><img src="img/myprj_dark_icon.png"/>내 프로젝트</div><br/>
+    		<div id="div_toCompanyOpenProject" th:data-href="@{companyOpenProject}" style="color:#36cfbd;"><img src="img/company_open_dark_icon.png"/>회사 공개 프로젝트</div><br/>
+    		<div><img src="img/more_dark_icon.png"/>더보기</div><br/>
+    	</div>
+    	<div id="div_left_menu2">
+    		<div id="div_collection_btn">모아보기<img src="img/left_btn_dark.png"/></div>
+    		<div id="div_recent_update_btn">최근 업데이트<img src="img/left_btn_dark.png"/></div>
+    		<div id="div_prj_folder_btn">프로젝트 폴더<img src="img/left_btn_dark.png"/></div>
+    	</div>
+    	<div id="div_left_menu3">
+    		<div><img src="img/invite_emp_dark.png"/>직원 초대</div>
+    		<div><img src="img/admin_dark.png"/>어드민</div>
+    	</div>
+    	<div id="div_left_menu4">
+    		<img src="img/guide_dark.png"/>
+    		<span>이용가이드</span>
+    	</div>
+    </div>
+    <div id="div_side2">
+	    <div id="div_header">
+	        <div class="left-container">
+	            <div id="div_consultant"><img src="img/consultant.png"/><span>오프라인 타요 설명회 →</span></div>
+	            <div id="div_pay"><img src="img/pay_button.png"/></div>
+	        </div>
+	        <div id="div_top_searchbar">
+	            <div id="div_main_searchbox">
+	                <img src="img/top_search_dark_icon.png"/>
+	                <div id="div_input_search">검색</div>
+	            </div>
+	            <div id="div_search_option">옵션</div>
+	        </div>
+	        <div id="div_top_right_menu">
+	        	<div id="div_top_hirearchy"><img src="img/hirearchy_dark.png"/></div>
+	        	<div id="div_top_chat"><img src="img/chat_dark.png"/></div>
+	        	<div id="div_top_alarm"><img src="img/alarm_dark.png"/></div>
+	        	<div id="div_profile"><img src="https://flow.team/flow-renewal/assets/images/profile-default.svg"/></div>
+	        </div>
+	    </div>
+	    <div id="div_content">
+	    	<div id="div_top_title">
+	    		<div>회사 공개 프로젝트</div>
+	    	</div>
+	    	<div id="div_search_area">
+	    		<div id="div_search_bar">
+	    			<img src="img/search_bar_icon.png"/>
+	    			<input class="project_search_input" type="text" placeholder="검색어를 입력해주세요">
+	    		</div>
+	    	</div>
+	    	<div id="div_main_area">
+	    		<div id="div_list_area">
+	    			<ul class="list_group">
+	    				<li><button type="button" class="public-project-item active">전체</button></li>
+	    				<li><button type="button" class="public-project-item">업무관련</button></li>
+	    				<li><button type="button" class="public-project-item">동호회</button></li>
+	    				<li><button type="button" class="public-project-item">정보공유</button></li>
+	    				<li><button type="button" class="public-project-item">학습</button></li>
+	    			</ul>
+	    		</div>
+	    		<div id="div_main_section2">
+	    			<div id="div_public_title_area">
+	    				<span>전체</span>
+	    				<em>0</em>
+	    			</div>
+	    		</div>
+	    		<div id="div_project_null">
+	    			<div>
+		    			<div>
+		    				<img src="https://flow.team/flow-renewal/assets/images/none_data.png?v=3580a344ca42c08f3ff0b20cf88bac92d31a7934"/>
+		    			</div>
+		    			<span>
+		    			설정된 프로젝트가 없습니다.
+		    			<br>
+		    			회사 직원 누구나 참여 가능한 프로젝트로 설정해 보세요!
+		    			</span>
+	    			</div>
+	    		</div>
+	    	</div>
+	    </div>
+    </div>
+</body>
+</html>
