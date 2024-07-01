@@ -30,10 +30,12 @@
        <div id="div_left_menu3">
           <div><img src="img/invite_emp.png"/>직원 초대</div>
           <div>
-			<a th:href="@{/Admin/list}">
+			<a th:href="@{/Admin/AdminCompanyInfo}">
 				<img src="img/admin.png"/>어드민
 			</a>
+			
 		  </div>
+		  
        </div>
        <div id="div_left_menu4">
           <img src="img/guide.png"/>
@@ -42,6 +44,7 @@
     </div>
     <div id="div_side2">
        <div id="div_header">
+		
            <div class="left-container">
                <div id="div_consultant"><img src="img/consultant.png"/><span>오프라인 타요 설명회 →</span></div>
                <div id="div_pay"><img src="img/pay_button.png"/></div>
@@ -169,6 +172,8 @@
              </div>
           </div>
        </div>
+	   <a th:href="@{/member/login}" sec:authorize="isAnonymous()" style="float:right; margin-top:-30px;">로그인</a>
+	   		  <a th:href="@{/member/logout}" sec:authorize="isAuthenticated()" style="float:right; margin-top:-30px;">로그아웃</a>
     </div>
 </body>
 </html>

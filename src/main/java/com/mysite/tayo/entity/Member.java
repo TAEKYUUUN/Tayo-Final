@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.checkerframework.common.aliasing.qual.Unique;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,6 +50,7 @@ public class Member {
 	 
 	 @ManyToOne(fetch = FetchType.LAZY)
 	 @JoinColumn(name = "company_idx")
+	 @JsonBackReference
 	 private Company company;
 	 
 	 @ManyToOne(fetch = FetchType.LAZY)

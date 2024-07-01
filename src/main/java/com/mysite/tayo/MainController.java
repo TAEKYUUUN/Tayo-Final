@@ -31,10 +31,17 @@ public class MainController {
 	}
 	
 	@GetMapping("/")
-	public String defaultAccess(Authentication authentication) {
+	public String defaultAccess(Authentication authentication, Model model) {
 		if (authentication != null && authentication.isAuthenticated() 
 			    && !(authentication.getPrincipal() instanceof String)) {
+			Member member = memberService.infoFromLogin(authentication);
+			model.addAttribute("member", member);
+			List<ProjectMember> myProject = projectService.getMyProject(member.getMemberIdx());
+			List<Member> companyMember = memberService.getListByCompanyIdx(member.getCompany().getCompanyIdx());
+			model.addAttribute("myproject", myProject);
+			model.addAttribute("companyMember", companyMember);
 			return "dashboard";
+			
 		} else {
 			return "mainpage";
 		}

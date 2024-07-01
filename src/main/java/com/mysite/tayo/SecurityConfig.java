@@ -27,8 +27,12 @@ public class SecurityConfig {
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 	    http
-	        .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-	        .requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
+	    .authorizeHttpRequests((requests) -> requests
+                .requestMatchers("/member/**").permitAll()  // 로그인 없이 접근 가능한 URL 패턴
+                .requestMatchers("/", "/mainpage").permitAll()
+                .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+                .anyRequest().authenticated()  // 그 외의 모든 URL은 로그인 필요
+            )
 	        .formLogin((formLogin) -> formLogin
 	                .loginPage("/member/login")
 	                .successHandler(new CustomAuthenticationSuccessHandler(memberRepository)) // Custom handler 등록

@@ -5,6 +5,8 @@ import java.util.Date;
 
 import org.checkerframework.common.aliasing.qual.Unique;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -34,6 +36,7 @@ public class Company {
 	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_idx")
+	@JsonManagedReference
 	private Member manager;
 	
 	
@@ -50,8 +53,8 @@ public class Company {
 	@Column(name="URL", length=100)
 	private String url;
 	
-	@Column(name="participation_method")
-	private Integer participationMethod;
+	@Column(name="participation_method", length=100)
+	private String participationMethod;
 	
 	@Column(name="security")
 	private Integer security;

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>FLOW</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/AdminInvitation.css}">
+	<script th:src="@{/js/AdminInvitation.js}"></script>
+</head>
+<body style = "overflow-y:hidden">
+	<div id="div_sidebar" class = "fl">
+		<div id = "div_header" >
+			<div id = "div_imagelogo">
+				<img src = "https://flow.team/flow-renewal/assets/images/flow-logo-w.svg" />
+			</div>
+		</div>
+		<div id = "div_side" class = "scrollbar">
+		<div id = "div_sidecontents" >
+			<h2>회사</h2>
+			<div id="div_h3box" >
+				<h3>회사 정보</h3>
+				<h3>구성원 관리</h3>
+				<h3 style ="color : #7faeff">구성원 초대</h3>
+				<h3>조직도 관리</h3>
+				<h3>포털 앱 권한 관리</h3>
+			</div>
+			<h2>프로젝트</h2>
+			<div id="div_h3box2" >
+				<h3>프로젝트 관리</h3>
+				<h3>회사 프로젝트 관리</h3>
+				<h3>공개 프로젝트 관리</h3>
+				<h3>공개 프로젝트 카테고리</h3>
+				<h3>프로젝트 템플릿 카테고리 관리</h3>
+				<h3>비활성화 프로젝트 관리</h3>
+			</div>
+			<h2>통계/리포트</h2>
+			<div id="div_h3box3" >
+				<h3>접속 통계</h3>
+				<h3>사용 통계</h3>
+			</div>
+			<h2>보안 설정</h2>
+			<div id="div_h3box" >
+				<h3>파일 보안 설정</h3>
+				<h3>로그인 보안 설정</h3>
+				<h3>화면 캡처 방지 설정</h3>
+				<h3>워터마크 설정</h3>
+				<h3>AI설정</h3>
+			</div>
+			<h2>로그</h2>
+			<div id="div_h3box3">
+				<h3>파일 다운로드 이력</h3>
+				<h3>관리자 변경 이력</h3>
+			</div>
+			<h2>결제</h2>
+			<div id="div_h3box4">
+				<h3>결제 정보</h3>
+			</div>
+			</div>
+		</div>
+		<div id = "div_helpbutton"><img src = "img/img_help.png"/></div>
+	</div>
+	<div id = "div_content" class = "fr">
+		<div id="div_titleh1" >
+			<h1>구성원 초대</h1>
+		</div>
+		<div id= "div_invitecontents" >
+			<div id="div_guide" >
+				<ul style="list-style-type: none;">
+				<li>· <span>전용 URL을 통해 초대받은 직원은 관리자가 설정한 참여 옵션에 따라서 이용이 가능합니다.<br/>(관리자 설정 -> 회사 정보 -> 전용 URL - 직원 참여 옵션)</span></li>
+				<li>· <span>이메일 초대를 통해 이메일을 수신한 직원은 직접 계정 가입 후 바로 이용 가능합니다.</span></li>
+			</ul>
+				<a>도움말</a>
+			</div>
+			<dl>
+				<dt>전용 URL</dt>
+				<dd>
+					<p style="margin-top : 0px; margin-bottom:15px;">전용 URL 주소를 전달하여 회사 직원들을 참여시킬 수 있습니다.</p>
+					<div id="div_inputbox">
+						<input type="text" th:value="'http://'+${Company.url}" disabled></input>
+						<button type="button" id="copybutton"></button>
+					</div>
+				</dd>
+				<dt style ="margin-top : 25px;">이메일 초대</dt>
+				<dd>
+					<p>직원들의 이메일 주소를 입력하여 바로 초대할 수 있습니다.</p>
+				</dd>
+			</dl>
+			<ul id="toSend" style="list-style-type: none; ">
+				<li><input type="text" placeholder="example@flow.team" maxlength="100"><img style="margin-left:20px;"></li>
+				<li><input type="text" placeholder="example@flow.team" maxlength="100"><img style="margin-left:20px;"></li>
+				<li><input type="text" placeholder="example@flow.team" maxlength="100"><img style="margin-left:20px;"></li>
+				<li><input type="text" placeholder="example@flow.team" maxlength="100"><img style="margin-left:20px;"></li>
+				<li><input type="text" placeholder="example@flow.team" maxlength="100"><img style="margin-left:20px;"></li>
+			</ul>
+			<button id="sendbutton" class="button1">전송</button>
+		</div>
+		
+		
+			
+	</div>
+	<div style = "clear:both;"></div>
+	
+</body>
+</html>

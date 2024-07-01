@@ -62,7 +62,7 @@
 	</div>
 	<div id = "div_content" class = "fr">
 		<div id = "div_titleh1">
-			<button id ="div_backsign" style = "display:block;"></button>
+			<button id ="div_backsign" style = "display:block;" onclick="history.back()"></button>
 			<h1>구성원 일괄등록</h1>
 		</div>
 		<div id = "div_guide">
@@ -82,12 +82,13 @@
 			</div>
 			<p>※ 파일등록 시, 해당 엑셀 표로 아래 표가 초기화됩니다.</p>
 		</div>
+		<form th:action="@{/Admin/AddAll}" method="post" id="memberForm" novalidate>
 		<div id = "div_additional_person">
 			<div id="div_totalamount" >
 				<div id="div_totalleft" class = "fl">
-					<span><strong>전체 0건수</strong></span>
-					<span>(0개 등록 가능, </span>
-					<span style="color:red;">0건수 </span>
+					<span><strong id="total_amount">전체 0건수</strong></span>
+					<span id="available_amount">(0개 등록 가능, </span>
+					<span id="unavailable_amount" style="color:red;">0건수 </span>
 					<span> 등록 불가능 )</span>
 					<label>
 						<input type="checkbox">
@@ -95,12 +96,12 @@
 					</label>
 				</div>
 				<div id="div_totalright" class = "fr">
-					<button id = "addrow" class="button2">행 추가</button>
-					<button id = "deleterow" class="button2">삭제</button>
-					<button class="button1" id="addNewMember">등록</button>
+					<button type = "button" id = "addrow" class="button2">행 추가</button>
+					<button type = "button" id = "deleterow" class="button2">삭제</button>
+					<button type = "button" class="button1" id="addNewMember">등록</button>
 				</div>
 			</div>
-			<table>
+			<table id="memberTable">
 			<thead>
 				<tr>
 					<th scope= "col" style="width:30px;">
@@ -133,6 +134,7 @@
 			</tbody>
 			</table>
 		</div>
+		
 		<div id= "div_allowpopup" style="display:none;">
 			<div id="div_allowtitle">등록을 진행하시겠습니까?<a id="exitallow"></a></div>
 			<div id="div_allowbody">
@@ -143,11 +145,12 @@
   					초기 비밀번호는 team123~! 입니다.</div>
   				</div>
 				<div id="div_allowbutton" >
-					<button id="allowcancel" class="button2" style="width:153px; height:30px; margin-right:10px;margin-left:0px;">취소</button>
+					<button type = "button" id="allowcancel" class="button2" style="width:153px; height:30px; margin-right:10px;margin-left:0px;">취소</button>
 					<button id="allowsave" class="button1" style="width:153px; height:30px;">확인</button>
 				</div>
 			</div>
 		</div>
+		</form>
 	</div>
 	<div id="div_backgroundfull" style="display:none;">
 	</div>

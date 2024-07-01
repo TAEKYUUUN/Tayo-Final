@@ -63,8 +63,7 @@
 	<div id = "div_content" class = "fr scrollbar">
 		<div id = "div_titleh1">
 			<h1>구성원 관리</h1> 
-			<a th:href="@{/member/login}" sec:authorize="isAnonymous()" style="float:right; margin-top:-30px;">로그인</a>
-			<a th:href="@{/member/logout}" sec:authorize="isAuthenticated()" style="float:right; margin-top:-30px;">로그아웃</a>
+
 		</div>
 		<div id = "div_guide">
 			<strong>가이드</strong>
@@ -111,7 +110,7 @@
 												<button id="addbutton1">구성원 개별 등록</button>
 											</li>
 											<li>
-												<a th:href="@{/Admin/AddAll}">
+												<a th:href="@{/Admin/memberAddAll}">
 													<button id="addbutton1">구성원 일괄 등록</button>
 												</a>
 											</li>
@@ -124,74 +123,73 @@
 		</div>
 		<div id = "div_blank"></div>
 		<div id = "div_table" >
-		<table>
-			<thead>
-				<tr>
-					<th scope= "col" style="width:30px;">
-						<div><input id="checkAllUser" type="checkbox"></div>
-					</th>
-					<th scope="col" style="cursor:pointer;">
-						<div><span>회사</span><a style ="-webkit-transform: rotateX(180deg)"></a></div>
-					</th>
-					<th scope="col" style="cursor:pointer;">
-						<div><span>이름</span><a></a></div>
-					</th>
-					<th scope="col" style="cursor:pointer;">
-						<div><span>부서</span><a></a></div>
-					</th>
-					<th scope="col" style="cursor:pointer;">
-						<div><span>직책</span><a></a></div>
-					</th>
-					<th scope="col" style="cursor:pointer;">
-						<div><span>이메일</span><a></a></div>
-					</th>
-					<th scope="col" style="cursor:pointer;">
-						<div><span>휴대폰 번호</span><a></a></div>
-					</th>
-					<th scope="col" style="cursor:pointer;">
-						<div><span>가입일</span><a></a></div>
-					</th>
-					<th scope="col" style="cursor:pointer;">
-						<div><span>웹 접속</span><a></a></div>
-					</th>
-					<th scope="col" style="cursor:pointer;">
-						<div><span>모바일 접속</span><a></a></div>
-					</th>
-					<th scope="col" style="cursor:pointer;">
-						<div><span>데스크탑앱 접속</span><a></a></div>
-					</th>
-					<th scope="col">
-						<div><span>접속 장치</span><a></a></div>
-					</th>
-					<th scope="col">
-						<div><span>상태</span><a></a></div>
-					</th>
-					<th scope="col" style="cursor:pointer;">
-						<div><span>관리자</span><a></a></div>
-					</th>				
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="member : ${memberList}">
-				    <td><input type="checkbox" style="margin:0; cursor:pointer;"></td>
-				    <td th:text="${#strings.defaultString(member.company?.companyName, '')}"></td>
-				    <td th:text="${member.name}" class="trName"></td>
-				    <td th:text="${#strings.defaultString(member.organization?.organizationName, '')}" class="trOrganizationName"></td>
-				    <td th:text="${#strings.defaultString(member.rankName, '')}" class="trRankName"></td>
-				    <td th:text="${member.email}" class="trId"></td>
-				    <td th:text="${#strings.defaultString(member.phone, '')}" class="trPhone"></td>
-				    <td th:text="${member.registDate}"></td>
-				    <td th:text="${member.password}" class="trPw" style="display:none"></td>
-				    <td></td>
-				    <td></td>
-				    <td></td>
-				    <td></td>
-				    <td></td>
-				    <td></td>
-				</tr>
-				
-			</tbody>
-		</table>
+			<table id="sortableTable" data-sort-column="2" data-sort-order="asc">
+			       <thead>
+					<tr>
+					               <th scope="col" style="width:30px;">
+					                   <div><input id="checkAllUser" type="checkbox"></div>
+					               </th>
+					               <th scope="col" onclick="sortTable(1)">
+					                   <div><span>회사</span><a></a></div>
+					               </th>
+					               <th scope="col" onclick="sortTable(2)">
+					                   <div><span>이름</span><a></a></div>
+					               </th>
+					               <th scope="col" onclick="sortTable(3)">
+					                   <div><span>부서</span><a></a></div>
+					               </th>
+					               <th scope="col" onclick="sortTable(4)">
+					                   <div><span>직책</span><a></a></div>
+					               </th>
+					               <th scope="col" onclick="sortTable(5)">
+					                   <div><span>이메일</span><a></a></div>
+					               </th>
+					               <th scope="col" onclick="sortTable(6)">
+					                   <div><span>휴대폰 번호</span><a></a></div>
+					               </th>
+					               <th scope="col" onclick="sortTable(7)">
+					                   <div><span>가입일</span><a></a></div>
+					               </th>
+					               <th scope="col" onclick="sortTable(8)">
+					                   <div><span>웹 접속</span><a></a></div>
+					               </th>
+					               <th scope="col" onclick="sortTable(9)">
+					                   <div><span>모바일 접속</span><a></a></div>
+					               </th>
+					               <th scope="col" onclick="sortTable(10)">
+					                   <div><span>데스크탑앱 접속</span><a></a></div>
+					               </th>
+					               <th scope="col" onclick="sortTable(11)">
+					                   <div><span>접속 장치</span><a></a></div>
+					               </th>
+					               <th scope="col" onclick="sortTable(12)">
+					                   <div><span>상태</span><a></a></div>
+					               </th>
+					               <th scope="col" onclick="sortTable(13)">
+					                   <div><span>관리자</span><a></a></div>
+					               </th>              
+					           </tr>
+			       </thead>
+			       <tbody>
+			           <tr th:each="member : ${memberList}">
+			               <td><input type="checkbox" style="margin:0; cursor:pointer;"></td>
+			               <td th:text="${#strings.defaultString(member.company?.companyName, '')}"></td>
+			               <td th:text="${member.name}" class="trName"></td>
+			               <td th:text="${#strings.defaultString(member.organization?.organizationName, '')}" class="trOrganizationName"></td>
+			               <td th:text="${#strings.defaultString(member.rankName, '')}" class="trRankName"></td>
+			               <td th:text="${member.email}" class="trId"></td>
+			               <td th:text="${#strings.defaultString(member.phone, '')}" class="trPhone"></td>
+			               <td th:text="${member.registDate}"></td>
+			               <td th:text="${member.password}" class="trPw" style="display:none"></td>
+			               <td></td>
+			               <td></td>
+			               <td></td>
+			               <td></td>
+			               <td></td>
+			               <td></td>
+			           </tr>
+			       </tbody>
+			   </table>
 		<table style="display:none;">
 			<thead>
 				<tr>
