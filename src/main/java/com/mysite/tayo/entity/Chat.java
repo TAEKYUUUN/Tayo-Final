@@ -36,5 +36,5 @@ public class Chat {
 	
 	@OneToMany(mappedBy = "chat", cascade = CascadeType.REMOVE)
 	private List<ChatContents> chatContentsList;
-	
+
 }

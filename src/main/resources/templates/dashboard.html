@@ -4,21 +4,22 @@
 			<meta charset="UTF-8" />
 			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-			<title>Tayo</title>
+			<title>Tayo - 대시보드</title>
 			<link rel="stylesheet" type="text/css" th:href="@{/css/dashboard.css}">
+			<script th:src="@{/js/dashboard.js}"></script>
 		</head>
 <body>
     <div id="div_side1">
        <div id="div_organization_logo">
           <div id="div_logo_box"><img src="https://flow.team/flow-renewal/assets/images/logo/logo-flow.svg"/></div>
        </div>
-       <div id="div_new_project">
+       <div id="div_new_project" th:data-href="@{createNewProject}">
           <div id="div_newprj_button"><img src="img/newprj_button.png"/></div>
        </div>
        <div id="div_left_menu1">
-          <div><img src="img/home_icon.png"/>대시보드</div><br/>
-          <div><img src="img/myprj_icon.png"/>내 프로젝트</div><br/>
-          <div><img src="img/company_open_icon.png"/>회사 공개 프로젝트</div><br/>
+          <div id="div_toDashboard" th:data-href="@{dashboard}"><img src="img/home_icon.png"/>대시보드</div><br/>
+          <div id="div_toProjectlist" th:data-href="@{projectlist}"><img src="img/myprj_icon.png"/>내 프로젝트</div><br/>
+          <div id="div_toCompanyOpenProject" th:data-href="@{companyOpenProject}"><img src="img/company_open_icon.png"/>회사 공개 프로젝트</div><br/>
           <div><img src="img/more_icon.png"/>더보기</div><br/>
        </div>
        <div id="div_left_menu2">
@@ -59,22 +60,29 @@
               <div id="div_top_hirearchy"><img src="img/hirearchy.png"/></div>
               <div id="div_top_chat"><img src="img/chat.png"/></div>
               <div id="div_top_alarm"><img src="img/alarm.png"/></div>
-              <div id="div_profile"><img src="https://flow.team/flow-renewal/assets/images/profile-default.svg"/></div>
+              <div id="div_top_profile">
+				<img src="https://flow.team/flow-renewal/assets/images/profile-default.svg"/>
+			</div>
            </div>
        </div>
        <div id="div_content">
           <div id="div_introwrap">
              <div id="div_profile_name">
-                <div id="div_profile">우태균님 즐거운 오후입니다.😊</div>
-                <div id="div_status_input"><div>·</div>프로필 상태 메세지를 입력해보세요.</div>
+                <div id="div_profile">
+					<span th:text="${member.name}"></span>
+				</div>
+              	<div id="div_status_input" th:text="'·&nbsp; ' + ${member.statusMessage != null ? member.statusMessage : '프로필 상태 메세지를 입력해보세요.'}"><div>·</div></div>
              </div>
              <div id="div_right_box">
                 <div id="div_right_time">
-                   <span>2024년 5월 30일 목요일</span>
+                   <span th:text="${#calendars.format(#calendars.createNow(), 'yyyy년 MM월 dd일')}"></span>
                 </div>
                 <div id="div_right_content">
-                   <img src="img/setting_btn.png"/>
-                   <div id="div_setwidget_btn"><img src="img/set_widget.png"/>위젯 설정</div>
+                   <img src="https://flow.team/flow-renewal/assets/images/dashboard/icon-dashboard-widget-home-light.svg?v=335328a99779d2465e54b6584b7f905cbbca119c"/>
+                   <div id="div_setwidget_btn">
+						<img src="https://flow.team/flow-renewal/assets/images/dashboard/icon-dashboard-widget-set-light.svg?v=88a6e5dbe751cde146937ff9e3264af3b6240444">
+						위젯 설정
+					</div>
                 </div>
              </div>
           </div>
@@ -83,40 +91,40 @@
                 <h3 class="widget_large_h3">
                    <span class="widget_large_title">내 프로젝트</span>
                    <span class="widget_large_category">최근 프로젝트</span>
+				   <div class="widget_menu_icon">
+				   </div>
                 </h3>
                 <div class="div_large_widget">
-                   <div id="new_prj_default"><span id="prj_icon_box">+</span>새 프로젝트</div>
-                   <div class="div_prj_item"><span class="prj_icon_box_blue"></span>[타요] 이용가이드</div>
-                   <div class="div_prj_item"><span class="prj_icon_box_yellow"></span>[타요] YG Academy</div>
-                   <div class="div_prj_item"><span class="prj_icon_box_pink"></span>for조 Project</div>
-                   <div class="div_prj_item"><span class="prj_icon_box_blue"></span>UAE 협약 프로젝트</div>
+                   <div id="new_prj_default" th:data-href="@{createNewProject}">
+						<span class="prj_icon_box">+</span>
+						새 프로젝트
+					</div>
+				   <div class="div_prj_item" th:each="projectMember : ${myproject}">
+				           <span class="prj_icon_box1" th:style="'background-color:' + ${projectMember.project.color}"></span>
+				           <span th:text="${projectMember.project.projectName}"></span>
+				   </div>
                 </div>
              </div>
              <div id="div_mymember">
-                <h3 class="widget_small_h3">
-                   <span class="widget_small_title">구성원</span>
-                   <span class="widget_small_category">최근 협업 순</span>
-                </h3>
-                <div class="div_small_widget">
+				<div>
+	                <h3 class="widget_small_h3">
+	                   <span class="widget_small_title">구성원</span>
+	                   <span class="widget_small_category">최근 협업 순</span>
+					   <div class="widget_menu_icon">
+					   </div>
+	                </h3>
+				</div>
+                <div id="div_memberlist" class="div_small_widget scrollbar">
                    <div id="member_invite">
                       <span id="new_member_box">+</span>직원 초대
                    </div>
-                   <div class="member_item">
+                   <div class="member_item" th:each="companyMember : ${companyMember}">
                       <span class="member_profile">
-                         <img src="https://flow.team/flow-renewal/assets/images/profile-default.png"/>
+                         <img th:src="${companyMember.profileImage != null ? companyMember.profileImage : 'https://flow.team/flow-renewal/assets/images/profile-default.png'}" alt="Profile Image"/>
                       </span>
                       <div class="member_info">
-                         <div class="member_name">우태균</div>
-                         <div class="member_company_org">YG Academy | 과장</div>
-                      </div>
-                   </div>
-                   <div class="member_item">
-                      <span class="member_profile">
-                         <img src="https://flow.team/flow-renewal/assets/images/profile-default.png"/>
-                      </span>
-                      <div class="member_info">
-                         <div class="member_name">김민성</div>
-                         <div class="member_company_org">YG Academy | 대리</div>
+                         <div class="member_name" th:text="${companyMember.name}"></div>
+                         <div class="member_company_org" th:text="${companyMember.company.companyName} + ' &nbsp;|&nbsp; ' + ${companyMember.rankName}"></div>
                       </div>
                    </div>
                 </div>
@@ -125,6 +133,8 @@
                 <h3 class="widget_large_h3">
                    <span class="widget_large_title">내가 담당중인 업무</span>
                    <span class="widget_large_category">이번 주</span>
+				   <div class="widget_menu_icon">
+				   </div>
                 </h3>
                 <div class="div_large_widget">
                    <div id="tab_title">
@@ -137,6 +147,8 @@
              <div id="div_memo">
                 <h3 class="widget_small_h3">
                    <span class="widget_small_title">메모장</span>
+				   <div class="widget_menu_icon">
+				   </div>
                 </h3>
                 <div class="div_small_widget">
                    <div class="div_memo_widget">내용을 입력해주세요.</div>

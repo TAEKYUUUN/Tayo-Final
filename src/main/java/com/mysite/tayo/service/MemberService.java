@@ -72,7 +72,7 @@ public class MemberService {
     	member.setIsConfirmed(1);
     	this.memberRepository.save(member);
     }
-    
+     
     
     public void update(String name, String email, String pw, String org, String rank,  String phone) {
     	Optional<Member> member = this.memberRepository.findByEmail(email);
@@ -89,7 +89,6 @@ public class MemberService {
     	}else {
     		throw new DataNotFoundException("에러");
     	}
-    	
     }
     
     public Optional<Member> existTest(String email){
@@ -116,4 +115,5 @@ public class MemberService {
         Optional<Member> optionalMember = findMemberByEmail(email);
         return optionalMember.get();
     }
+    
 }

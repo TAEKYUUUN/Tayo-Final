@@ -2,8 +2,9 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Tayo 협업페이지</title>
-	<link rel="stylesheet" type="text/css" th:href="@{/css/MyProject.css}">
+    <title>Tayo - 회사 공개 프로젝트</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/companyOpenProject.css}">
+	<script th:src="@{/js/companyOpenProject.js}"></script>
 </head>
 <body>
     <div id="div_side1">
@@ -14,9 +15,9 @@
     		<div id="div_newprj_button"><img src="img/newprj_btn_dark.png"/></div>
     	</div>
     	<div id="div_left_menu1">
-    		<div><img src="img/hom_dark_icon.png"/>대시보드</div><br/>
-    		<div><img src="img/myprj_dark_icon.png"/>내 프로젝트</div><br/>
-    		<div><img src="img/company_open_dark_icon.png"/>회사 공개 프로젝트</div><br/>
+    		<div id="div_toDashboard" th:data-href="@{dashboard}"><img src="img/hom_dark_icon.png"/>대시보드</div><br/>
+    		<div id="div_toProjectlist" th:data-href="@{projectlist}"><img src="img/myprj_dark_icon.png"/>내 프로젝트</div><br/>
+    		<div id="div_toCompanyOpenProject" th:data-href="@{companyOpenProject}" style="color:#36cfbd;"><img src="img/company_open_dark_icon.png"/>회사 공개 프로젝트</div><br/>
     		<div><img src="img/more_dark_icon.png"/>더보기</div><br/>
     	</div>
     	<div id="div_left_menu2">
@@ -54,45 +55,41 @@
 	        </div>
 	    </div>
 	    <div id="div_content">
-	    	<div id="div_topsetting">
-	    		<div id="div_top_name">내 프로젝트</div>
-	    		<div id="div_home_menu">
-	    			<div id="div_left_menu">
-	    				<div>
-	    					<img src="img/order_icon.png"/>
-	    					<div>정렬</div>
-	    				</div>
-	    				<div>
-	    					<img src="img/setting_icon.png"/>
-	    					<div>설정</div>
-	    				</div>
-	    			</div>
-	    			<div id="div_right_menu">
-	    				<div>
-	    					<img src="img/order_type1_icon.png"/>
-	    				</div>
-	    				<div>
-	    					<img src="img/order_type2_icon.png"/>
-	    				</div>
-	    			</div>
+	    	<div id="div_top_title">
+	    		<div>회사 공개 프로젝트</div>
+	    	</div>
+	    	<div id="div_search_area">
+	    		<div id="div_search_bar">
+	    			<img src="img/search_bar_icon.png"/>
+	    			<input class="project_search_input" type="text" placeholder="검색어를 입력해주세요">
 	    		</div>
 	    	</div>
-	    	<div id="div_maincontent">
-	    		<div id="div_prj_home">
-	    			<div id="div_prj_board">
-	    				<div id="prj_board_title">참여중</div>
-	    				<div class="project_item" th:each="project, index : ${projectList}"  th:style="'border-left-color:' + ${project.project.color} + ';'">
-	    					<div class="project_content">
-	    						<div class="project_hotlist">
-	    							<img src="https://flow.team/flow-renewal/assets/images/icons/icon_star.png?v=c253f2c3b6c7b36ebe1fbb7ba4c300802671771e"/>
-	    						</div>
-	    						<div class="project_title" th:text="${project.project.projectName}"></div>
-	    						<div class="project_member_cnt">
-	    							<img src="img/prj_member_icon.png"/>
-	    							<span class="mebmber_cnt" th:text="${countMember[index.index]}"></span>
-	    						</div>
-	    					</div>
-	    				</div>
+	    	<div id="div_main_area">
+	    		<div id="div_list_area">
+	    			<ul class="list_group">
+	    				<li><button type="button" class="public-project-item active">전체</button></li>
+	    				<li><button type="button" class="public-project-item">업무관련</button></li>
+	    				<li><button type="button" class="public-project-item">동호회</button></li>
+	    				<li><button type="button" class="public-project-item">정보공유</button></li>
+	    				<li><button type="button" class="public-project-item">학습</button></li>
+	    			</ul>
+	    		</div>
+	    		<div id="div_main_section2">
+	    			<div id="div_public_title_area">
+	    				<span>전체</span>
+	    				<em>0</em>
+	    			</div>
+	    		</div>
+	    		<div id="div_project_null">
+	    			<div>
+		    			<div>
+		    				<img src="https://flow.team/flow-renewal/assets/images/none_data.png?v=3580a344ca42c08f3ff0b20cf88bac92d31a7934"/>
+		    			</div>
+		    			<span>
+		    			설정된 프로젝트가 없습니다.
+		    			<br>
+		    			회사 직원 누구나 참여 가능한 프로젝트로 설정해 보세요!
+		    			</span>
 	    			</div>
 	    		</div>
 	    	</div>

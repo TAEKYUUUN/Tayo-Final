@@ -36,6 +36,7 @@ dependencies {
    	runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
    	implementation 'org.hibernate:hibernate-core:6.5.2.Final' // Hibernate 의존성
    	implementation 'com.oracle.database.jdbc:ojdbc10:19.8.0.0' // Oracle JDBC 드라이버 의존성
+
 }
 
 tasks.named('test') {
