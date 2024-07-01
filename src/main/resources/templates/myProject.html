@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Tayo 협업페이지</title>
-	<link rel="stylesheet" type="text/css" th:href="@{/css/MyProject.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/css/myProject.css}">
+	<script th:src="@{/js/myProject.js}"></script>
 </head>
 <body>
     <div id="div_side1">
@@ -14,9 +15,9 @@
     		<div id="div_newprj_button"><img src="img/newprj_btn_dark.png"/></div>
     	</div>
     	<div id="div_left_menu1">
-    		<div><img src="img/hom_dark_icon.png"/>대시보드</div><br/>
-    		<div><img src="img/myprj_dark_icon.png"/>내 프로젝트</div><br/>
-    		<div><img src="img/company_open_dark_icon.png"/>회사 공개 프로젝트</div><br/>
+    		<div id="div_toDashboard" th:data-href="@{dashboard}"><img src="img/hom_dark_icon.png"/>대시보드</div><br/>
+    		<div id="div_toProjectlist" th:data-href="@{projectlist}" style="color:#36cfbd;"><img src="img/myprj_dark_icon.png"/>내 프로젝트</div><br/>
+    		<div id="div_toCompanyOpenProject" th:data-href="@{companyOpenProject}"><img src="img/company_open_dark_icon.png"/>회사 공개 프로젝트</div><br/>
     		<div><img src="img/more_dark_icon.png"/>더보기</div><br/>
     	</div>
     	<div id="div_left_menu2">
@@ -83,9 +84,20 @@
 	    				<div id="prj_board_title">참여중</div>
 	    				<div class="project_item" th:each="project, index : ${projectList}"  th:style="'border-left-color:' + ${project.project.color} + ';'">
 	    					<div class="project_content">
-	    						<div class="project_hotlist">
-	    							<img src="https://flow.team/flow-renewal/assets/images/icons/icon_star.png?v=c253f2c3b6c7b36ebe1fbb7ba4c300802671771e"/>
-	    						</div>
+								<form th:action="@{/projectlist}" method="post">
+									<input type="hidden" th:value="${project.hotlist == null ? '' : project.hotlist}" name="isHotlist">
+									<input type="hidden" th:value="${project.project.projectIdx}" name="projectIdx">
+									<div class="project_hotlist"  th:if="${project.hotlist==1}">
+										<button class="star_btn">
+											<img src="https://flow.team/flow-renewal/assets/images/icons/icon_star_on.png?v=0b1344b90c03f4a1cec8afc4927837b54841744f" class="star_img" />
+										</button>
+									</div>
+									<div class="project_hotlist"  th:if="${project.hotlist==null}">
+										<button class="star_btn">
+											<img src="https://flow.team/flow-renewal/assets/images/icons/icon_star.png?v=c253f2c3b6c7b36ebe1fbb7ba4c300802671771e" class="star_img" />
+										</button>
+									</div>
+								</form>
 	    						<div class="project_title" th:text="${project.project.projectName}"></div>
 	    						<div class="project_member_cnt">
 	    							<img src="img/prj_member_icon.png"/>
@@ -95,6 +107,7 @@
 	    				</div>
 	    			</div>
 	    		</div>
+				<div id="div_added_widget">완료되었습니다.</div>
 	    	</div>
 	    </div>
     </div>
