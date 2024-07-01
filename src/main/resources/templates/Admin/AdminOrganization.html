@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>FLOW</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/AdminOrganization.css}">
+	<script th:src="@{/js/AdminOrganization.js}"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body style = "overflow-y:hidden">
+	<div id="div_sidebar" class = "fl">
+		<div id = "div_header" >
+			<div id = "div_imagelogo">
+				<img src = "https://flow.team/flow-renewal/assets/images/flow-logo-w.svg" />
+			</div>
+		</div>
+		<div id = "div_side" class = "scrollbar">
+		<div id = "div_sidecontents" >
+			<h2>회사</h2>
+			<div id="div_h3box" >
+				<h3>회사 정보</h3>
+				<h3>구성원 관리</h3>
+				<h3>구성원 초대</h3>
+				<h3 style ="color : #7faeff">조직도 관리</h3>
+				<h3>포털 앱 권한 관리</h3>
+			</div>
+			<h2>프로젝트</h2>
+			<div id="div_h3box2" >
+				<h3>프로젝트 관리</h3>
+				<h3>회사 프로젝트 관리</h3>
+				<h3>공개 프로젝트 관리</h3>
+				<h3>공개 프로젝트 카테고리</h3>
+				<h3>프로젝트 템플릿 카테고리 관리</h3>
+				<h3>비활성화 프로젝트 관리</h3>
+			</div>
+			<h2>통계/리포트</h2>
+			<div id="div_h3box3" >
+				<h3>접속 통계</h3>
+				<h3>사용 통계</h3>
+			</div>
+			<h2>보안 설정</h2>
+			<div id="div_h3box" >
+				<h3>파일 보안 설정</h3>
+				<h3>로그인 보안 설정</h3>
+				<h3>화면 캡처 방지 설정</h3>
+				<h3>워터마크 설정</h3>
+				<h3>AI설정</h3>
+			</div>
+			<h2>로그</h2>
+			<div id="div_h3box3">
+				<h3>파일 다운로드 이력</h3>
+				<h3>관리자 변경 이력</h3>
+			</div>
+			<h2>결제</h2>
+			<div id="div_h3box4">
+				<h3>결제 정보</h3>
+			</div>
+			</div>
+		</div>
+		<div id = "div_helpbutton"><img src = "img/img_help.png"/></div>
+	</div>
+	<div id = "div_content" class = "fr">
+		<div id="div_titleh1" >
+			<h1>조직도 관리</h1>
+		</div>
+		<div id= "div_invitecontents" >
+			<div id="div_guide" >
+				<strong>가이드</strong>
+				<ul style="list-style-type: none;">
+				<li>· <span>조직도 관리 기능 사용여부를 설정할 수 있습니다.</span></li>
+				<li>· <span>부서 정보는 1개씩 추가하거나 엑셀을 통한 일괄 등록도 가능합니다.</span></li>
+				<li>· <span>부서 정보는 최대 8 Depth까지 구성할 수 있습니다.</span></li>
+				</ul>
+				<a>도움말</a>
+			</div>
+		
+		</div>
+		<div id = "div_usingOrg">
+			<span>조직도 기능이 </span>
+			<em style="color:#307cfe; font-style:normal;">사용</em>
+			<span>상태로 설정되어 있습니다.</span>
+			<div>
+				<label class="switch">
+				  <input type="checkbox" checked>
+				  <span class="slider round"></span>
+				</label>
+			</div>
+		</div>
+		<div id = "div_Organization" >
+			<div id = "div_searching">
+				<div id ="div_searchleft" class = "fl">
+					<input type = "text" placeholder="검색어를 입력해주세요">
+					<button class="button2" style="width:67.77px;">검색</button>
+				</div>
+				<div id="div_searchright" class= "fr">
+					<a class="button2"><span></span>엑셀 다운로드</a>
+					<button id="button1" style="width:105;">부서 일괄 등록</button>
+				</div>
+			</div>
+			<div id = "div_organizationlist">
+			<div id = "div_top" >
+				<strong>부서명</strong>
+			</div>
+			<div id = "div_middle" style="overflow-y:auto; overflow-x:hidden ;" class = "scrollbar">
+				<div id="div_orgname" >
+					<strong>YG ACADEMY</strong>
+				</div>
+				<div id="div_orgcontents">
+					<span th:if="${organizationList.size()==0}">부서 등록이 되어 있지 않습니다.</span>
+					<ul style="margin-top:0;" id="organizationAllList">
+						<li th:id="'organization'+${organization.organizationIdx}" class="organizationList" th:each="organization : ${organizationList}" th:if="${organization.upperOrganization == null}">
+								<div id="organizationLists">
+									<p th:text="${organization.organizationName}"></p>
+									<p id="organizationIdx" style="display:none;" th:text="${organization.organizationIdx}"></p>
+								</div>
+								<ul th:if="${organization.lowerOrganization != null}" style="padding-left : 20px;">
+									<li th:each="lowOrganization : ${organization.lowerOrganization}" th:id="'organization'+${lowOrganization.organizationIdx}">
+										<div th:insert="~{/fragments/organization :: organizationFragment (organization = *{lowOrganization})}"></div>
+									</li>
+								</ul>
+						</li>
+					</ul>
+					
+				</div>
+			</div>
+			<div id = "div_bottom">
+				<button id = "addOrganization" class="button2" style="width:65px;">추가</button>
+				<button class="button2" style="width:65px;margin-left : 6px;">수정</button>
+				<button class="button2" style="width:65px;margin-left : 6px;">삭제</button>
+				<button class="button2" style="width:78px; margin-left:1270px;">초기화</button>
+			</div>
+			
+			</div>
+		</div>
+	</div>
+	<div style = "clear:both;"></div>
+	
+</body>
+</html>

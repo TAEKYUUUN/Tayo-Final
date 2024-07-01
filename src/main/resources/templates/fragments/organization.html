@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="organizationFragment (organization)">
+<body>
+		<div th:if="${organization.upperOrganization != null }">
+			<div id="organizationLists">
+				<p th:text="${organization.organizationName}"></p>
+				<p id="organizationIdx" style="display:none;" th:text="${organization.organizationIdx}"></p>
+			</div>
+			<ul th:if="${organization.lowerOrganization != null}" style="padding-left : 20px;" >
+				<li th:each="lowOrganization : ${organization.lowerOrganization}" th:id="'organization'+${lowOrganization.organizationIdx}">
+					<div th:insert="~{this :: organizationFragment (organization = *{lowOrganization})}"></div>
+				</li>
+			</ul>
+		</div>
+</body>
+</html>
+
+

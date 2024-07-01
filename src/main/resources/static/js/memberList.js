@@ -108,3 +108,49 @@ const popupappear = function(){
 				})
 			})
 		})
+
+		document.addEventListener("DOMContentLoaded", function() {
+		    sortTable(2); // 기본 정렬 컬럼 인덱스 설정 (2번째 컬럼: 이름)
+		    sortTable(2); // 기본 정렬 컬럼 인덱스 설정 (2번째 컬럼: 이름)
+		});
+
+		function sortTable(columnIndex) {
+		    let table = document.getElementById("sortableTable");
+		    let rows = Array.from(table.rows).slice(1); // header row 제외
+		    let currentSortOrder = table.getAttribute("data-sort-order");
+		    let sortOrder = (table.getAttribute("data-sort-column") == columnIndex && currentSortOrder === "asc") ? "desc" : "asc";
+
+		    rows.sort((rowA, rowB) => {
+		        let cellA = rowA.cells[columnIndex].innerText.toLowerCase();
+		        let cellB = rowB.cells[columnIndex].innerText.toLowerCase();
+
+		        if (cellA < cellB) return sortOrder === "asc" ? -1 : 1;
+		        if (cellA > cellB) return sortOrder === "asc" ? 1 : -1;
+		        return 0;
+		    });
+
+		    table.setAttribute("data-sort-order", sortOrder);
+		    table.setAttribute("data-sort-column", columnIndex);
+
+		    rows.forEach(row => table.tBodies[0].appendChild(row));
+
+		    updateSortedColumnIndicator(columnIndex, sortOrder);
+		}
+
+		function updateSortedColumnIndicator(columnIndex, sortOrder) {
+		    let thElements = document.querySelectorAll("#sortableTable th");
+		    thElements.forEach((th, index) => {
+		        let aTag = th.querySelector("a");
+		        if (aTag) {
+		            if (index === columnIndex) {
+		                th.classList.add("sorted");
+		                th.classList.remove("asc", "desc");
+		                th.classList.add(sortOrder);
+		                aTag.style.display = "inline-block";
+		            } else {
+		                th.classList.remove("sorted", "asc", "desc");
+		                aTag.style.display = "none";
+		            }
+		        }
+		    });
+		}

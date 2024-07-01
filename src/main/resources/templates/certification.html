@@ -6,13 +6,14 @@
 		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 		<title>Tayo</title>
 		<link rel="stylesheet" type="text/css" th:href="@{/css/certification.css}">
+		<script th:src="@{/js/certification.js}"></script>
 	</head>
 <body>
     <div class="container">
         <h2>이메일 인증</h2>
         <p>이메일로 전송된 6자리 코드를 입력하세요.</p>
         <div class="input-container">
-			<form th:action="@{/member/certification}" method="post">
+			<form th:action="@{/member/certification}" method="post" id="otp-form">
 	            <input type="text" maxlength="1" name="digit1">
 	            <input type="text" maxlength="1" name="digit2">
 	            <input type="text" maxlength="1" name="digit3">

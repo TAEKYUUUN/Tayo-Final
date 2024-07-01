@@ -1,8 +1,12 @@
+
 document.addEventListener('DOMContentLoaded', () => {
 		    const modbuttons = document.querySelectorAll('.modbutton');
 		    const savebuttons = document.querySelectorAll('.savebutton');
 		    const cancelbuttons = document.querySelectorAll('.cancelbutton');
+			const methodSave = document.querySelector('#승인');
+			
 		    let input1value;
+
 		    const checked = document.querySelectorAll('input[name="승인"]');
 			const acceptedURL = document.querySelector('#div_acceptURL');
 			
@@ -14,6 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
 			const allowcancel = document.querySelector('#allowcancel');
 			const allowsave = document.querySelector('#allowsave');
 			const exitallow = document.querySelector('#exitallow');
+			
+			methodSave.addEventListener('click', (event) =>{
+			           document.querySelector('#input3').value = '';
+			        })
 			
 			logoinsert.addEventListener('click',(event)=>{
 				document.querySelector('#div_backgroundfull').style.display="block";
@@ -92,3 +100,26 @@ document.addEventListener('DOMContentLoaded', () => {
 		        });
 		    });
 		});
+		function updateCompanyInfo(){
+		    var rawUrl = $("#input2").val();
+		    
+		    var companyData = {
+		        companyIdx: $("#companyIdx").val(), 
+		        companyName: $("#input1").val(),
+		        participationMethod: $("#input3").val(),
+		        url: rawUrl.replace(/^https?:\/\//, '')
+		    };
+		    
+		    $.ajax({
+		        url:"/Admin/AdminCompanyInfo",
+		        type:'POST',
+		        contentType:'application/json',
+		        data:JSON.stringify(companyData),
+		        success:function(response){
+		        },
+		        error: function(error){
+		            alert(error.responseText);
+					console.log(error.responseText);
+		        }
+		    });
+		}
