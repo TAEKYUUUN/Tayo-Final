@@ -108,24 +108,34 @@ public class AdminController {
 	public @ResponseBody List<OrganizationDTO> organizationAdd(@RequestBody OrganizationDTO organizationDTO, Authentication authentication) {
 		Member member = memberService.infoFromLogin(authentication);
 		Company company = member.getCompany();
-		Optional<Organization> upperOrganization = organizationRepository.findById(organizationDTO.getUpperOrganization());
 		
-		Organization organization = new Organization();
-		organization.setOrganizationName(organizationDTO.getOrganizationName());
-		organization.setCompany(company);
-		if(upperOrganization.isPresent()) {
-			organization.setUpperOrganization(upperOrganization.get());
+		if(organizationDTO.getAction().equals("create")) {
+			Optional<Organization> upperOrganization = organizationRepository.findById(organizationDTO.getUpperOrganization());
+			
+			Organization organization = new Organization();
+			organization.setOrganizationName(organizationDTO.getOrganizationName());
+			organization.setCompany(company);
+			if(upperOrganization.isPresent()) {
+				organization.setUpperOrganization(upperOrganization.get());
+			}
+			organizationRepository.save(organization);
+		} else if(organizationDTO.getAction().equals("update")) {
+			Optional<Organization> _organization = organizationRepository.findById(organizationDTO.getOrganizationIdx());
+			Organization organization = _organization.get();
+			organization.setOrganizationName(organizationDTO.getOrganizationName());
+			organizationRepository.save(organization);
 		}
-		organizationRepository.save(organization);
+		
+		
+		
 		List<Organization> organizationList = organizationRepository.findByCompanyCompanyIdx(company.getCompanyIdx());
-		 List<OrganizationDTO> organizationDTOList = organizationList.stream().map(org -> {
-		        OrganizationDTO dto = new OrganizationDTO();
-		        dto.setOrganizationIdx(org.getOrganizationIdx());
-		        dto.setOrganizationName(org.getOrganizationName());
-		        dto.setUpperOrganization(org.getUpperOrganization() != null ? org.getUpperOrganization().getOrganizationIdx() : null);
-		        return dto;
-		    }).collect(Collectors.toList());
-
-		    return organizationDTOList;
+		List<OrganizationDTO> organizationDTOList = organizationList.stream().map(org -> {
+			OrganizationDTO dto = new OrganizationDTO();
+			dto.setOrganizationIdx(org.getOrganizationIdx());
+			dto.setOrganizationName(org.getOrganizationName());
+			dto.setUpperOrganization(org.getUpperOrganization() != null ? org.getUpperOrganization().getOrganizationIdx() : null);
+			return dto;
+		}).collect(Collectors.toList());
+		return organizationDTOList;
 	}
 }

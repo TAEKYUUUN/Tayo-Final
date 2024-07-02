@@ -85,6 +85,11 @@ public class MemberController {
 			bindingResult.rejectValue("checkpw", "passwordInCorrect", "2개의 패스워드가 일치하지 않습니다.");
 			return "Regist";
 		}
+		if(memberService.findMemberByEmail(memberCreateForm.getEmail()).isPresent()) {
+			bindingResult.rejectValue("email", "이미 존재하는 이메일입니다.");
+			return "Regist";
+		}
+		
 		int randomNumber = (int)(Math.random()*900000)+100000;
 		memberService.registMember(memberCreateForm.getName(), memberCreateForm.getEmail(), memberCreateForm.getPassword(), randomNumber);
 		HttpSession session = request.getSession();

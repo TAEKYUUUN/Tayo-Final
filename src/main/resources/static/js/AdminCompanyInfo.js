@@ -19,9 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			const allowsave = document.querySelector('#allowsave');
 			const exitallow = document.querySelector('#exitallow');
 			
-			methodSave.addEventListener('click', (event) =>{
-			           document.querySelector('#input3').value = '';
-			        })
+
 			
 			logoinsert.addEventListener('click',(event)=>{
 				document.querySelector('#div_backgroundfull').style.display="block";
@@ -67,6 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			allowsave.addEventListener('click',(event)=>{
 				document.querySelector('#div_backgroundfull').style.display="none";
 				document.querySelector('#div_allowpopup').style.display="none";
+				document.querySelector('#input3').value = '';
+				updateCompanyInfo();
 				acceptedURL.style.display="none";
 			});
 			

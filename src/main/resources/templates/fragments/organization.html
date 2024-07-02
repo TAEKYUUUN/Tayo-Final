@@ -2,11 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org" th:fragment="organizationFragment (organization)">
 <body>
 		<div th:if="${organization.upperOrganization != null }">
-			<div id="organizationLists">
-				<p th:text="${organization.organizationName}"></p>
+			<div id="organizationLists"  style="display:flex; align-items: center;">
+				<p th:text="${organization.organizationName}"></p>&nbsp;
 				<p id="organizationIdx" style="display:none;" th:text="${organization.organizationIdx}"></p>
+				<input type = "text" style="display:none;" id="changedOrganizationName" th:value="${organization.organizationName}">
+				
+				<button id="openAllChild" th:if="${organization.lowerOrganization.size != 0}"> +</button>
+				<button id="closeAllChild" th:if="${organization.lowerOrganization.size != 0}" style="display:none;"> -</button>
+				
 			</div>
-			<ul th:if="${organization.lowerOrganization != null}" style="padding-left : 20px;" >
+			<ul th:if="${organization.lowerOrganization != null}" style="padding-left : 20px;display:none;" >
 				<li th:each="lowOrganization : ${organization.lowerOrganization}" th:id="'organization'+${lowOrganization.organizationIdx}">
 					<div th:insert="~{this :: organizationFragment (organization = *{lowOrganization})}"></div>
 				</li>
