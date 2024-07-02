@@ -248,6 +248,10 @@
 			min-height:242px;
 			margin-top : 10px;
 		}
+		
+		li > div{
+			display:flex;
+		}
 		#div_top{
 			width:1598px;
 			height:40px;

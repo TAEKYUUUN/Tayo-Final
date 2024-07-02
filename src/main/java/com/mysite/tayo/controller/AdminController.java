@@ -21,6 +21,7 @@ import com.mysite.tayo.entity.Organization;
 import com.mysite.tayo.repository.OrganizationRepository;
 import com.mysite.tayo.service.AdminService;
 import com.mysite.tayo.service.MemberService;
+import com.mysite.tayo.service.OrganizationService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,6 +32,8 @@ public class AdminController {
 	private final MemberService memberService;
 	private final AdminService adminService;
 	private final OrganizationRepository organizationRepository;
+	private final OrganizationService organizationService;
+	
 	@GetMapping("/AdminCompanyInfo")
 	public String companyInfo(Model model, Authentication authentication) {
 	    Member member = memberService.infoFromLogin(authentication);
@@ -124,6 +127,12 @@ public class AdminController {
 			Organization organization = _organization.get();
 			organization.setOrganizationName(organizationDTO.getOrganizationName());
 			organizationRepository.save(organization);
+		}else if(organizationDTO.getAction().equals("delete")) {
+			Optional<Organization> _organization = organizationRepository.findById(organizationDTO.getOrganizationIdx());
+			Organization organization = _organization.get();
+			organizationRepository.deleteById(organization.getOrganizationIdx());
+		}else if(organizationDTO.getAction().equals("clear")) {
+			organizationService.deleteOrganizationsByCompanyIdx(company.getCompanyIdx());
 		}
 		
 		

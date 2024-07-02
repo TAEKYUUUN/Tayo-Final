@@ -9,6 +9,30 @@ document.addEventListener('DOMContentLoaded', () => {
 	const changeOrganizationName = document.querySelector('#changeOrganizationName');
 	
 	const changedOrganizationName = document.querySelectorAll('#changedOrganizationName');
+	const deleteOrganization = document.querySelector('#deleteOrganization');
+	const cancelOrganzation = document.querySelector('#cancelOrganzation');
+	
+	const clearOrganization = document.querySelector('#clearOrganization');
+	
+	clearOrganization.addEventListener('click', ()=>{
+		clearOrganizations();
+	})
+	
+	cancelOrganzation.addEventListener('click', ()=>{
+		if(document.querySelector('#NewOrgDiv')){
+			document.querySelector('#NewOrgDiv').remove();
+		}
+		const changeTarget = document.querySelector('.targetOrganization');
+		if(changeTarget){
+			changeTarget.querySelector('input').style.display = "none";
+			changeTarget.querySelector('p').style.removeProperty('display');
+			changeTarget.classList.remove('targetOrganization');
+		}
+	})
+	
+	deleteOrganization.addEventListener('click', ()=>{
+		deleteTheOrganization();
+	})
 	
 	document.addEventListener('keydown', (event)=> {
 	    if (event.key === 'Enter') {
@@ -28,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		if(changeTarget){
 				changeTarget.querySelector('input').style.removeProperty('display');
 				changeTarget.querySelector('p').style.display = "none";
-				//document.addEventListener('click', handleClickOutside);
 
 		}
 	})
@@ -51,16 +74,28 @@ document.addEventListener('DOMContentLoaded', () => {
 	})
 	targetOrganization.forEach(li => {
 		li.addEventListener('click', (event)=>{
-			targetOrganization.forEach(li =>{
-				li.classList.remove('targetOrganization');
+			const everyInput = document.querySelectorAll('changedOrganizationName');
+			let changingNumber = 0;
+			
+			everyInput.forEach(input => {
+				if(input.style.display !== 'none'){
+					changingNumber ++;
+				}
 			})
-			event.currentTarget.classList.add('targetOrganization');
+			
+			if(!document.querySelector('#newOrgInput') && changingNumber === 0){
+				targetOrganization.forEach(li =>{
+					li.classList.remove('targetOrganization');
+				})
+				event.currentTarget.classList.add('targetOrganization');
+			}
 		});
 	})
 	
 	addOrganization.addEventListener('click', ()=>{
 	
 		const newOrganization = document.createElement('div');
+		newOrganization.setAttribute('id', 'NewOrgDiv');
 		newOrganization.innerHTML ='<input type="text" id="newOrgInput" style="margin-left:20px;">'
 		if(organizationList.querySelector('span')){
 			organizationList.querySelector('span').remove();
@@ -106,6 +141,76 @@ const istargeted = function () {
 	return targetIdx;
 }
 
+
+function clearOrganizations(){
+			var organizationData = {
+					action:"clear",
+			 };
+		    
+		    $.ajax({
+		        url:"/Admin/AdminOrganization",
+		        type:'POST',
+		        contentType:'application/json',
+		        data:JSON.stringify(organizationData),
+		        success:function(response){
+					while (document.querySelector('#organizationAllList').firstChild) {
+					       document.querySelector('#organizationAllList').removeChild(document.querySelector('#organizationAllList').firstChild);
+					   }
+					const noOrg = document.createElement('span');
+					noOrg.innerHTML = '부서 등록이 되어 있지 않습니다.';
+					document.querySelector('#div_orgcontents').appendChild(noOrg);
+		        },
+		        error: function(error){
+		            alert(error.responseText);
+					console.log(error.responseText);
+		        }
+		    });
+		}
+
+
+
+
+
+
+function deleteTheOrganization(){
+			var organizationData = {
+					action:"delete",
+					organizationIdx: document.querySelector('.targetOrganization').querySelector('#organizationIdx').innerHTML,
+			 };
+		    
+		    $.ajax({
+		        url:"/Admin/AdminOrganization",
+		        type:'POST',
+		        contentType:'application/json',
+		        data:JSON.stringify(organizationData),
+		        success:function(response){
+					if(document.querySelector('.targetOrganization').parentElement.tagName.toLowerCase() === 'div'){
+						const todelete = document.querySelector('.targetOrganization').parentElement.parentElement.parentElement;
+						if(todelete.parentElement.childElementCount === 1){
+							todelete.parentElement.previousElementSibling.querySelector('button').remove();
+							todelete.parentElement.previousElementSibling.querySelector('button').remove();
+						}
+						todelete.remove();
+						
+					}else{
+						const todelete = document.querySelector('.targetOrganization').parentElement;
+						if(todelete.parentElement.childElementCount === 1){
+							todelete.parentElement.previousElementSibling.querySelector('button').remove();
+							todelete.parentElement.previousElementSibling.querySelector('button').remove();
+						}
+						todelete.remove();
+					}
+		        },
+		        error: function(error){
+		            alert(error.responseText);
+					console.log(error.responseText);
+		        }
+		    });
+		}
+
+
+
+
 function updateOrganizationName(){
 			const newName = document.querySelector('.targetOrganization').querySelector('input').value;
 			var organizationData = {
@@ -149,7 +254,7 @@ function createNewOrganization(istargeted){
 		        contentType:'application/json',
 		        data:JSON.stringify(organizationData),
 		        success:function(response){
-					$("#newOrgInput").remove(); // 입력 필드를 제거합니다.
+					$("#NewOrgDiv").remove(); // 입력 필드를 제거합니다.
 					
 					let maxOrganization = response.reduce((prev, current) => (prev.organizationIdx > current.organizationIdx) ? prev : current);
 					
@@ -157,39 +262,58 @@ function createNewOrganization(istargeted){
 					const newUl = document.createElement('ul');
 									  
 					newLi.id = 'organization' + maxOrganization.organizationIdx;
+					let inputAndButton = '<input type = "text" style="display:none;" id="changedOrganizationName" value="'+maxOrganization.organizationName+'">';
 					
 					if(maxOrganization.upperOrganization == null){
-						newLi.innerHTML = '<div id="organizationLists">' +
+						newLi.innerHTML = '<div id="organizationLists"  style="display:flex">' +
 															  '<p>' + maxOrganization.organizationName + '</p>' +
 															  '<p id="organizationIdx" style="display:none;">' + maxOrganization.organizationIdx + '</p>' +
+															  inputAndButton +
 															  '</div>';
 						newUl.innerHTML = '<li class="organizationList" id="organization'+maxOrganization.organizationIdx+'">' +
-					                             '<div id="organizationLists">' +
+					                             '<div id="organizationLists" style="display:flex">' +
 					                             '<p>' + maxOrganization.organizationName + '</p>' +
 					                             '<p id="organizationIdx" style="display:none;">' + maxOrganization.organizationIdx + '</p>' +
+												 inputAndButton +
 					                             '</div>' +
 					                             '</li>';
 					}else{
-						newLi.innerHTML = '<div><div><div id="organizationLists">' +
+						newLi.innerHTML = '<div><div><div id="organizationLists"  style="display:flex">' +
 																  '<p>' + maxOrganization.organizationName + '</p>' +
 																  '<p id="organizationIdx" style="display:none;">' + maxOrganization.organizationIdx + '</p>' +
+																  inputAndButton +
 																  '</div></div></div>';
 						newUl.innerHTML = '<li id="organization'+maxOrganization.organizationIdx+'">' +
-				                             '<div><div><div id="organizationLists">' +
+				                             '<div><div><div id="organizationLists" style="display:flex">' +
 				                             '<p>' + maxOrganization.organizationName + '</p>' +
 				                             '<p id="organizationIdx" style="display:none;">' + maxOrganization.organizationIdx + '</p>' +
+											 inputAndButton +
 				                             '</div></div></div>' +
 				                             '</li>';
 						 newLi.style.paddingLeft = 0;
 					}
 					newUl.style.paddingLeft='20px';
 					const direction = document.querySelector(".targetOrganization");
-					
+					const newplus = document.createElement('button');
+					const newminus = document.createElement('button');
+					newplus.setAttribute('id', 'openAllChild');
+					newplus.style.display='none';
+					newplus.innerHTML = '+';
+					newminus.setAttribute('id', 'closeAllChild');
+					newminus.innerHTML = '-';
 					if(direction){
 	                  if(direction.parentElement.querySelector('ul')){
 	                     direction.parentElement.querySelector('ul').appendChild(newLi);
+						 if(!direction.parentElement.querySelector('ul').previousElementSibling.previousElementSibling.querySelector('button')){
+							 direction.parentElement.querySelector('ul').previousElementSibling.previousElementSibling.appendChild(newplus);
+							 direction.parentElement.querySelector('ul').previousElementSibling.previousElementSibling.appendChild(newminus);
+						 }
 	                  }else{
 	                     direction.parentElement.append(newUl);
+						 if(!direction.parentElement.querySelector('div').querySelector('button')){
+		                     direction.parentElement.querySelector('div').appendChild(newplus);
+		                     direction.parentElement.querySelector('div').appendChild(newminus);
+						 }
 	                  }
 	               }else{
 					  newLi.classList.add('organizationList');
@@ -207,6 +331,26 @@ function createNewOrganization(istargeted){
 								event.currentTarget.classList.add('targetOrganization');
 							});
 						})
+						
+						const openAllChild = document.querySelectorAll('#openAllChild');
+						const closeAllChild = document.querySelectorAll('#closeAllChild');
+
+						openAllChild.forEach(button => {
+							button.addEventListener('click', (event)=>{
+								event.stopPropagation(); 
+								event.currentTarget.parentElement.nextElementSibling.nextElementSibling.style.removeProperty('display');
+								event.currentTarget.nextElementSibling.style.removeProperty('display');
+								event.currentTarget.style.display="none";
+							})
+						})
+						closeAllChild.forEach(button => {
+							button.addEventListener('click', (event)=>{
+								event.stopPropagation(); 
+								event.currentTarget.parentElement.nextElementSibling.nextElementSibling.style.display="none";
+								event.currentTarget.previousElementSibling.style.removeProperty('display');
+								event.currentTarget.style.display="none";
+							})
+						})	
 		        },
 		        error: function(error){
 		            alert(error.responseText);
