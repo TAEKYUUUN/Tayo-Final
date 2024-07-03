@@ -8,10 +8,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mysite.tayo.entity.Company;
+import com.mysite.tayo.entity.Member;
+import com.mysite.tayo.entity.Project;
 import com.mysite.tayo.entity.ProjectMember;
 import com.mysite.tayo.repository.ProjectMemberRepository;
 import com.mysite.tayo.repository.ProjectRepository;
@@ -28,6 +31,21 @@ public class ProjectController {
 	private final ProjectService projectService;
 	private final ProjectRepository projectRepository;
 	private final ProjectMemberRepository projectMemberRepository;
+	
+	// 테스트용
+	@GetMapping("/projectFeed2/{projectIdx}")
+	public String feed(Model model, Authentication authentication, @PathVariable("projectIdx")Long projectIdx) {
+		Member member = memberService.infoFromLogin(authentication);
+		Optional<Project> project = projectRepository.findById(projectIdx);
+		List<ProjectMember> projectMemberList = projectMemberRepository.findByProjectProjectIdx(projectIdx);
+		Optional<ProjectMember> projectMember = projectMemberRepository.findByProjectProjectIdxAndMemberMemberIdx(projectIdx, member.getMemberIdx());
+		model.addAttribute("member", member);
+		model.addAttribute("projectMember", projectMember.get());
+		model.addAttribute("projectMemberList", projectMemberList);
+		model.addAttribute("project", project.get());
+		return "projectFeed2";
+	}
+
 	
 	// 프로젝트 생성 페이지 이동
 	@GetMapping("/createNewProject")
