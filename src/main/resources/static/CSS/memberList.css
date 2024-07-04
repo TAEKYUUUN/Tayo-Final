@@ -428,12 +428,33 @@ td{
 	width: 500px;
     height: 600px;
     margin-left: -250px;
+    margin-top: -300px;
     z-index: 10000;
     position: fixed;
-    top: 3%;
+    top: 50%;
     left: 50%;
     background-color: rgb(255, 255, 255);
 }
+#div_orgpopup{
+	width: 500px;
+    height: 550px;
+    margin-left: -250px;
+    margin-top: -275px;
+    z-index: 13000;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    background-color: rgb(255, 255, 255);
+	
+}
+
+#openOrgSelector{
+	position:absolute; 
+	right:10px; 
+	z-index: 10001;
+	cursor:pointer;
+}
+
 #div_insertpopuphead{
 	width:500px;
 	height:68px;
@@ -468,6 +489,56 @@ td{
 #div_popupbottom{
 	padding: 0px 30px;
     margin-bottom: 30px;
+}
+#div_popupOrgBottom{
+	padding: 0px 30px;
+	margin: 30px 0;
+}
+#div_orgSearchtab{
+	display:flex;
+	justify-content: space-between;
+}
+#orgSearchButton{
+	width:70px;
+	height:30px;
+}
+#div_orgTitle{
+	border: 1px solid #e9e9e9; 
+	margin-top:15px;
+	height:30px;
+	padding-left:10px;
+	padding-top:2px;
+}
+#div_orgList{
+	border: 1px solid #e9e9e9; 
+	width:440px;
+	height:300px;
+	padding-left:10px;
+	overflow-y:auto;
+}
+#div_orgSearchtab > input{
+	width:370px;
+	height:30px;
+}
+ul {
+	padding-left:10px;
+}
+#organizationLists{
+	font-weight: 400;
+	color: #111;
+	font-size: 16px;
+}
+.organizationList{
+	list-style: none; 
+}
+#organizationLists:hover{
+	color: blue;
+}
+.targetOrganization > p{
+	color:blue;
+}
+#resetPassword:hover {
+	text-decoration: underline
 }
 #div_popupbody{
 	margin-top:10px;

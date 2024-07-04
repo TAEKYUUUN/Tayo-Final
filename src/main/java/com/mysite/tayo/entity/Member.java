@@ -58,7 +58,7 @@ public class Member {
 	 private Organization organization;
 	 
 	 @Column(name="rank_name", length=100)
-	 private String rankName;
+	 private String rankName = "직원";
 	 
 	 @Column(name="regist_date")
 	 private Date registDate;
@@ -68,6 +68,9 @@ public class Member {
 	 
 	 @Column(name="is_confirmed")
 	 private Integer isConfirmed;
+	 
+	 @Column(name="is_banned")
+	 private Integer isBanned;
 	 
 	 @Column(name="phone_company", length=100)
 	 private String phoneCompany;
@@ -87,7 +90,8 @@ public class Member {
 	 @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
 	 private List<ChatMember> chatMemberList;
 	    
-    
+	 @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+	 private List<UserSession> userSessionList;
     
     
 }

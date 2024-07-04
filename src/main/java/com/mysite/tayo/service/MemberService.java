@@ -2,10 +2,11 @@ package com.mysite.tayo.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,17 +42,16 @@ public class MemberService {
     
     // 특정 회사에 그 이름에 맞는 org인지 확인해서 추가하는 기능 필요할 것. 이름에서 역으로 찾아가기 때문에, 이름은 unique 해야할것.
     // 일단 company도 임시로 고정으로 들어가도록 설정해둠. 수정 요망
-    public void create(String name, String email, String pw, String org, String rank,  String phone, Authentication authentication) {
+    public void create(String name, String email, Long OrganizationIdx, String rank,  String phone, Authentication authentication) {
     	Member member = new Member();
     	Member AuthenticationMember = infoFromLogin(authentication);
     	Long companyIdx = AuthenticationMember.getCompany().getCompanyIdx();
-    	Optional<Organization> organization = organizationRepository.findById((long) 1);
+    	Optional<Organization> organization = organizationRepository.findById(OrganizationIdx);
     	Optional<Company> company = companyRepository.findById(companyIdx);
     	if(organization.isPresent() && company.isPresent()) {
     	Date date = new Date();
     	member.setName(name);
     	member.setEmail(email);
-    	member.setPassword(passwordEncoder.encode(pw));
     	member.setOrganization(organization.get());
     	member.setRankName(rank);
     	member.setPhone(phone);
@@ -74,12 +74,11 @@ public class MemberService {
     }
      
     
-    public void update(String name, String email, String pw, String org, String rank,  String phone) {
+    public void update(String name, String email, Long organizationIdx, String rank,  String phone) {
     	Optional<Member> member = this.memberRepository.findByEmail(email);
-    	Optional<Organization> organization = organizationRepository.findByOrganizationName(org);
+    	Optional<Organization> organization = organizationRepository.findById(organizationIdx);
     	if(member.isPresent()) {
     		member.get().setName(name);
-        	member.get().setPassword(passwordEncoder.encode(pw));
     		if(organization.isPresent()) {
     			member.get().setOrganization(organization.get());
     		}
@@ -110,10 +109,28 @@ public class MemberService {
     }
     
     public Member infoFromLogin(Authentication authentication) {
-    	User user = (User) authentication.getPrincipal();  
-        String email = user.getUsername();
+    	 Object principal = authentication.getPrincipal();
+         String email;
+
+         if (principal instanceof UserDetails) {
+             email = ((UserDetails) principal).getUsername();
+         } else {
+             email = principal.toString();
+         }
+    	
         Optional<Member> optionalMember = findMemberByEmail(email);
         return optionalMember.get();
+    }
+    public void resetPw(String email) {
+    	Optional<Member> _member = memberRepository.findByEmail(email);
+    	if(_member.isPresent()) {
+    		Member member = _member.get();
+    		member.setPassword(passwordEncoder.encode("123456789"));
+    		memberRepository.save(member);
+    	}else {
+    		throw new NoSuchElementException("No member found with userId: " + email);
+    	}
+    	
     }
     
 }

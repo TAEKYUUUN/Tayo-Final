@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	})
 	
 	addOrganization.addEventListener('click', ()=>{
-	
+		if(document.querySelector('#newOrgInput')) return;
 		const newOrganization = document.createElement('div');
 		newOrganization.setAttribute('id', 'NewOrgDiv');
 		newOrganization.innerHTML ='<input type="text" id="newOrgInput" style="margin-left:20px;">'
@@ -195,10 +195,17 @@ function deleteTheOrganization(){
 					}else{
 						const todelete = document.querySelector('.targetOrganization').parentElement;
 						if(todelete.parentElement.childElementCount === 1){
-							todelete.parentElement.previousElementSibling.querySelector('button').remove();
-							todelete.parentElement.previousElementSibling.querySelector('button').remove();
+							if(todelete.parentElement.previousElementSibling){
+								todelete.parentElement.previousElementSibling.querySelector('button').remove();
+								todelete.parentElement.previousElementSibling.querySelector('button').remove();
+							}
 						}
 						todelete.remove();
+					}
+					if(document.querySelector('#organizationAllList').childElementCount === 0){
+						const noOrg = document.createElement('span');
+						noOrg.innerHTML = '부서 등록이 되어 있지 않습니다.';
+						document.querySelector('#div_orgcontents').appendChild(noOrg);
 					}
 		        },
 		        error: function(error){
@@ -292,6 +299,8 @@ function createNewOrganization(istargeted){
 				                             '</li>';
 						 newLi.style.paddingLeft = 0;
 					}
+					newLi.style.display = '';
+					newUl.style.display = '';
 					newUl.style.paddingLeft='20px';
 					const direction = document.querySelector(".targetOrganization");
 					const newplus = document.createElement('button');
@@ -304,10 +313,10 @@ function createNewOrganization(istargeted){
 					if(direction){
 	                  if(direction.parentElement.querySelector('ul')){
 	                     direction.parentElement.querySelector('ul').appendChild(newLi);
-						 if(!direction.parentElement.querySelector('ul').previousElementSibling.previousElementSibling.querySelector('button')){
-							 direction.parentElement.querySelector('ul').previousElementSibling.previousElementSibling.appendChild(newplus);
-							 direction.parentElement.querySelector('ul').previousElementSibling.previousElementSibling.appendChild(newminus);
-						 }
+							if(!direction.parentElement.querySelector('ul').previousElementSibling.querySelector('button')){
+								direction.parentElement.querySelector('ul').previousElementSibling.appendChild(newplus);
+								direction.parentElement.querySelector('ul').previousElementSibling.appendChild(newminus);
+							}
 	                  }else{
 	                     direction.parentElement.append(newUl);
 						 if(!direction.parentElement.querySelector('div').querySelector('button')){
@@ -338,7 +347,7 @@ function createNewOrganization(istargeted){
 						openAllChild.forEach(button => {
 							button.addEventListener('click', (event)=>{
 								event.stopPropagation(); 
-								event.currentTarget.parentElement.nextElementSibling.nextElementSibling.style.removeProperty('display');
+								event.currentTarget.parentElement.nextElementSibling.style.removeProperty('display');
 								event.currentTarget.nextElementSibling.style.removeProperty('display');
 								event.currentTarget.style.display="none";
 							})
@@ -346,7 +355,7 @@ function createNewOrganization(istargeted){
 						closeAllChild.forEach(button => {
 							button.addEventListener('click', (event)=>{
 								event.stopPropagation(); 
-								event.currentTarget.parentElement.nextElementSibling.nextElementSibling.style.display="none";
+								event.currentTarget.parentElement.nextElementSibling.style.display="none";
 								event.currentTarget.previousElementSibling.style.removeProperty('display');
 								event.currentTarget.style.display="none";
 							})
