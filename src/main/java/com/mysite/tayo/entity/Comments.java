@@ -18,14 +18,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "post_member")
-public class PostMember {
+@Table(name = "comments")
+public class Comments {
 	@Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "post_member_seq")
-    @SequenceGenerator(name = "post_member_seq", sequenceName = "POST_MEMBER_SEQ", allocationSize = 1)
-    @Column(name = "post_member_idx")
-    private Long postMemberIdx;
-
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comments_seq")
+    @SequenceGenerator(name = "comments_seq", sequenceName = "COMMENTS_SEQ", allocationSize = 1)
+    @Column(name = "comments_idx")
+    private Long commentsIdx;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_idx", referencedColumnName = "post_idx")
 	private Post post;
@@ -34,15 +34,13 @@ public class PostMember {
     @JoinColumn(name = "member_idx", referencedColumnName = "member_idx")
     private Member member;
 	
-	@Column(name = "alarm")
-	private Integer alarm;
+	@Column(name = "write_time")
+	private Date writeTime;
 	
-	@Column(name = "bookmark")
-	private Integer bookmark;
+	@Column(name = "contents")
+	private String contents;
 	
-	@Column(name = "re_alarm")
-	private Date reAlarm;
+	@Column(name = "has_file")
+	private String hasFile;
 	
-	@Column(name = "read_time")
-	private Date readTime;
 }

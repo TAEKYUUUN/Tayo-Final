@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const backgroundFull = document.getElementById('div_backgroundfull');
     const closeBtn = document.querySelector('.close-btn');
     const tabs = document.querySelectorAll('.tabs');
+    const tabTypeInput = document.getElementById('tabType');
 
     createPostArea.addEventListener('click', function() {
         modal.style.display = 'block';
@@ -20,7 +21,19 @@ document.addEventListener('DOMContentLoaded', function() {
             tabs.forEach(t => t.style = ""); // Reset styles for all tabs
             this.style.color = 'black';
             this.style.borderBottom = '2px solid #666';
-        });
+            const tabType = document.getElementById('tabType');
+	        if (this.classList.contains('tab-paragraph')) {
+	            tabType.value = 1;
+	        } else if (this.classList.contains('tab-task')) {
+	            tabType.value = 2;
+	        } else if (this.classList.contains('tab-schedule')) {
+	            tabType.value = 3;
+	        } else if (this.classList.contains('tab-todo')) {
+	            tabType.value = 4;
+	        } else if (this.classList.contains('tab-vote')) {
+	            tabType.value = 5;
+	        }
+	     });
     });
 
     const taskTab = document.querySelector('.tab-task');
@@ -29,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
         modalContent.style.minHeight = '592px';
         modalContent.style.overflowY = 'auto';
         modal.style.height = '780px';
-        
+
         const taskContent = `
         <div class="input-group1">
             <input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
@@ -56,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class="subtask_header">
                 <span class="subtask_title" style="font-size:14px;">
-                <img src="img/subtask_icon.png"/>
+                	<img src="/img/subtask_icon.png"/>
                     하위업무
                 </span>
             </div>
@@ -65,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         </div>
         `;
-        document.querySelector('.modal-content').innerHTML = taskContent;
+        modalContent.innerHTML = taskContent;
 
         const taskButtons = document.querySelectorAll('.task_state_btn');
         taskButtons.forEach(button => {
@@ -99,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
         modalContent.style.minHeight = '';
         modalContent.style.overflowY = '';
         modal.style.height = '780px';
-        
+
         const paragraphContent = `
         <div class="input-group1">
             <input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
@@ -108,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <textarea id="content" name="content" placeholder="내용을 입력하세요."></textarea>
         </div>
         `;
-        document.querySelector('.modal-content').innerHTML = paragraphContent;
+        modalContent.innerHTML = paragraphContent;
     });
 
     const scheduleTab = document.querySelector('.tab-schedule');
@@ -117,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
         modalContent.style.minHeight = '592px';
         modalContent.style.overflowY = 'auto';
         modal.style.height = '780px';
-        
+
         const scheduleContent = `
         <div class="input-group1">
             <input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
@@ -143,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         </div>
         `;
-        document.querySelector('.modal-content').innerHTML = scheduleContent;
+        modalContent.innerHTML = scheduleContent;
 
         document.getElementById('allDay').addEventListener('change', function() {
             const startInput = document.getElementById('start');
@@ -178,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         </div>
         `;
-        document.querySelector('.modal-content').innerHTML = todoContent;
+        modalContent.innerHTML = todoContent;
 
         function createNewTodoEdit() {
             const newDiv = document.createElement('div');
@@ -255,14 +268,14 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="vote_option_container">
                 <div class="endDate vote_option">
                     <div class="option_name">
-                        <img src="img/vote_enddate.png"/>
+                        <img src="/img/vote_enddate.png"/>
                         <span>투표 마감일</span>
                     </div>
                     <button type="button" id="add_voteEndDate">마감일 추가</button>
                 </div>
                 <div class="pluralVote vote_option">
                     <div class="option_name">
-                        <img src="img/vote_doublecheck.png"/>
+                        <img src="/img/vote_doublecheck.png"/>
                         <span>복수 투표</span>
                     </div>
                     <label class="switch" style="margin-top:4px;">
@@ -272,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="anonymousVote vote_option">
                     <div class="option_name">
-                        <img src="img/vote_anonymous.png"/>
+                        <img src="/img/vote_anonymous.png"/>
                         <span>익명 투표</span>
                     </div>
                     <label class="switch" style="margin-top:4px;">
@@ -283,7 +296,7 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         </div>
         `;
-        document.querySelector('.modal-content').innerHTML = voteContent;
+        modalContent.innerHTML = voteContent;
 
         const voteContainer = document.querySelector('.voteContainer');
         const addVoteitemBtn = document.getElementById('addVoteitem');
@@ -314,7 +327,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         addVoteitemBtn.addEventListener('click', createNewVoteItemEdit);
     });
-    
+
     // 왼쪽 사이드 바 '새 프로젝트' 클릭 시 createNewProject로 이동
     document.getElementById('div_new_project').addEventListener('click', function() {
         var href = this.getAttribute('data-href');

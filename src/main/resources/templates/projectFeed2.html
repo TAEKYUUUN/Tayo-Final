@@ -3,322 +3,325 @@
 <head>
     <meta charset="UTF-8">
     <title>Tayo 협업페이지</title>
-	<link rel="stylesheet" type="text/css" th:href="@{/css/projectFeed.css}">
-	<script th:src="@{/js/projectFeed.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/projectFeed.css}">
+    <script th:src="@{/js/projectFeed.js}"></script>
 </head>
 <body>
-	<div id="div_side1">
-	    <div id="div_organization_logo">
-	        <div id="div_logo_box"><img src="https://flow.team/flow-renewal/assets/images/logo/logo-flow.svg" alt="Logo" /></div>
-	    </div>
-	    <div id="div_new_project">
-	        <div id="div_newprj_button"><img src="/img/newprj_btn_dark.png" alt="New Project Button" /></div>
-	    </div>
-		<div id="div_left_menu1">
-			<div id="div_toDashboard" th:data-href="@{/dashboard}"><img src="/img/hom_dark_icon.png" />대시보드</div><br />
-			<div id="div_toProjectlist" th:data-href="@{/projectlist}"><img src="/img/myprj_dark_icon.png" />내 프로젝트</div><br />
-			<div id="div_toCompanyOpenProject" th:data-href="@{/companyOpenProject}"><img src="/img/company_open_dark_icon.png" />회사 공개
-				프로젝트</div><br />
-			<div><img src="/img/more_dark_icon.png" alt="More Icon" />더보기</div><br />
-		</div>
-	    <div id="div_left_menu2">
-	        <div id="div_collection_btn">모아보기<img src="/img/left_btn_dark.png" alt="Collection Button" /></div>
-	        <div id="div_recent_update_btn">최근 업데이트<img src="/img/left_btn_dark.png" alt="Recent Updates Button" /></div>
-	        <div id="div_prj_folder_btn">프로젝트 폴더<img src="/img/left_btn_dark.png" alt="Project Folder Button" /></div>
-	    </div>
-	    <div id="div_left_menu3">
-	        <div><img src="/img/invite_emp_dark.png" alt="Invite Employee Icon" />직원 초대</div>
-	        <div><img src="/img/admin_dark.png" alt="Admin Icon" />어드민</div>
-	    </div>
-	    <div id="div_left_menu4">
-	        <img src="/img/guide_dark.png" alt="Guide Icon" />
-	        <span>이용가이드</span>
-	    </div>
-	</div>
-	<div id="div_side2">
-	    <div id="div_header">
-	        <div class="left-container">
-	            <div id="div_consultant"><img src="/img/consultant.png" alt="Consultant Icon" /><span>오프라인 타요 설명회 →</span></div>
-	            <div id="div_pay"><img src="/img/pay_button.png" alt="Pay Button" /></div>
-	        </div>
-	        <div id="div_top_searchbar">
-	            <div id="div_main_searchbox">
-	                <img src="/img/top_search_dark_icon.png" alt="Search Icon" />
-	                <div id="div_input_search">검색</div>
-	            </div>
-	            <div id="div_search_option">옵션</div>
-	        </div>
-	        <div id="div_top_right_menu">
-	            <div id="div_top_hirearchy"><img src="/img/hirearchy_dark.png" alt="Hierarchy Icon" /></div>
-	            <div id="div_top_chat"><img src="/img/chat_dark.png" alt="Chat Icon" /></div>
-	            <div id="div_top_alarm"><img src="/img/alarm_dark.png" alt="Alarm Icon" /></div>
-	            <div id="div_profile"><img src="https://flow.team/flow-renewal/assets/images/profile-default.svg" alt="Profile Icon" /></div>
-	        </div>
-	    </div>
-	    <div id="div_content">
-	        <div id="div_top_main_bar">
-	            <div id="div_project_detail_title">
-	                <div id="div_project_color" th:style="'background-color:' + ${project.color}"></div>
-	                <div id="div_project_header">
-						<div id="div_project_option">
-							<div class="project_hotlist" th:if="${projectMember.hotlist==1}">
-								<button class="star_btn">
-									<img src="https://flow.team/flow-renewal/assets/images/icons/icon_star_on.png?v=0b1344b90c03f4a1cec8afc4927837b54841744f"
-										class="star_img" />
-								</button>
-							</div>
-							<div class="project_hotlist" th:if="${projectMember.hotlist==null}">
-								<button class="star_btn">
-									<img src="https://flow.team/flow-renewal/assets/images/icons/icon_star.png?v=c253f2c3b6c7b36ebe1fbb7ba4c300802671771e"
-										class="star_img" />
-								</button>
-							</div>
-							<div class="project_option_btn">
-								<img src="https://cdn-icons-png.flaticon.com/512/8373/8373399.png"/>
-							</div>
-						</div>
-	                    <h3 th:text="${project.projectName}"></h3>
-	                </div>
-	            </div>
-	            <div id="div_invite_prjmem"><img src="/img/invite_prjmember.png" alt="Invite Project Member Icon" /></div>
-	        </div>
-	        <div id="div_prj_detail_top">
-	        	<ul id="detail_tab" class="project_detail_menu">
-	        		<li class="tab_item">
-	        			<div>
-	        				<a><img src="/img/peed_icon.png"/>피드</a>
-	        			</div>
-	        		</li>
-	        		<li class="tab_item">
-	        			<div>
-	        				<a>업무</a>
-	        			</div>
-	        		</li>
-	        		<li class="tab_item">
-	        			<div>
-	        				<a>간트차트</a>
-	        			</div>
-	        		</li>
-	        		<li class="tab_item">
-	        			<div>
-	        				<a>캘린더</a>
-	        			</div>
-	        		</li>
-	        		<li class="tab_item">
-	        			<div>
-	        				<a>파일</a>
-	        			</div>
-	        		</li>
-	        		<li class="tab_item">
-	        			<div>
-	        				<a>알림</a>
-	        			</div>
-	        		</li>
-	        		<li class="tab_item">
-	        			<div>
-	        				<a>반복 등록</a>
-	        			</div>
-	        		</li>
-	        		<li class="tab_item">
-	        			<div>
-	        				<a>인사이트</a>
-	        			</div>
-	        		</li>
-	        	</ul>
-	        	<div id="div_top_search" class="project_search_area">
-	        		<img src="/img/search_bar_icon.png"/>
-	        		<input type=text placeholder="검색어를 입력해주세요" class="project_search_input">
-	        		<button id="prj_search_option">옵션</button>
-	        	</div>
-	        </div>
-	        <div id="div_prj_main_area" class="scrollbar">
-	            <div id="detail-wrap">
-	                <div id="posts_area">
-	                    <div id="create_post_area">
-	                        <ul id="select_post_type">
-	                            <li>
-	                                <img src="/img/paragraph_icon.png" alt="Paragraph Icon" />
-	                                <span>글</span>
-	                            </li>
-	                            <li>
-	                                <img src="/img/task_icon.png" alt="Task Icon" />
-	                                <span>업무</span>
-	                            </li>
-	                            <li>
-	                                <img src="/img/schedule_icon.png" alt="Schedule Icon" />
-	                                <span>일정</span>
-	                            </li>
-	                            <li>
-	                                <img src="/img/todo_icon.png" alt="Todo Icon" />
-	                                <span>할 일</span>
-	                            </li>
-	                            <li>
-	                                <img src="/img/vote_icon.png" alt="Vote Icon" />
-	                                <span>투표</span>
-	                            </li>
-	                        </ul>
-	                        <div id="work_design_area" style="background-color: #fff;">
-	                            <p>내용을 입력하세요.</p>
-	                            <div id="work_design_icon_group">
-									<img src="https://cdn-icons-png.flaticon.com/512/876/876210.png" alt="" />
-									<img src="https://cdn-icons-png.flaticon.com/512/4503/4503645.png" alt="" />
-									<img src="https://cdn-icons-png.flaticon.com/512/3489/3489597.png" alt="" style="width:18; height:18px;"/>
-	                            </div>
-	                        </div>
-	                    </div>
-						<div id="section_title_area">
-							<h4>전체</h4>
-							<div id="feed_type_button">
-								<button id="filter_btn">
-									<img src="/img/filter_icon.png" />
-									<span>필터</span>
-								</button>
-							</div>
-						</div>
-						<!-- 포스트 없는 경우에 나오는 div -->
-						<div id="nothing_post">
-							<img src="https://flow.team/flow-renewal/assets/images/none_member.png"/>
-							<p class="none_text">
-								아직 참여중인 멤버들이 없습니다.<br/>
-								함께할 멤버들을 지금 초대해 보세요!
-							</p>
-							<button class="nothing_btn invite" type="button">초대하기</button>
-						</div>
-						
-						
-					</div>	<!-- div_postarea 끝나는 부분 -->
-					
-	                <!-- 피드 오른편 참여자 "participants_area" -->
-	                <div class="participants_area">
-	                    <div class="prj_participants">
-	                        <div class="section_title_area">
-	                            <h4>
-	                                <span>참여자</span>
-	                                <span style="color:gray;" th:text="${#lists.size(projectMemberList)}"></span>
-	                            </h4>
-	                            <button class="btn_view_all">전체 보기</button>
-	                        </div>
-	                        <div id="participants_area" class="participants_container">
-	                            <div id="participants_scroll_area" class="participants_content_group">
-									<ul class="participants_list">
-									    <!-- 프로젝트 관리자 -->
-									    <span class="participants_title">
-									        <em>&nbsp;프로젝트 관리자</em>
-									        <span th:text="${#lists.size(projectMemberList.?[isManager == 1])}"></span>
-									    </span>
-									    <li th:each="memberList : ${projectMemberList}" th:if="${memberList.isManager == 1}" class="participants_item">
-									        <div class="post_author">
-									            <span class="participants_profile">
-									                <i><img src="https://flow.team/flow-renewal/assets/images/profile-default.png" alt="Profile" /></i>
-									            </span>
-									            <dl class="post_author_info">
-									                <dt>
-									                    <strong th:if="${memberList.member.memberIdx == member.memberIdx}" th:text="${memberList.member.name + '(나)'}"></strong>
-									                    <strong th:unless="${memberList.member.memberIdx == member.memberIdx}" th:text="${memberList.member.name}"></strong>
-									                </dt>
-									                <dd>
-									                    <strong th:text="${memberList.member.company.companyName} + ' &nbsp;|&nbsp; ' + ${memberList.member.rankName}"></strong>
-									                </dd>
-									            </dl>
-									        </div>
-									        <button class="participants_chat_btn">
-									            <img src="/img/participants_chat_icon.png" alt="Chat Icon" />
-									        </button>
-									    </li>
-									    
-									    <!-- 임직원 -->
-									    <div th:if="${#lists.size(projectMemberList.?[isManager == null]) > 0}">
-									        <span class="participants_title">
-									            <em>&nbsp;임직원</em>
-									            <span th:text="${#lists.size(projectMemberList.?[isManager == null])}"></span>
-									        </span>
-									        <li th:each="memberList : ${projectMemberList}" th:if="${memberList.isManager == null}" class="participants_item">
-									            <div class="post_author">
-									                <span class="participants_profile">
-									                    <i><img src="https://flow.team/flow-renewal/assets/images/profile-default.png" alt="Profile" /></i>
-									                </span>
-									                <dl class="post_author_info">
-									                    <dt>
-									                        <strong th:if="${memberList.member.memberIdx == member.memberIdx}" th:text="${memberList.member.name + '(나)'}"></strong>
-									                        <strong th:unless="${memberList.member.memberIdx == member.memberIdx}" th:text="${memberList.member.name}"></strong>
-									                    </dt>
-									                    <dd>
-									                        <strong th:text="${memberList.member.company.companyName} + ' &nbsp;|&nbsp; ' + ${memberList.member.rankName}"></strong>
-									                    </dd>
-									                </dl>
-									            </div>
-									            <button class="participants_chat_btn">
-									                <img src="/img/participants_chat_icon.png" alt="Chat Icon" />
-									            </button>
-									        </li>
-									    </div>
-									</ul>
-	                            </div>
-	                            <div class="participants_menu">
-	                            	<button class="participants_button">
-	                            		<span>
-	                            			<img src="/img/participants_menu_icon1.png"/>
-	                            			채팅
-	                            		</span>
-	                            	</button>
-	                            	<button class="participants_button">
-	                            		<span>
-	                            			<img src="/img/participants_menu_icon2.png"/>
-											화상회의	                            		
-	                            		</span>
-	                            	</button>
-	                            </div>
-	                        </div>
-	                    </div>
-	                </div>
-	            </div>
-	        </div>
-	    </div>
-		<div id="div_backgroundfull"></div>
-		    <div class="modal">
-		        <div class="modal-header">
-		            <div class="modal-title">게시물 작성</div>
-		            <div class="project-name">
-		                <div class="project-icon"></div>
-		                <span>Tayo 프로젝트</span>
-		            </div>
-		            <div class="close-btn">&times;</div>
-		        </div>
-		        <div class="modal-tabs">
-		            <div class="tabs tab-paragraph" style="color: black; border-bottom: 2px solid #666;">
-		                <img src="/img/paragraph_icon.png" />글
-		            </div>
-		            <div class="tabs tab-task">
-		                <img src="/img/task_icon.png" />업무
-		            </div>
-		            <div class="tabs tab-schedule">
-		                <img src="/img/schedule_icon.png" />일정
-		            </div>
-		            <div class="tabs tab-todo">
-		                <img src="/img/todo_icon.png" />할 일
-		            </div>
-		            <div class="tabs tab-vote">
-		                <img src="/img/vote_icon.png" />투표
-		            </div>
-		        </div>
-		        <div class="modal-content">
-		            <div class="input-group1">
-		                <input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
-		            </div>
-		            <div class="input-group2">
-		                <textarea id="content" name="content" placeholder="내용을 입력하세요."></textarea>
-		            </div>
-		        </div>
-		        <div class="modal-footer">
-		            <select class="privacy">
-		                <option>전체 공개</option>
-		                <option>프로젝트 관리자만</option>
-		            </select>
-		            <button class="save-draft">임시저장</button>
-		            <button class="submit" style="width:100px;">등록</button>
-		        </div>
-		    </div>
-		</div>
-	</div>
+    <div id="div_side1">
+        <div id="div_organization_logo">
+            <div id="div_logo_box"><img src="https://flow.team/flow-renewal/assets/images/logo/logo-flow.svg" alt="Logo" /></div>
+        </div>
+        <div id="div_new_project" th:data-href="@{/createNewProject}"       >
+            <div id="div_newprj_button"><img src="/img/newprj_btn_dark.png" alt="New Project Button" /></div>
+        </div>
+        <div id="div_left_menu1">
+            <div id="div_toDashboard" th:data-href="@{/dashboard}"><img src="/img/hom_dark_icon.png" />대시보드</div><br />
+            <div id="div_toProjectlist" th:data-href="@{/projectlist}"><img src="/img/myprj_dark_icon.png" />내 프로젝트</div><br />
+            <div id="div_toCompanyOpenProject" th:data-href="@{/companyOpenProject}"><img src="/img/company_open_dark_icon.png" />회사 공개
+                프로젝트</div><br />
+            <div><img src="/img/more_dark_icon.png" alt="More Icon" />더보기</div><br />
+        </div>
+        <div id="div_left_menu2">
+            <div id="div_collection_btn">모아보기<img src="/img/left_btn_dark.png" alt="Collection Button" /></div>
+            <div id="div_recent_update_btn">최근 업데이트<img src="/img/left_btn_dark.png" alt="Recent Updates Button" /></div>
+            <div id="div_prj_folder_btn">프로젝트 폴더<img src="/img/left_btn_dark.png" alt="Project Folder Button" /></div>
+        </div>
+        <div id="div_left_menu3">
+            <div><img src="/img/invite_emp_dark.png" alt="Invite Employee Icon" />직원 초대</div>
+            <div><img src="/img/admin_dark.png" alt="Admin Icon" />어드민</div>
+        </div>
+        <div id="div_left_menu4">
+            <img src="/img/guide_dark.png" alt="Guide Icon" />
+            <span>이용가이드</span>
+        </div>
+    </div>
+    <div id="div_side2">
+        <div id="div_header">
+            <div class="left-container">
+                <div id="div_consultant"><img src="/img/consultant.png" alt="Consultant Icon" /><span>오프라인 타요 설명회 →</span></div>
+                <div id="div_pay"><img src="/img/pay_button.png" alt="Pay Button" /></div>
+            </div>
+            <div id="div_top_searchbar">
+                <div id="div_main_searchbox">
+                    <img src="/img/top_search_dark_icon.png" alt="Search Icon" />
+                    <div id="div_input_search">검색</div>
+                </div>
+                <div id="div_search_option">옵션</div>
+            </div>
+            <div id="div_top_right_menu">
+                <div id="div_top_hirearchy"><img src="/img/hirearchy_dark.png" alt="Hierarchy Icon" /></div>
+                <div id="div_top_chat"><img src="/img/chat_dark.png" alt="Chat Icon" /></div>
+                <div id="div_top_alarm"><img src="/img/alarm_dark.png" alt="Alarm Icon" /></div>
+                <div id="div_profile"><img src="https://flow.team/flow-renewal/assets/images/profile-default.svg" alt="Profile Icon" /></div>
+            </div>
+        </div>
+        <div id="div_content">
+            <div id="div_top_main_bar">
+                <div id="div_project_detail_title">
+                    <div id="div_project_color" th:style="'background-color:' + ${project.color}"></div>
+                    <div id="div_project_header">
+                        <div id="div_project_option">
+                            <div class="project_hotlist" th:if="${projectMember.hotlist==1}">
+                                <button class="star_btn">
+                                    <img src="https://flow.team/flow-renewal/assets/images/icons/icon_star_on.png?v=0b1344b90c03f4a1cec8afc4927837b54841744f"
+                                        class="star_img" />
+                                </button>
+                            </div>
+                            <div class="project_hotlist" th:if="${projectMember.hotlist==null}">
+                                <button class="star_btn">
+                                    <img src="https://flow.team/flow-renewal/assets/images/icons/icon_star.png?v=c253f2c3b6c7b36ebe1fbb7ba4c300802671771e"
+                                        class="star_img" />
+                                </button>
+                            </div>
+                            <div class="project_option_btn">
+                                <img src="https://cdn-icons-png.flaticon.com/512/8373/8373399.png"/>
+                            </div>
+                        </div>
+                        <h3 th:text="${project.projectName}"></h3>
+                    </div>
+                </div>
+                <div id="div_invite_prjmem"><img src="/img/invite_prjmember.png" alt="Invite Project Member Icon" /></div>
+            </div>
+            <div id="div_prj_detail_top">
+                <ul id="detail_tab" class="project_detail_menu">
+                    <li class="tab_item">
+                        <div>
+                            <a><img src="/img/peed_icon.png"/>피드</a>
+                        </div>
+                    </li>
+                    <li class="tab_item">
+                        <div>
+                            <a>업무</a>
+                        </div>
+                    </li>
+                    <li class="tab_item">
+                        <div>
+                            <a>간트차트</a>
+                        </div>
+                    </li>
+                    <li class="tab_item">
+                        <div>
+                            <a>캘린더</a>
+                        </div>
+                    </li>
+                    <li class="tab_item">
+                        <div>
+                            <a>파일</a>
+                        </div>
+                    </li>
+                    <li class="tab_item">
+                        <div>
+                            <a>알림</a>
+                        </div>
+                    </li>
+                    <li class="tab_item">
+                        <div>
+                            <a>반복 등록</a>
+                        </div>
+                    </li>
+                    <li class="tab_item">
+                        <div>
+                            <a>인사이트</a>
+                        </div>
+                    </li>
+                </ul>
+                <div id="div_top_search" class="project_search_area">
+                    <img src="/img/search_bar_icon.png"/>
+                    <input type=text placeholder="검색어를 입력해주세요" class="project_search_input">
+                    <button id="prj_search_option">옵션</button>
+                </div>
+            </div>
+            <div id="div_prj_main_area" class="scrollbar">
+                <div id="detail-wrap">
+                    <div id="posts_area">
+                        <div id="create_post_area">
+                            <ul id="select_post_type">
+                                <li>
+                                    <img src="/img/paragraph_icon.png" alt="Paragraph Icon" />
+                                    <span>글</span>
+                                </li>
+                                <li>
+                                    <img src="/img/task_icon.png" alt="Task Icon" />
+                                    <span>업무</span>
+                                </li>
+                                <li>
+                                    <img src="/img/schedule_icon.png" alt="Schedule Icon" />
+                                    <span>일정</span>
+                                </li>
+                                <li>
+                                    <img src="/img/todo_icon.png" alt="Todo Icon" />
+                                    <span>할 일</span>
+                                </li>
+                                <li>
+                                    <img src="/img/vote_icon.png" alt="Vote Icon" />
+                                    <span>투표</span>
+                                </li>
+                            </ul>
+                            <div id="work_design_area" style="background-color: #fff;">
+                                <p>내용을 입력하세요.</p>
+                                <div id="work_design_icon_group">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/876/876210.png" alt="" />
+                                    <img src="https://cdn-icons-png.flaticon.com/512/4503/4503645.png" alt="" />
+                                    <img src="https://cdn-icons-png.flaticon.com/512/3489/3489597.png" alt="" style="width:18; height:18px;"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="section_title_area">
+                            <h4>전체</h4>
+                            <div id="feed_type_button">
+                                <button id="filter_btn">
+                                    <img src="/img/filter_icon.png" />
+                                    <span>필터</span>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- 포스트 없는 경우에 나오는 div -->
+                        <div id="nothing_post">
+                            <img src="https://flow.team/flow-renewal/assets/images/none_member.png"/>
+                            <p class="none_text">
+                                아직 참여중인 멤버들이 없습니다.<br/>
+                                함께할 멤버들을 지금 초대해 보세요!
+                            </p>
+                            <button class="nothing_btn invite" type="button">초대하기</button>
+                        </div>
+                        
+                        
+                    </div>  <!-- div_postarea 끝나는 부분 -->
+                    
+                    <!-- 피드 오른편 참여자 "participants_area" -->
+                    <div class="participants_area">
+                        <div class="prj_participants">
+                            <div class="section_title_area">
+                                <h4>
+                                    <span>참여자</span>
+                                    <span style="color:gray;" th:text="${#lists.size(projectMemberList)}"></span>
+                                </h4>
+                                <button class="btn_view_all">전체 보기</button>
+                            </div>
+                            <div id="participants_area" class="participants_container">
+                                <div id="participants_scroll_area" class="participants_content_group">
+                                    <ul class="participants_list">
+                                        <!-- 프로젝트 관리자 -->
+                                        <span class="participants_title">
+                                            <em>&nbsp;프로젝트 관리자</em>
+                                            <span th:text="${#lists.size(projectMemberList.?[isManager == 1])}"></span>
+                                        </span>
+                                        <li th:each="memberList : ${projectMemberList}" th:if="${memberList.isManager == 1}" class="participants_item">
+                                            <div class="post_author">
+                                                <span class="participants_profile">
+                                                    <i><img src="https://flow.team/flow-renewal/assets/images/profile-default.png" alt="Profile" /></i>
+                                                </span>
+                                                <dl class="post_author_info">
+                                                    <dt>
+                                                        <strong th:if="${memberList.member.memberIdx == member.memberIdx}" th:text="${memberList.member.name + '(나)'}"></strong>
+                                                        <strong th:unless="${memberList.member.memberIdx == member.memberIdx}" th:text="${memberList.member.name}"></strong>
+                                                    </dt>
+                                                    <dd>
+                                                        <strong th:text="${memberList.member.company.companyName} + ' &nbsp;|&nbsp; ' + ${memberList.member.rankName}"></strong>
+                                                    </dd>
+                                                </dl>
+                                            </div>
+                                            <button class="participants_chat_btn">
+                                                <img src="/img/participants_chat_icon.png" alt="Chat Icon" />
+                                            </button>
+                                        </li>
+                                        
+                                        <!-- 임직원 -->
+                                        <div th:if="${#lists.size(projectMemberList.?[isManager == null]) > 0}">
+                                            <span class="participants_title">
+                                                <em>&nbsp;임직원</em>
+                                                <span th:text="${#lists.size(projectMemberList.?[isManager == null])}"></span>
+                                            </span>
+                                            <li th:each="memberList : ${projectMemberList}" th:if="${memberList.isManager == null}" class="participants_item">
+                                                <div class="post_author">
+                                                    <span class="participants_profile">
+                                                        <i><img src="https://flow.team/flow-renewal/assets/images/profile-default.png" alt="Profile" /></i>
+                                                    </span>
+                                                    <dl class="post_author_info">
+                                                        <dt>
+                                                            <strong th:if="${memberList.member.memberIdx == member.memberIdx}" th:text="${memberList.member.name + '(나)'}"></strong>
+                                                            <strong th:unless="${memberList.member.memberIdx == member.memberIdx}" th:text="${memberList.member.name}"></strong>
+                                                        </dt>
+                                                        <dd>
+                                                            <strong th:text="${memberList.member.company.companyName} + ' &nbsp;|&nbsp; ' + ${memberList.member.rankName}"></strong>
+                                                        </dd>
+                                                    </dl>
+                                                </div>
+                                                <button class="participants_chat_btn">
+                                                    <img src="/img/participants_chat_icon.png" alt="Chat Icon" />
+                                                </button>
+                                            </li>
+                                        </div>
+                                    </ul>
+                                </div>
+                                <div class="participants_menu">
+                                    <button class="participants_button">
+                                        <span>
+                                            <img src="/img/participants_menu_icon1.png"/>
+                                            채팅
+                                        </span>
+                                    </button>
+                                    <button class="participants_button">
+                                        <span>
+                                            <img src="/img/participants_menu_icon2.png"/>
+                                            화상회의                                   
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="div_backgroundfull"></div>
+            <div class="modal" style="display: none;">
+                <form th:action="@{/projectFeed2/{projectIdx}(projectIdx=${projectIdx})}" method="post">
+                    <input type="hidden" id="tabType" name="tabType" />
+                    <div class="modal-header">
+                        <div class="modal-title">게시물 작성</div>
+                        <div class="project-name">
+                            <div class="project-icon"></div>
+                            <span>Tayo 프로젝트</span>
+                        </div>
+                        <div class="close-btn">&times;</div>
+                    </div>
+                    <div class="modal-tabs">
+                        <div class="tabs tab-paragraph" style="color: black; border-bottom: 2px solid #666;">
+                            <img src="/img/paragraph_icon.png" />글
+                        </div>
+                        <div class="tabs tab-task">
+                            <img src="/img/task_icon.png" />업무
+                        </div>
+                        <div class="tabs tab-schedule">
+                            <img src="/img/schedule_icon.png" />일정
+                        </div>
+                        <div class="tabs tab-todo">
+                            <img src="/img/todo_icon.png" />할 일
+                        </div>
+                        <div class="tabs tab-vote">
+                            <img src="/img/vote_icon.png" />투표
+                        </div>
+                    </div>
+                    <div class="modal-content">
+                        <div class="input-group1">
+                            <input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
+                        </div>
+                        <div class="input-group2">
+                            <textarea id="content" name="content" placeholder="내용을 입력하세요."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <select class="privacy">
+                            <option>전체 공개</option>
+                            <option>프로젝트 관리자만</option>
+                        </select>
+                        <button class="save-draft">임시저장</button>
+                        <button class="submit" style="width:100px;">등록</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

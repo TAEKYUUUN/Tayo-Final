@@ -1,11 +1,17 @@
 package com.mysite.tayo.entity;
 
 import java.util.Date;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -22,23 +28,19 @@ public class Post {
     @Column(name = "post_idx")
     private Long postIdx;
 
-    @Column(name = "project_idx")
-    private Integer projectIdx;
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_idx", referencedColumnName = "project_idx")
+    private Project project;
     
-    @Column(name = "member_idx")
-    private Integer memberIdx;
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_idx", referencedColumnName = "member_idx")
+    private Member member;
 
     @Column(name = "upload_date")
     private Date uploadDate;
 
     @Column(name = "file_type")
     private Integer fileType;
-
-    @Column(name = "is_repeated")
-    private Integer isRepeated;
-
-    @Column(name = "repeat_until")
-    private Date repeatUntil;
  
     @Column(name = "is_fixed")
     private Integer isFixed;
@@ -48,4 +50,19 @@ public class Post {
   
     @Column(name = "is_revised")
     private Integer isRevised;
+    
+    @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Paragraph paragraph;
+    
+    @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Task task;
+    
+    @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Schedule schedule;
+    
+    @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Todo todo;
+    
+    @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Vote vote;
 }
