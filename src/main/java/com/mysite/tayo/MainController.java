@@ -58,6 +58,7 @@ public class MainController {
 	@GetMapping("/dashboard")
 	public String dashboard(Authentication authentication, Model model) {
 		Member member = memberService.infoFromLogin(authentication);
+		System.out.println(member.getEmail());
 		model.addAttribute("member", member);
 		List<ProjectMember> myProject = projectService.getMyProject(member.getMemberIdx());
 		List<Member> companyMember = memberService.getListByCompanyIdx(member.getCompany().getCompanyIdx());
