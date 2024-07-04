@@ -185,9 +185,14 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="input-group2" style="max-height: 400px;">
             <div class="div_todo_edit">
                 <input type="text" placeholder="할 일 추가 (Enter 또는 Tab) / 최대 60자" class="todo_input" id="todoName" name="todoName"/>
-                <span class="todo_manager_profile">
-                    <i><img src="https://flow.team/flow-renewal/assets/images/profile-default.png" alt="Profile" /></i>
-                </span>
+                <div>
+	                <span class="todo_deadline">
+	                	<i><img src="https://cdn-icons-png.flaticon.com/512/833/833593.png"/></i>
+	                </span>
+	                <span class="todo_manager_profile">
+	                    <i><img src="https://cdn-icons-png.flaticon.com/512/9977/9977153.png"/></i>
+	                </span>
+	            </div>
             </div>
         </div>
         `;

@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -21,12 +23,15 @@ public class Voter {
 	@Column(name = "voter_idx")
 	private Long voterIdx;
 	
-	@Column(name = "member_idx")
-	private Integer memberIdx;
+	@ManyToOne
+	@JoinColumn(name = "member_idx", referencedColumnName = "member_idx")
+	private Member member;
 	
-	@Column(name = "vote_item_idx")
-	private Integer voteItemIdx;
+	@ManyToOne
+	@JoinColumn(name = "vote_item_idx", referencedColumnName = "vote_item_idx")
+	private VoteItem voteItem;
 	
-	@Column(name = "vote_idx")
-	private Integer voteIdx;
+	@ManyToOne
+	@JoinColumn(name = "vote_idx", referencedColumnName = "vote_idx")
+	private Vote vote;
 }

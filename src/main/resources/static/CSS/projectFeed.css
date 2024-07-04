@@ -1828,6 +1828,15 @@ li {
 	vertical-align: middle;
 }
 
+.todo_deadline {
+	width : 36px;
+	height: 36px;
+}
+
+.todo_deadline>i>img {
+	width: 24px;
+}
+
 .todo_manager_profile {
 	width: 36px;
 	height: 36px;
@@ -1836,9 +1845,7 @@ li {
 }
 
 .todo_manager_profile>i>img {
-	width: 36px;
-	height: 36px;
-	border-radius: 14px;
+	width: 24px;
 }
 
 .em_vote_proceed {
@@ -2219,7 +2226,7 @@ li {
 
 .save-draft {
 	position: absolute;
-	right: 750px;
+	right: 130px;
 }
 
 .tabs {
@@ -2426,19 +2433,6 @@ li {
 	min-width: 370px;
 	text-overflow: ellipsis;
 	border: none;
-}
-
-.todo_manager_profile {
-	width: 30px;
-	height: 30px;
-	border-radius: 14px;
-	margin-left: 20px;
-}
-
-.todo_manager_profile>i>img {
-	width: 30px;
-	height: 30px;
-	border-radius: 9px;
 }
 
 .remove-btn {
