@@ -1,5 +1,6 @@
 package com.mysite.tayo;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -7,10 +8,13 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.mysite.tayo.repository.MemberRepository;
@@ -18,7 +22,8 @@ import com.mysite.tayo.repository.MemberRepository;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
+	 @Autowired
+     private CustomLogoutSuccessHandler customLogoutSuccessHandler;
 	 private final MemberRepository memberRepository;
 
 	    public SecurityConfig(MemberRepository memberRepository) {
@@ -40,12 +45,29 @@ public class SecurityConfig {
 	        .logout((logout) -> logout
 	                .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
 	                .logoutSuccessUrl("/mainpage")
+	                .logoutSuccessHandler(customLogoutSuccessHandler)
 	                .invalidateHttpSession(true))
+	        .sessionManagement(sessionManagement -> sessionManagement
+	                .maximumSessions(1)
+	                .maxSessionsPreventsLogin(false)
+	                .expiredUrl("/member/login")
+	                .sessionRegistry(sessionRegistry())
+	            )
 	    ;
 	    http.csrf(AbstractHttpConfigurer::disable);
 	    return http.build();
 	}
 
+	 @Bean
+	    public SessionRegistry sessionRegistry() {
+	        return new SessionRegistryImpl();
+	    }
+
+	    @Bean
+	    public HttpSessionEventPublisher httpSessionEventPublisher() {
+	        return new HttpSessionEventPublisher();
+	    }
+	
     @Bean
     public AuthenticationSuccessHandler customAuthenticationSuccessHandler() {
         return new CustomAuthenticationSuccessHandler(memberRepository);

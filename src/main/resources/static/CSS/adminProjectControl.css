@@ -1,0 +1,495 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap');
+		* { box-sizing : border-box;
+			font-family: 'Inter', 'Noto Sans KR', Arial, Helvetica, sans-serif;
+		}
+		* {box-sizing : border-box;}
+		.border { border  : 1px solid red;}
+		.fl{float:left;}
+		.fr{float:right;}
+		.scrollbar{
+			width:250px;
+			height:250px;
+			overflow-y:scroll;
+		}
+		
+		.scrollbar::-webkit-scrollbar {
+    		width: 7px;  
+    		height: 7px;
+    		padding-right: 7px;
+    		
+		}	
+		.scrollbar::-webkit-scrollbar-thumb {
+			background: #666; /* 스크롤바 색상 */
+			border-radius: 10px; /* 스크롤바 둥근 테두리 */
+		}
+		.scrollbar::-webkit-scrollbar-track {
+    		background: #999;  /*스크롤바 뒷 배경 색상*/
+		}
+		
+		body{
+			margin : 0; padding : 0;
+			font-size : 14px;
+			font-family : 'Roboto', 'Noto Sans KR';
+		}
+		
+		
+		#div_sidebar{
+			width : 260px;
+			height: 100vh;
+			background-color : #4f545d;
+		}
+		#div_header{
+			width : 260px;
+			height : 60px;
+			padding : 18px 0px;
+			background-color : #3D4044;
+		}
+		#div_side{
+			margin:0px;
+			width:260px;
+			height: calc(100vh - 135px);
+			padding : 25px 10px 25px 30px;
+			background-color : #4f545d;
+			overflow-y : scroll;
+			overflow-x : hidden;
+		}
+		#div_content{
+			width: calc(100vw - 260px);
+			min-height : 100vh;
+			padding : 21px 30px 25px  30px ;
+			overflow-y : scroll;
+			overflow-x : hidden;
+		}
+		#div_imagelogo{
+			width : 260px;
+			height : 28.86px;
+		}
+		#div_sidecontents > h2{
+			margin-top: 0px;
+			margin-bottom: 7px;
+		    line-height: 24px;
+		    font-size: 15px;
+		    color: #fff;
+		    font-weight: 800;
+		}
+		#div_sidecontents{
+			width : 220px;
+			height :914.6px;
+			overflow:hidden;
+		}
+		
+		#div_imagelogo > img{
+			margin-left:30px;
+			width : 128px;
+		}
+		
+		#div_h3box{
+			padding-left:6px;
+			margin-bottom:18px;
+			width:220px;
+			height:134px;
+		}
+		#div_h3box2{
+			padding-left:6px;
+			margin-bottom:18px;
+			width:220px;
+			height:160.8px;
+		}
+		#div_h3box3{
+			padding-left:6px;
+			margin-bottom:18px;
+			width:220px;
+			height:53.6px;
+		}
+		#div_h3box4{
+			padding-left:6px;
+			margin-bottom:18px;
+			width:220px;
+			height:26.8px;
+		}
+		#div_h3box > h3{
+			margin : 0px 0px 0px 0px;
+			position: relative;
+		    padding: 5px 20px 5px 0px;
+		    line-height: 1.2;
+		    text-wrap: balance;
+		    font-size: 14px;
+		    color: #bebec3;
+		    font-weight: 300;
+		}
+		#div_h3box2 > h3{
+			margin : 0px 0px 0px 0px;
+			position: relative;
+		    padding: 5px 20px 5px 0px;
+		    line-height: 1.2;
+		    text-wrap: balance;
+		    font-size: 14px;
+		    color: #bebec3;
+		    font-weight: 300;
+		}
+		#div_h3box3 > h3{
+			margin : 0px 0px 0px 0px;
+			position: relative;
+		    padding: 5px 20px 5px 0px;
+		    line-height: 1.2;
+		    text-wrap: balance;
+		    font-size: 14px;
+		    color: #bebec3;
+		    font-weight: 300;
+		}
+		#div_h3box4 > h3{
+			margin : 0px 0px 0px 0px;
+			position: relative;
+		    padding: 5px 20px 5px 0px;
+		    line-height: 1.2;
+		    text-wrap: balance;
+		    font-size: 14px;
+		    color: #bebec3;
+		    font-weight: 300;
+		}
+		#div_helpbutton{
+			width : 210px;
+			height : 32.8px;
+			margin-left:30px;
+			margin-right:20px;
+			bargin-bottom:30px;
+			margin-top:10px;
+		}
+		#div_helpbutton > img{
+			width : 210px;
+			height : 32.8px;
+		}
+		
+		#div_titleh1{
+			width : 1600px;
+			height : 45px;
+			font-size : 14px;
+			font-color : #4f545d;
+			border-bottom:1px solid #e6e6e6;
+		}
+		#div_titleh1 > h1{
+			flex-shrink: 0;
+			line-height: 24px;
+			font-size: 19px;
+			color: #111111;
+			font-weight: 700;
+			margin : 10px;
+		}
+		
+		#div_headtab{
+			width : 1600px;
+			height : 41px;
+			margin : 30px 0px 0px;
+			border-bottom : 1px solid #999;
+			
+		}
+
+		#div_searchwrap{
+			width : 1600px;
+			height : 32px;
+			margin-top : 15px;
+		}
+		#div_searcharea{
+			width : 1600px;
+			height : 32px;
+		}
+		#div_search{
+			width : 397.6px;
+			height : 32px;
+		}
+		#div_buttons{
+			width : 120x;
+			height : 32px;
+		}
+		#div_blank{
+			width : 1600px;
+			height : 30px;
+		}
+		#div_table{
+			width : 1600px;
+			margin-top : 10px;
+			margin-bottom : 15px; 
+		}
+		
+		#button1{
+			color: #fff;
+		    border-color: #307cff;
+		    background-color: #307cff;
+			padding: 0 10px;
+		    height: 30px;
+		    line-height: 28px;
+		    font-size: 14px;
+		    font-weight: bold;
+		    border: 1px solid #c9c9c9;
+		    border-radius: 2px;
+		    cursor: pointer;
+		    display:inline-block;
+		}
+		#button2{
+			padding: 0 10px;
+		    height: 30px;
+		    line-height: 28px;
+		    font-size: 14px;
+		    color: #4c4c4c;
+		    font-weight: bold;
+		    border: 1px solid #c9c9c9;
+		    border-radius: 2px;
+		    background-color: #fff;
+		    display: inline-block;
+		    vertical-align: middle;
+		    text-align: center;
+		    cursor: pointer;
+		}
+		.help-view-btn {
+		    position: absolute;
+		    bottom: 15px;
+		    right: 0;
+		    width: 120px;
+		    padding: 7px 0;
+		    border-radius: 2px;
+		    background: #777;
+		    font-size: 14px;
+		    font-weight: 700;
+		    color: #fff;
+		    text-align: center;
+		}
+		#div_headtab > a {
+		    display: inline-block;
+		    float: left;
+		    margin-right: -1px;
+		    min-width: 120px;
+		    height: 41px;
+		    line-height: 38px;
+		    font-size: 15px;
+		    color: #4f545d;
+		    font-weight: normal;
+		    text-align: center;
+		    border: 1px solid #e7e7e9;
+		    border-bottom: 4px solid #307cff;
+		    box-sizing: border-box;
+		    font-weight:bold;
+		}
+		#div_headtab>a:nth-child(1){
+			border-radius : 7px 0 0 0;
+		}
+		
+		#div_search > select{
+			width : 100px;
+			vertical-align: middle;
+		    border: 1px solid #e6e6e6;
+		    border-radius: 1px;
+		}
+		#div_search > input{
+			width:220px;
+			padding-left:10px;
+			height : 30px;
+			font-size : 13px;
+			vertical-align : middle;
+			border : 1px solid #e6e6e6;
+			border-radius : 1px;
+		}
+		#div_search > a{
+			border-color : #999aa0;
+			color : #000000;
+			padding: 0 20px;
+		    height: 30px;
+		    width:68px;
+		    line-height: 28px;
+		    font-size: 14px;
+		    color: #3d4044;
+		    font-weight: bold;
+		    border: 1px solid #c5c6cb;
+		    border-radius: 2px;
+		    display:inline-block;
+		    cursor:pointer;
+		}
+		
+		table{
+			table-layout : fixed;
+			width : 100%;
+			border-collapse:collapse;
+		}
+		
+		th{
+			    vertical-align: middle;
+			    font-size: 13px;
+			    color: #111;
+			    text-align: center;
+			    font-weight: normal;
+			    border: 1px solid #e1e1e2;
+			    background-color : #f0f0fb;
+			    height : 37px;
+		}
+		th > div> a{
+			display: inline-block;
+		    vertical-align: middle;
+		    width: 20px;
+		    height: 20px;
+		    background: url(https://flow.team/design2/flow_admin_2019/img/bul_sort.png) no-repeat center;
+		}
+		tbody{
+			    display: table-row-group;
+			    vertical-align: middle;
+			    unicode-bidi: isolate;
+			    border-color: inherit;
+		}
+		tr{
+			display: table-row;
+		    vertical-align: inherit;
+		    unicode-bidi: isolate;
+		    border-color: inherit;
+		    cursor:pointer;
+		    background-color : white;
+		    
+		}
+		td{
+			position: relative;
+		    padding: 8px;
+		    line-height: 16px;
+		    word-break: break-word;
+		    vertical-align: middle;
+		    font-size: 13px;
+		    color: #111;
+		    text-align: center;
+		    font-weight: normal;
+		    border: 1px solid #e1e1e2;
+		}
+		
+		#div_backgroundfull{
+			position:fixed;
+			top:0px;
+			left:0px;
+			width:100%;
+			height:100%;
+			overflow:hidden;
+			background:rgb(0,0,0);
+			opacity:0.3;
+			z-index:9000;
+			display:block;
+		}
+		
+		#div_projectInfopopup{
+			height:668.81px;
+			z-index:11000;
+			width:900px;
+			position:fixed;
+			top:50%;
+			left:50%;
+			margin-top:-370px;
+			margin-left:-450px;
+			display:block;
+			background:rgb(255,255,255);
+			border-radius:7px;
+		}
+		#div_popupTitle{
+			width:900px;
+			height:68px;
+			padding:25px 30px 0 30px;
+			margin:0;
+			font-size: 19px;
+		    color: #111111;
+		    font-weight: 700;
+			border-radius: 7px 7px 0 0;
+			position:relative;
+		}
+		#pt{
+			width:840px;
+			height:43px;
+			padding-bottom:14px;
+			border-bottom:1px solid #e6e6e6;
+		}
+		#div_popupTitle > a{
+			display:block;
+			position:absolute;
+			top:20px;
+			right:30px;
+			width:30px;
+			height:30px;
+			background : url(https://flow.team/design2/flow_admin_2019/img/btn_popclose.gif) no-repeat center;
+			cursor:pointer;
+		}
+		#div_popupBody{
+			width:900px;
+			height:570.81px;
+			padding:0 30px;
+			margin-bottom:30px;
+			overflow-y:auto;
+			overflow-x:hidden;
+		}
+		
+		#div_innertable{
+			width:833px;
+			height:510px;
+			margin-top:10px;
+		}
+		
+		#div_innertable > table{
+			border-collapse:collapse;
+			width:100%;
+			table-layout:fixed;
+			border:none;
+			border-spacing:0;
+			font-family: inherit;
+		    font-size: 100%;
+		    line-height: normal;
+		    margin: 0;
+		    color: #333;
+		}
+		#div_innertable > table > tbody>tr{
+			display: table-row;
+		    background-color : white;
+		}
+		#div_innertable > table > tbody> tr > th{
+		 		vertical-align: middle;
+			    font-size: 14px;
+			    color: #4f545d;
+			    font-weight:bold;
+			    text-align: left;
+			    border: none;
+			    background-color : white;
+			    height : 22px;
+			    cursor:default;
+		}
+		#div_innertable > table >tbody> tr > td{
+			height: 22px;
+			font-size: 13px;
+    		color: #4f545d;
+    		padding: 5px 0 6px 0;
+		    vertical-align: middle;
+		    text-align: left;
+		    border:none;
+		    cursor:default;
+		}
+		#outlinenone{
+			height:28px;
+			padding-left:10px;
+			outline:none;
+			border: 1px solid #e6e6e6;
+		}
+		
+		#div_popupbuttons{
+			width:833px;
+			height:36px;
+			position:relative;
+			margin-top:15px;
+			text-align:center;
+			display:flex;
+			align-items:center;
+			justify-content:center;
+		}
+		
+		#div_redbuttoncover{
+			position:absolute;
+			top:1px;
+			left:0;
+		}
+		#redbutton{
+			cursor:pointer;
+			min-width: 100px;
+		    height: 36px;
+		    line-height: 34px;
+		    font-size: 16px;
+		    color: #fff;
+		    background-color: #d03737;
+		    border-radius: 2px;
+		}
