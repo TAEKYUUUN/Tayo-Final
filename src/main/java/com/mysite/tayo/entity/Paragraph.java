@@ -5,7 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -22,8 +24,9 @@ public class Paragraph {
     @Column(name = "paragraph_idx")
 	private Long paragraphIdx;
 	
-	@Column(name = "paragraph_post_idx")
-	private Integer paragraphPostIdx;
+	@OneToOne
+    @JoinColumn(name = "post_idx", referencedColumnName = "post_idx")
+    private Post post;
 	
 	@Column(name = "title", length = 100)
 	private String title;

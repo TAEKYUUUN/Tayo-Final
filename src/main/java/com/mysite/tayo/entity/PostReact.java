@@ -18,31 +18,25 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "post_member")
-public class PostMember {
+@Table(name = "post_react")
+public class PostReact {
 	@Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "post_member_seq")
-    @SequenceGenerator(name = "post_member_seq", sequenceName = "POST_MEMBER_SEQ", allocationSize = 1)
-    @Column(name = "post_member_idx")
-    private Long postMemberIdx;
-
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "post_react_seq")
+    @SequenceGenerator(name = "post_react_seq", sequenceName = "POST_REACT_SEQ", allocationSize = 1)
+    @Column(name = "post_react_idx")
+    private Long postReactIdx;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_idx", referencedColumnName = "post_idx")
 	private Post post;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_idx", referencedColumnName = "member_idx")
-    private Member member;
+	@JoinColumn(name = "member_idx", referencedColumnName = "member_idx")
+	private Member member;
 	
-	@Column(name = "alarm")
-	private Integer alarm;
+	@Column(name = "react")
+	private Integer react;
 	
-	@Column(name = "bookmark")
-	private Integer bookmark;
-	
-	@Column(name = "re_alarm")
-	private Date reAlarm;
-	
-	@Column(name = "read_time")
-	private Date readTime;
+	@Column(name = "react_time")
+	private Date reactTime;
 }

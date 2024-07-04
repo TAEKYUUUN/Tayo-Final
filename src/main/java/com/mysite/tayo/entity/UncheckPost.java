@@ -1,7 +1,5 @@
 package com.mysite.tayo.entity;
 
-import java.util.Date;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -18,14 +16,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "post_member")
-public class PostMember {
+@Table(name = "uncheck_post")
+public class UncheckPost {
 	@Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "post_member_seq")
-    @SequenceGenerator(name = "post_member_seq", sequenceName = "POST_MEMBER_SEQ", allocationSize = 1)
-    @Column(name = "post_member_idx")
-    private Long postMemberIdx;
-
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "uncheck_post_seq")
+    @SequenceGenerator(name = "uncheck_post_seq", sequenceName = "UNCHECK_POST_SEQ", allocationSize = 1)
+    @Column(name = "uncheck_post_idx")
+    private Long uncheckPostIdx;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_idx", referencedColumnName = "post_idx")
 	private Post post;
@@ -33,16 +31,4 @@ public class PostMember {
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_idx", referencedColumnName = "member_idx")
     private Member member;
-	
-	@Column(name = "alarm")
-	private Integer alarm;
-	
-	@Column(name = "bookmark")
-	private Integer bookmark;
-	
-	@Column(name = "re_alarm")
-	private Date reAlarm;
-	
-	@Column(name = "read_time")
-	private Date readTime;
 }

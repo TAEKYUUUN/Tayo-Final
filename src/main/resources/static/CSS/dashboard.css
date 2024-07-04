@@ -660,6 +660,16 @@
        	text-align: center;
        }
 
+       #div_worklist::before {
+       	content: "";
+       	background: url("https://flow.team/flow-renewal/assets/images/dashboard/emptyimg/widget-null-01.svg?v=7c9723f685d28161150ea6ffb86b714158d024e5") no-repeat bottom -1px center / 100%;
+       	position: absolute;
+       	top: 0;
+       	left: 0;
+       	width: 100%;
+       	height: 100%;
+       }
+
        #div_memo {
        	width: 330px;
        	height: 276px;
@@ -730,7 +740,7 @@
        .change_widget_size>div:nth-child(1) {
        	height: 18px;
        	cursor: pointer;
-       	margin-top : 4px;
+       	margin-top: 4px;
        	margin-bottom: 8px;
        }
 
