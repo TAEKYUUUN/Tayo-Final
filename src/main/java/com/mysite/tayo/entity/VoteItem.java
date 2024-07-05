@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -21,8 +23,9 @@ public class VoteItem {
 	@Column(name = "vote_item_idx")
 	private Long voteItemIdx;
 	
-	@Column(name = "vote_idx")
-	private Integer voteIdx;
+	@ManyToOne
+	@JoinColumn(name = "vote_idx", referencedColumnName = "vote_idx")
+	private Vote vote;
 	
 	@Column(name = "item_name", length = 100)
 	private String itemName;

@@ -1,5 +1,7 @@
 package com.mysite.tayo.entity;
 
+import java.util.Date;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -32,14 +34,28 @@ public class Alarm {
 	private Integer alarmType;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_idx", referencedColumnName = "post_idx")
+    @JoinColumn(name = "from_post_idx", referencedColumnName = "post_idx")
 	private Post post;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "comments_idx", referencedColumnName = "comments_idx")
+	@JoinColumn(name = "from_comments_idx", referencedColumnName = "comments_idx")
 	private Comments comments;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "project_idx", referencedColumnName = "project_idx")
+	@JoinColumn(name = "from_project_idx", referencedColumnName = "project_idx")
 	private Project project;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "from_post_react_idx", referencedColumnName = "post_react_idx")
+	private PostReact postReact;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "from_comments_react_idx", referencedColumnName = "comments_react_idx")
+	private CommentsReact commentsReact;
+	
+	@Column(name = "is_read")
+	private Integer isRead = 1;
+	
+	@Column(name = "alarm_time")
+	private Date alarmTime;
 }

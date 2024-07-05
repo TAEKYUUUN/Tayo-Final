@@ -1828,6 +1828,15 @@ li {
 	vertical-align: middle;
 }
 
+.todo_deadline {
+	width : 36px;
+	height: 36px;
+}
+
+.todo_deadline>i>img {
+	width: 24px;
+}
+
 .todo_manager_profile {
 	width: 36px;
 	height: 36px;
@@ -1836,9 +1845,7 @@ li {
 }
 
 .todo_manager_profile>i>img {
-	width: 36px;
-	height: 36px;
-	border-radius: 14px;
+	width: 24px;
 }
 
 .em_vote_proceed {
@@ -2158,7 +2165,6 @@ li {
 .lowertask_name:focus {
 	outline: none;
 	border: none;
-	border-bottom: 1px solid #555;
 }
 
 .input-group1 input {
@@ -2219,7 +2225,7 @@ li {
 
 .save-draft {
 	position: absolute;
-	right: 750px;
+	right: 130px;
 }
 
 .tabs {
@@ -2294,7 +2300,7 @@ li {
 
 .update_btn {
 	cursor: pointer;
-	font-size: 15px;
+	font-size: 14px;
 	font-weight: 700;
 	color: #999;
 	text-decoration: underline;
@@ -2426,19 +2432,6 @@ li {
 	min-width: 370px;
 	text-overflow: ellipsis;
 	border: none;
-}
-
-.todo_manager_profile {
-	width: 30px;
-	height: 30px;
-	border-radius: 14px;
-	margin-left: 20px;
-}
-
-.todo_manager_profile>i>img {
-	width: 30px;
-	height: 30px;
-	border-radius: 9px;
 }
 
 .remove-btn {
@@ -2642,4 +2635,34 @@ input:checked+.slider:before {
 
 .star_btn .star_img:hover {
    content: url('https://flow.team/flow-renewal/assets/images/icons/icon_star_hover.png?v=ec4598971c09ac473b7c177e221dbb2dbef6e594');
+}
+
+.mini_subwork_img_div:hover {
+	border: 1px solid #6449fc;
+	
+}
+.mini_subwork_img_div:hover .mini_subwork_img, .mini_subwork_img_div:hover .mini_subwork_img2{
+	filter: invert(28%) sepia(63%) saturate(3185%) hue-rotate(240deg) brightness(97%) contrast(105%);
+	
+}
+.mini_subwork_img {
+	width: 14px;
+	margin: 7px 0 0 7px;
+	
+}
+.mini_subwork_img2 {
+	margin: 4px 0 0 4px;
+}
+.mini_subwork_icon {
+	display : flex;
+	align-items : center;
+}
+
+.mini_subwork_img_div {
+	border: 1px solid #a8a8a8;
+	width: 30px;
+	height: 30px;
+	margin-left: 10px;
+	border-radius: 15px;
+	background: #eeeeee;
 }

@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -21,11 +23,13 @@ public class TodoMember {
 	@Column(name = "todo_member_idx")
 	private Long todoMemberIdx;
 	
-	@Column(name = "todoname_idx")
-	private Integer todonameIdx;
+	@ManyToOne
+	@JoinColumn(name = "todo_name_idx", referencedColumnName = "todo_name_idx")
+	private TodoName todoname;
 	
-	@Column(name = "member_idx")
-	private Integer memberIdx;
+	@ManyToOne
+	@JoinColumn(name = "member_idx", referencedColumnName = "member_idx")
+	private Member member;
 	
 	@Column(name = "is_done")
 	private Integer isDone;

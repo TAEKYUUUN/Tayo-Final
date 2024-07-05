@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -39,19 +40,11 @@ public class Schedule {
 	@Column(name = "end_date")
 	private Date endDate;
 	
-	@Column(name = "manager_idx")
-	private Integer managerIdx;
-	
 	@Column(name = "place", length = 200)
 	private String place;
-	
-	@Column(name = "can_online")
-	private Integer canOnline;
 	
 	@Lob
 	@Column(name = "contents", columnDefinition = "CLOB")
 	private String contents;
 	
-	@Column(name = "schedule_alarm")
-	private Integer number;
 }
