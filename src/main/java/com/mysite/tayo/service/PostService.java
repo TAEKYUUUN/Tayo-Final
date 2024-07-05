@@ -1,6 +1,5 @@
 package com.mysite.tayo.service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -119,8 +118,8 @@ public class PostService {
 	}
 
 	// 업무(Task) 생성
-	public void createTask(Member member, Project project, String taskName, int condition, Long managerIdx,
-			Date endDate, String contents, ArrayList<String> lowerTaskNameList, ArrayList<Integer> lowertTaskConditionList) {
+	public void createTask(Member member, Project project, String taskName, int condition, Member manager,
+			Date endDate, String contents, List<String> lowerTaskNameList, List<Integer> lowertTaskConditionList) {
 		Date date = new Date();
 
 		Post post = new Post();
@@ -134,7 +133,7 @@ public class PostService {
 		task.setPost(post);
 		task.setTaskName(taskName);
 		task.setCondition(condition);
-		task.setMember(member);
+		task.setMember(member);	// manager
 		task.setStartDate(date);
 		task.setEndDate(endDate);
 		task.setUploadDate(date);
@@ -185,7 +184,7 @@ public class PostService {
 
 	// 일정(Schedule) 생성
 	public void createSchedule(Member member, Project project, String title, Date startDate, Date endDate,
-			Member manager, String place, String contents, ArrayList<Member> scheduleAttenderList) {
+			String place, String contents, List<Member> scheduleAttenderList) {
 		Date date = new Date();
 
 		Post post = new Post();
@@ -243,8 +242,8 @@ public class PostService {
 	}
 
 	// 할일(Todo) 생성
-	public void createTodo(Member member, Project project, String title, ArrayList<String> todoNameList,
-			ArrayList<Member> todoManagerList, ArrayList<Date> todoDeadlineList) {
+	public void createTodo(Member member, Project project, String title, List<String> todoNameList,
+			List<Member> todoManagerList, List<Date> todoDeadlineList) {
 		Date date = new Date();
 
 		Post post = new Post();
@@ -310,7 +309,7 @@ public class PostService {
 
 	// 투표(Vote) 생성
 	public void createVote(Member member, Project project, String title, String voteDetail, Date voteEnddate,
-			ArrayList<String> voteItemList) {
+			List<String> voteItemList) {
 		Date date = new Date();
 
 		Post post = new Post();
