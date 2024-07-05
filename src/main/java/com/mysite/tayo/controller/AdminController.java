@@ -20,7 +20,9 @@ import com.mysite.tayo.DTO.OrganizationDTO;
 import com.mysite.tayo.entity.Company;
 import com.mysite.tayo.entity.Member;
 import com.mysite.tayo.entity.Organization;
+import com.mysite.tayo.entity.Project;
 import com.mysite.tayo.entity.UserSession;
+import com.mysite.tayo.repository.ProjectRepository;
 import com.mysite.tayo.service.AdminService;
 import com.mysite.tayo.service.MemberService;
 import com.mysite.tayo.service.OrganizationService;
@@ -36,9 +38,14 @@ public class AdminController {
 	private final AdminService adminService;
 	private final OrganizationService organizationService;
 	private final UserSessionService userSessionService;
+	private final ProjectRepository projectRepository;
 	
 	@GetMapping("/adminProjectControl")
-	public String projectInfo() {
+	public String projectInfo(Model model, Authentication authentication) {
+		Member member = memberService.infoFromLogin(authentication);
+		Company company = member.getCompany();
+		List<Project> projectList =  projectRepository.findByCompanyCompanyIdx(company.getCompanyIdx());
+		model.addAttribute("projectList", projectList);
 		return "/Admin/adminProjectControl";
 	}
 	
@@ -116,6 +123,7 @@ public class AdminController {
             @RequestParam("popupName") String name,
             @RequestParam("popupEmail") String email,
             @RequestParam("popupRank") String rank,
+            @RequestParam(value="popupPw", required = false) String pw,
             @RequestParam("popupPhone") String phone, 
             @RequestParam("popupOrgIdx") Long organizationIdx,Authentication authentication) {
 		Optional<Member> member = memberService.existTest(email);
@@ -124,7 +132,7 @@ public class AdminController {
 			memberService.update(name, email, organizationIdx, rank, phone);
 		}
 		else {
-			memberService.create(name, email, organizationIdx, rank, phone, authentication);
+			memberService.create(name, email, organizationIdx, pw, rank, phone, authentication);
 		}
 		return "redirect:/Admin/memberList";
 	}

@@ -125,17 +125,19 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td style="text-align:left; padding-left:10px;">UAE 협약 프로젝트</td>
-					<td>최승현</td>
-					<td>1</td>
-					<td>1</td>
-					<td>0</td>
-					<td>2</td>
-					<td>0</td>
-					<td>0</td>
-					<td>0</td>
-					<td>1</td>
+				<tr th:each="project : ${projectList}">
+					<td th:text="${project.projectName}" style="text-align:left; padding-left:10px;"></td>
+					<td th:each="projectMember : ${project.projectMemberList}">
+						<div th:text="${projectMember.member.name}" th:if="${projectMember.isManager == 1}"></div>
+					</td>
+					<td th:text="${project.projectMemberList.size()}"></td>
+					<td th:text="${project.projectMemberList.size()}"></td>
+					<td></td>
+					<td th:text="${project.postList.size()}">2</td>
+					<td></td>
+					<td></td>
+					<td th:text="${#lists.size(project.postList.?[fileType.value == 3])}">0</td>
+					<td th:text="${#lists.size(project.postList.?[fileType.value == 2])}">0</td>
 					<td>2024-06-02, 15:33</td>
 					<td>2024-05-31, 10:47</td>
 				</tr>
