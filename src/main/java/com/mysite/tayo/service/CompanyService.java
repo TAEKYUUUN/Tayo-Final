@@ -63,6 +63,8 @@ public class CompanyService {
 			}
 		}
 		companyRepository.save(company);
+		member.get().setCompany(company);
+		memberRepository.save(member.get());
 	}
 	
 	

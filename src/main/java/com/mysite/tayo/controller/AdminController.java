@@ -75,8 +75,12 @@ public class AdminController {
 			Optional<UserSession> _userComputerSession = userSessionService.findUserSessionByMemberIdxAndDeviceType(companyMember.get(i).getMemberIdx(), "Computer");
 			if(_userSession.isPresent()) {
 				userSessionList.add(_userSession.get());
-				userMobileSessionList.add(_userMobileSession.get());
-				userComputerSessionList.add(_userComputerSession.get());
+				if(_userMobileSession.isPresent()) {
+					userMobileSessionList.add(_userMobileSession.get());
+				}
+				if(_userComputerSession.isPresent()) {
+					userComputerSessionList.add(_userComputerSession.get());
+				}
 			}
 		}
 		List<Organization> organizationList = organizationService.findByCompanyIdx(companyIdx);

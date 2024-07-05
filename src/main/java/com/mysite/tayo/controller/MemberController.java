@@ -48,19 +48,16 @@ public class MemberController {
 			    && !(authentication.getPrincipal() instanceof String)) {
 		        	 Member member = memberService.infoFromLogin(authentication);
 		        	 certificationNumber = member.getCertificationNumber() + "";
-		         
+		        	 email = member.getEmail();
 			} else {
 				HttpSession session = request.getSession();
-				certificationNumber = session.getAttribute("certificationNumber") + "";
+				certificationNumber = session.getAttribute("certificationNumber").toString() ;
 				email = (String) session.getAttribute("email");
-				System.out.println(certificationNumber);
-				System.out.println(email);
 			}
 		
 		
 		String code = digit1 + digit2 + digit3 + digit4 + digit5 + digit6;
-		
-		if(certificationNumber == null || !certificationNumber.equals(code) ) {
+		if(!certificationNumber.equals(code) ) {
 			 model.addAttribute("error", "인증번호가 일치하지 않습니다.");
 		     return "certification";
 		}
