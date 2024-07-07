@@ -1,203 +1,220 @@
 <!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <title>Tayo - 대시보드</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/dashboard.css}">
-    <script th:src="@{/js/dashboard.js}"></script>
-</head>
+	<html lang="ko">
+		<head>
+			<meta charset="UTF-8" />
+			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+			<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+			<title>Tayo - 대시보드</title>
+			<link rel="stylesheet" type="text/css" th:href="@{/css/dashboard.css}">
+			<script th:src="@{/js/dashboard.js}"></script>
+		</head>
 <body>
     <div id="div_side1">
-        <div id="div_organization_logo">
-            <div id="div_logo_box">
-                <img src="https://flow.team/flow-renewal/assets/images/logo/logo-flow.svg" />
-            </div>
-        </div>
-        <div id="div_new_project" th:data-href="@{createNewProject}">
-            <div id="div_newprj_button"><img src="/img/newprj_button.png" /></div>
-        </div>
-        <div id="div_left_menu1">
-            <div id="div_toDashboard" th:data-href="@{dashboard}"><img src="/img/home_icon.png" />대시보드</div><br />
-            <div id="div_toProjectlist" th:data-href="@{projectlist}"><img src="/img/myprj_icon.png" />내 프로젝트</div><br />
-            <div id="div_toCompanyOpenProject" th:data-href="@{companyOpenProject}"><img src="/img/company_open_icon.png" />회사 공개 프로젝트</div><br />
-            <div><img src="/img/more_icon.png" />더보기</div><br />
-        </div>
-        <div id="div_left_menu2">
-            <div id="div_collection_btn">모아보기<img src="/img/left_btn.png" /></div>
-            <div id="div_recent_update_btn">최근 업데이트<img src="/img/left_btn.png" /></div>
-            <div id="div_prj_folder_btn">프로젝트 폴더<img src="/img/left_btn.png" /></div>
-        </div>
-        <div id="div_left_menu3">
-            <div><img src="/img/invite_emp.png" />직원 초대</div>
-            <div>
-                <a th:href="@{/Admin/AdminCompanyInfo}"><img src="/img/admin.png" />어드민</a>
-            </div>
-        </div>
-        <div id="div_left_menu4">
-            <img src="/img/guide.png" />
-            <span>이용가이드</span>
-        </div>
+       <div id="div_organization_logo">
+          <div id="div_logo_box"><img src="https://flow.team/flow-renewal/assets/images/logo/logo-flow.svg"/></div>
+       </div>
+       <div id="div_new_project" th:data-href="@{createNewProject}">
+          <div id="div_newprj_button"><img src="/img/newprj_button.png"/></div>
+       </div>
+       <div id="div_left_menu1">
+          <div id="div_toDashboard" th:data-href="@{dashboard}"><img src="/img/home_icon.png"/>대시보드</div><br/>
+          <div id="div_toProjectlist" th:data-href="@{projectlist}"><img src="/img/myprj_icon.png"/>내 프로젝트</div><br/>
+          <div id="div_toCompanyOpenProject" th:data-href="@{companyOpenProject}"><img src="/img/company_open_icon.png"/>회사 공개 프로젝트</div><br/>
+          <div><img src="img/more_icon.png"/>더보기</div><br/>
+       </div>
+       <div id="div_left_menu2">
+          <div id="div_collection_btn">모아보기<img src="/img/left_btn.png"/></div>
+          <div id="div_recent_update_btn">최근 업데이트<img src="img/left_btn.png"/></div>
+          <div id="div_prj_folder_btn">프로젝트 폴더<img src="/img/left_btn.png"/></div>
+       </div>
+       <div id="div_left_menu3">
+          <div><img src="/img/invite_emp.png"/>직원 초대</div>
+          <div>
+			<a th:href="@{/Admin/AdminCompanyInfo}">
+				<img src="/img/admin.png"/>어드민
+			</a>
+			
+		  </div>
+		  
+       </div>
+       <div id="div_left_menu4">
+          <img src="img/guide.png"/>
+          <span>이용가이드</span>
+       </div>
     </div>
     <div id="div_side2">
-        <div id="div_header">
-            <div class="left-container">
-                <div id="div_consultant"><img src="/img/consultant.png" /><span>오프라인 타요 설명회 →</span></div>
-                <div id="div_pay"><img src="/img/pay_button.png" /></div>
-            </div>
-            <div id="div_top_searchbar">
-                <div id="div_main_searchbox">
-                    <img src="/img/top_search_icon.png" />
-                    <div id="div_input_search">검색</div>
+       <div id="div_header">
+		
+           <div class="left-container">
+               <div id="div_consultant"><img src="/img/consultant.png"/><span>오프라인 타요 설명회 →</span></div>
+               <div id="div_pay"><img src="/img/pay_button.png"/></div>
+           </div>
+           <div id="div_top_searchbar">
+               <div id="div_main_searchbox">
+                   <img src="/img/top_search_icon.png"/>
+                   <div id="div_input_search">검색</div>
+               </div>
+               <div id="div_search_option">옵션</div>
+           </div>
+           <div id="div_top_right_menu">
+              <div id="div_top_hirearchy"><img src="/img/hirearchy.png"/></div>
+              <div id="div_top_chat"><img src="/img/chat.png"/></div>
+              <div id="div_top_alarm" style="cursor:pointer;"><img src="/img/alarm.png"/></div>
+              <div id="div_top_profile">
+				<img src="https://flow.team/flow-renewal/assets/images/profile-default.svg"/>
+			</div>
+           </div></div>
+		<div id="div_content">
+			<div id="alarmPopup" style="display:none;">
+				<div id="alarmHead">알림 <a id="exitlogoedit"></a></div>
+				<div id="alarmBody">
+					<ul>
+						<li id="unread" class="allOrUnread">미확인</li>
+						<li id="allalarm">전체</li>
+						<li id="readall" style="margin-left:188px;">모두 읽음</li>
+					</ul>
+					<div id="searchTab">
+						<img id="searchicon" src="img/search_bar_icon.png" alt="" />
+						<input id="searchInput" type="text" placeholder="검색">
+						<div id="searchOption">옵션</div>
+					</div>
+					<div id="alarms">
+						<ul>
+							<li class="alarmListClass unreadAlarm">
+								<div id="alarmProfile" >ㅇ</div>
+								<div id="div_alarmtext">
+									<div id="div_alarmTitle">
+										<span>for조</span>
+										<em>7분 전</em>
+									</div>
+									<div id="div_alarmContents">우태균님의 글 등록</div>
+									<div id="div_alarmDetails">for조 화이팅</div>
+								</div>								
+							</li>
+							<li class="alarmListClass">
+								<div id="alarmProfile" >ㅇ</div>
+								<div id="div_alarmtext">
+									<div id="div_alarmTitle">
+										<span>for조</span>
+										<em>7분 전</em>
+									</div>
+									<div id="div_alarmContents">우태균님의 글 등록</div>
+									<div id="div_alarmDetails">for조 화이팅</div>
+								</div>								
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div id="div_introwrap">
+             <div id="div_profile_name">
+                <div id="div_profile">
+					<span th:text="${member.name}"></span>
+				</div>
+              	<div id="div_status_input" th:text="'·&nbsp; ' + ${member.statusMessage != null ? member.statusMessage : '프로필 상태 메세지를 입력해보세요.'}"><div>·</div></div>
+             </div>
+             <div id="div_right_box">
+                <div id="div_right_time">
+                   <span th:text="${#calendars.format(#calendars.createNow(), 'yyyy년 MM월 dd일')}"></span>
                 </div>
-                <div id="div_search_option">옵션</div>
-            </div>
-            <div id="div_top_right_menu">
-                <div id="div_top_hirearchy"><img src="/img/hirearchy.png" /></div>
-                <div id="open-chat-window-btn"><img src="/img/chat.png" /></div>
-                <div id="div_top_alarm"><img src="/img/alarm.png" /></div>
-                <div id="div_top_profile">
-                    <img src="https://flow.team/flow-renewal/assets/images/profile-default.svg" />
+                <div id="div_right_content">
+                   <img src="https://flow.team/flow-renewal/assets/images/dashboard/icon-dashboard-widget-home-light.svg?v=335328a99779d2465e54b6584b7f905cbbca119c"/>
+                   <div id="div_setwidget_btn">
+						<img src="https://flow.team/flow-renewal/assets/images/dashboard/icon-dashboard-widget-set-light.svg?v=88a6e5dbe751cde146937ff9e3264af3b6240444">
+						위젯 설정
+					</div>
                 </div>
-            </div>
-        </div>
-        <div id="div_content">
-            <div id="div_introwrap">
-                <div id="div_profile_name">
-                    <div id="div_profile">
-                        <span th:text="${member.name}"></span>
-                    </div>
-                    <div id="div_status_input" th:text="'·&nbsp; ' + ${member.statusMessage != null ? member.statusMessage : '프로필 상태 메세지를 입력해보세요.'}"><div>·</div></div>
+             </div>
+          </div>
+          <div id="div_widgetwrap">
+             <div id="div_myproject">
+                <h3 class="widget_large_h3">
+                   <span class="widget_large_title">내 프로젝트</span>
+                   <span class="widget_large_category">최근 프로젝트</span>
+				   <div class="widget_menu_icon">
+						<div class="change_widget_size" >
+							<div>위젯 삭제</div>
+							<div>작은 위젯으로 변경</div>
+						</div>
+				   </div>
+                </h3>
+				<div class="div_large_widget">
+					<div id="new_prj_default" th:data-href="@{createNewProject}">
+						<span class="prj_icon_box">+</span>
+						새 프로젝트
+					</div>
+					<div class="div_prj_item" th:each="projectMember : ${myproject}" th:data-href="@{projectFeed2}">
+						<input type="hidden" th:value="${projectMember.project.projectIdx}"/>
+						<span class="prj_icon_box1" th:style="'background-color:' + ${projectMember.project.color}"></span>
+						<span th:text="${projectMember.project.projectName}"></span>
+					</div>
+				</div>
+             </div>
+             <div id="div_mymember">
+				<div>
+	                <h3 class="widget_small_h3">
+	                   <span class="widget_small_title">구성원</span>
+	                   <span class="widget_small_category">최근 협업 순</span>
+					   <div class="widget_menu_icon">
+							<div class="change_widget_size">
+								<div>위젯 삭제</div>
+								<div>작은 위젯으로 변경</div>
+							</div>
+						</div>
+	                </h3>
+				</div>
+                <div id="div_memberlist" class="div_small_widget scrollbar">
+                   <div id="member_invite">
+                      <span id="new_member_box">+</span>직원 초대
+                   </div>
+                   <div class="member_item" th:each="companyMember : ${companyMember}">
+                      <span class="member_profile">
+                         <img th:src="${companyMember.profileImage != null ? companyMember.profileImage : 'https://flow.team/flow-renewal/assets/images/profile-default.png'}" alt="Profile Image"/>
+                      </span>
+                      <div class="member_info">
+                         <div class="member_name" th:text="${companyMember.name}"></div>
+                         <div class="member_company_org" th:text="${companyMember.company.companyName} + ' &nbsp;|&nbsp; ' + ${companyMember.rankName}"></div>
+                      </div>
+                   </div>
                 </div>
-                <div id="div_right_box">
-                    <div id="div_right_time">
-                        <span th:text="${#calendars.format(#calendars.createNow(), 'yyyy년 MM월 dd일')}"></span>
-                    </div>
-                    <div id="div_right_content">
-                        <img src="https://flow.team/flow-renewal/assets/images/dashboard/icon-dashboard-widget-home-light.svg?v=335328a99779d2465e54b6584b7f905cbbca119c" />
-                        <div id="div_setwidget_btn">
-                            <img src="https://flow.team/flow-renewal/assets/images/dashboard/icon-dashboard-widget-set-light.svg?v=88a6e5dbe751cde146937ff9e3264af3b6240444" />
-                            위젯 설정
-                        </div>
-                    </div>
+             </div>
+             <div id="div_mywork">
+                <h3 class="widget_large_h3">
+                   <span class="widget_large_title">내가 담당중인 업무</span>
+                   <span class="widget_large_category">이번 주</span>
+				   <div class="widget_menu_icon">
+						<div class="change_widget_size">
+							<div>위젯 삭제</div>
+							<div>작은 위젯으로 변경</div>
+						</div>
+				   </div>
+                </h3>
+                <div class="div_large_widget">
+                   <div id="tab_title">
+                      <div id="tab_1">예정된 업무 <span>0</span></div>
+                      <div id="tab_2">지연된 업무 <span>4</span></div>
+                   </div>
+                   <div id="div_worklist">예정된 업무가 없습니다.</div>
                 </div>
-            </div>
-            <div id="div_widgetwrap">
-                <div id="div_myproject">
-                    <h3 class="widget_large_h3">
-                        <span class="widget_large_title">내 프로젝트</span>
-                        <span class="widget_large_category">최근 프로젝트</span>
-                        <div class="widget_menu_icon">
-                            <div class="change_widget_size">
-                                <div>위젯 삭제</div>
-                                <div>작은 위젯으로 변경</div>
-                            </div>
-                        </div>
-                    </h3>
-                    <div class="div_large_widget">
-                        <div id="new_prj_default" th:data-href="@{createNewProject}">
-                            <span class="prj_icon_box">+</span>
-                            새 프로젝트
-                        </div>
-                        <div class="div_prj_item" th:each="projectMember : ${myproject}">
-                            <span class="prj_icon_box1" th:style="'background-color:' + ${projectMember.project.color}"></span>
-                            <span th:text="${projectMember.project.projectName}"></span>
-                        </div>
-                    </div>
+             </div>
+             <div id="div_memo">
+                <h3 class="widget_small_h3">
+                   <span class="widget_small_title">메모장</span>
+				   <div class="widget_menu_icon">
+						<div class="change_widget_size">
+							<div>위젯 삭제</div>
+							<div>작은 위젯으로 변경</div>
+						</div>
+				   </div>
+                </h3>
+                <div class="div_small_widget">
+                   <div class="div_memo_widget">내용을 입력해주세요.</div>
                 </div>
-                <div id="div_mymember">
-                    <div>
-                        <h3 class="widget_small_h3">
-                            <span class="widget_small_title">구성원</span>
-                            <span class="widget_small_category">최근 협업 순</span>
-                            <div class="widget_menu_icon">
-                                <div class="change_widget_size">
-                                    <div>위젯 삭제</div>
-                                    <div>작은 위젯으로 변경</div>
-                                </div>
-                            </div>
-                        </h3>
-                    </div>
-                    <div id="div_memberlist" class="div_small_widget scrollbar">
-                        <div id="member_invite">
-                            <span id="new_member_box">+</span>직원 초대
-                        </div>
-                        <div class="member_item" th:each="companyMember : ${companyMember}">
-                            <span class="member_profile">
-                                <img th:src="${companyMember.profileImage != null ? companyMember.profileImage : 'https://flow.team/flow-renewal/assets/images/profile-default.png'}" alt="Profile Image" />
-                            </span>
-                            <div class="member_info">
-                                <div class="member_name" th:text="${companyMember.name}"></div>
-                                <div class="member_company_org" th:text="${companyMember.company.companyName} + ' &nbsp;|&nbsp; ' + ${companyMember.rankName}"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="div_mywork">
-                    <h3 class="widget_large_h3">
-                        <span class="widget_large_title">내가 담당중인 업무</span>
-                        <span class="widget_large_category">이번 주</span>
-                        <div class="widget_menu_icon">
-                            <div class="change_widget_size">
-                                <div>위젯 삭제</div>
-                                <div>작은 위젯으로 변경</div>
-                            </div>
-                        </div>
-                    </h3>
-                    <div class="div_large_widget">
-                        <div id="tab_title">
-                            <div id="tab_1">예정된 업무 <span>0</span></div>
-                            <div id="tab_2">지연된 업무 <span>4</span></div>
-                        </div>
-                        <div id="div_worklist">예정된 업무가 없습니다.</div>
-                    </div>
-                </div>
-                <div id="div_memo">
-                    <h3 class="widget_small_h3">
-                        <span class="widget_small_title">메모장</span>
-                        <div class="widget_menu_icon">
-                            <div class="change_widget_size">
-                                <div>위젯 삭제</div>
-                                <div>작은 위젯으로 변경</div>
-                            </div>
-                        </div>
-                    </h3>
-                    <div class="div_small_widget">
-                        <div class="div_memo_widget">내용을 입력해주세요.</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <a th:href="@{/member/login}" sec:authorize="isAnonymous()" style="float: right; margin-top: -30px">로그인</a>
-        <a th:href="@{/member/logout}" sec:authorize="isAuthenticated()" style="float: right; margin-top: -30px">로그아웃</a>
-        <!-- 채팅 html 연결 -->
-        <div class="chat-window" id="chat-window-js" style="display: none">
-            <div class="chat-window-header">
-                <h2>채팅</h2>
-                <button id="close-chat-window-btn">✕</button>
-            </div>
-            <div class="chat-search">
-                <input type="text" placeholder="이름, 채팅방명 검색" />
-            </div>
-            <div class="chat-list">
-                <div th:each="chat : ${chatList}" class="chat-list-item">
-                    <input type="hidden" th:value="${chat.chatIdx}" />
-                    <img src="https://via.placeholder.com/40" alt="User" />
-                    <div>
-                        <div th:each="chatmember : ${chat.chatMemberList}">
-                            <span th:if="${chatmember.member.memberIdx == 1}">
-                                <span th:if="${chatmember.chatName != null}" th:text="${chatmember.chatName}"></span>
-                                <span th:unless="${chatmember.chatName != null}" th:each="memberName : ${chat.chatMemberList}">
-                                    <span th:if="${memberName.member.memberIdx != 1}" th:text="${memberName.member.name}"></span>
-                                </span>
-                            </span>
-                        </div>
-                        <span>아이사 반</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+             </div>
+          </div>
+       </div>
+	   <a th:href="@{/member/login}" sec:authorize="isAnonymous()" style="float:right; margin-top:-30px;">로그인</a>
+	   		  <a th:href="@{/member/logout}" sec:authorize="isAuthenticated()" style="float:right; margin-top:-30px;">로그아웃</a>
     </div>
 </body>
 </html>

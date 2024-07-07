@@ -1,4 +1,21 @@
 document.addEventListener('DOMContentLoaded', function() {
+	
+	document.querySelector('#unread').addEventListener('click', ()=>{
+		document.querySelector('#allalarm').classList.remove('allOrUnread');
+		document.querySelector('#unread').classList.add('allOrUnread');
+	})
+	document.querySelector('#allalarm').addEventListener('click', ()=>{
+		document.querySelector('#unread').classList.remove('allOrUnread');
+		document.querySelector('#allalarm').classList.add('allOrUnread');
+	})
+	
+	document.querySelector('#div_top_alarm').addEventListener('click', ()=>{
+		document.querySelector('#alarmPopup').style.removeProperty('display');
+	})
+	document.querySelector('#exitlogoedit').addEventListener('click', ()=>{
+		document.querySelector('#alarmPopup').style.display='none';
+	})
+	
     // '새 프로젝트' 클릭 시 createNewProject로 이동
     document.getElementById('new_prj_default').addEventListener('click', function() {
         var href = this.getAttribute('data-href');

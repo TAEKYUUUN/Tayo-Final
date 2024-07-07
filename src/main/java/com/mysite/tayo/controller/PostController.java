@@ -87,7 +87,7 @@ public class PostController {
 	            break;
 	        case 2: // task
 	        	// test
-	        	managerIdx = 1l;
+	        	managerIdx = 8l;
 	        	SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
 	        	try {
 	                endDate = formatter.parse("2024/07/08");
