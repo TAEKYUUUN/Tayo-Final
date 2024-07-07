@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	createPostArea.addEventListener('click', function() {
 		modal.style.display = 'block';
 		backgroundFull.style.display = 'block';
+		tabTypeInput.value = 1;
 	});
 
 	closeBtn.addEventListener('click', function() {
@@ -48,21 +49,22 @@ document.addEventListener('DOMContentLoaded', function() {
             <input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
         </div>
         <div class="input-group2" style="max-height: 400px;">
+        	<input type="hidden" id="hiddenCondition" name="condition" value="1">
             <div class="task_icon_box1">
                 <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-status.svg?v=b3a5b7f86f05f658d1ce954c34f8c33a61ea8873" style="margin-right: 10px;"/>
-                <button type="button" class="task_state_btn request active">요청</button>
-                <button type="button" class="task_state_btn progress">진행</button>
-                <button type="button" class="task_state_btn feedback">피드백</button>
-                <button type="button" class="task_state_btn completion">완료</button>
-                <button type="button" class="task_state_btn hold">보류</button>
+                <button type="button" class="task_state_btn request active" name="condition" value="1">요청</button>
+                <button type="button" class="task_state_btn progress" name="condition" value="2">진행</button>
+                <button type="button" class="task_state_btn feedback" name="condition" value="3">피드백</button>
+                <button type="button" class="task_state_btn completion" name="condition" value="4">완료</button>
+                <button type="button" class="task_state_btn hold" name="condition" value="5">보류</button>
             </div>
             <div class="task_icon_box2">
                 <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d" style="margin-right: 16px;"/>
-                <button type="button" class="update_btn">담당자 추가</button>
+                <button type="button" class="update_btn" name="manager">담당자 추가</button>
             </div>
             <div class="task_icon_box1">
                 <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=cfae9e268527a6f7007fe81fd49cab2c9659eea3" style="margin-right:16px;"/>
-                <button type="button" class="update_btn">마감일 추가</button>
+                <button type="button" class="update_btn" name="endDate">마감일 추가</button>
             </div>
             <div class="div_textarea" style="height:270px;">
                 <textarea id="content" name="content" placeholder="내용을 입력하세요." style="height:270px;"></textarea>
@@ -80,29 +82,52 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
 		modalContent.innerHTML = taskContent;
 
-		const taskButtons = document.querySelectorAll('.task_state_btn');
-		taskButtons.forEach(button => {
+		const taskStateButtons = document.querySelectorAll('.task_state_btn');
+		taskStateButtons.forEach(button => {
 			button.addEventListener('click', function() {
-				taskButtons.forEach(btn => btn.classList.remove('active'));
+				taskStateButtons.forEach(btn => btn.classList.remove('active'));
 				this.classList.add('active');
+				document.getElementById('hiddenCondition').value = this.value;
 			});
 		});
 
 		document.getElementById('addLowerTask').addEventListener('click', function() {
+			addLowerTask();
+		});
+
+		function addLowerTask() {
+			const taskContainer = document.getElementById('taskContainer');
+			const lowerTasks = taskContainer.querySelectorAll('.input_lowertask');
+
+			if (lowerTasks.length >= 5) {
+				alert('하위 업무는 최대 5개까지만 추가할 수 있습니다.');
+				return;
+			}
+
 			const newTaskDiv = document.createElement('div');
 			newTaskDiv.className = 'input_lowertask';
 
 			const requestButton = document.createElement('button');
 			requestButton.type = 'button';
 			requestButton.className = 'lowertask_state_btn request active';
+			requestButton.name = 'lowerTaskConditions';
+			requestButton.value = '1';
 			requestButton.textContent = '요청';
 			newTaskDiv.appendChild(requestButton);
 
 			const inputField = document.createElement('input');
 			inputField.type = 'text';
 			inputField.className = 'lowertask_name';
+			inputField.name = 'lowerTaskNames';
 			inputField.placeholder = '업무명 입력(Enter로 업무 연속 등록 가능)';
 			newTaskDiv.appendChild(inputField);
+
+			inputField.addEventListener('keypress', function(event) {
+				if (event.key === 'Enter') {
+					event.preventDefault();
+					addLowerTaskAndFocus();
+				}
+			});
 
 			const miniSubworkIcon = document.createElement('div');
 			miniSubworkIcon.className = 'mini_subwork_icon';
@@ -111,6 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			miniSubworkImgDiv1.className = 'mini_subwork_img_div';
 			const miniSubworkImg1 = document.createElement('img');
 			miniSubworkImg1.className = 'mini_subwork_img2';
+			miniSubworkImg1.name = 'lowerTaskManagers';
 			miniSubworkImg1.src = 'https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=dab609f4e3114ab334c0216bd41d1a6e27b6503a';
 			miniSubworkImgDiv1.appendChild(miniSubworkImg1);
 
@@ -118,17 +144,45 @@ document.addEventListener('DOMContentLoaded', function() {
 			miniSubworkImgDiv2.className = 'mini_subwork_img_div';
 			const miniSubworkImg2 = document.createElement('img');
 			miniSubworkImg2.className = 'mini_subwork_img2';
+			miniSubworkImg2.name = 'lowerTaskEndDates';
 			miniSubworkImg2.src = 'https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=118ef1e91b7ced5f275a138083d2ddd7cf94773d';
 			miniSubworkImgDiv2.appendChild(miniSubworkImg2);
 
 			miniSubworkIcon.appendChild(miniSubworkImgDiv1);
 			miniSubworkIcon.appendChild(miniSubworkImgDiv2);
 
-			newTaskDiv.appendChild(miniSubworkIcon);
+			const hiddenInput = document.createElement('input');
+			hiddenInput.type = 'hidden';
+			hiddenInput.className = 'lowertask_state_value';
+			hiddenInput.name = 'lowerTaskConditions';
+			hiddenInput.value = requestButton.value; // 초기 값 설정
+			newTaskDiv.appendChild(hiddenInput);
 
-			const taskContainer = document.getElementById('taskContainer');
+
+			const removeButton = document.createElement('button');
+			removeButton.textContent = 'x';
+			removeButton.className = 'remove-btn';
+			removeButton.style.position = 'relative'; // 스타일 설정을 명확히
+			removeButton.style.right = '-37px'; // 기존 스타일 유지
+
+			removeButton.addEventListener('click', function() {
+				newTaskDiv.remove();
+			});
+
+			newTaskDiv.appendChild(miniSubworkIcon);
+			newTaskDiv.appendChild(removeButton);
 			taskContainer.insertBefore(newTaskDiv, document.getElementById('addLowerTask'));
-		});
+
+			return inputField;
+		}
+
+		function addLowerTaskAndFocus() {
+			const newInput = addLowerTask();
+			if (newInput) {
+				newInput.focus();
+			}
+		}
+
 	});
 
 	const paragraphTab = document.querySelector('.tab-paragraph');
@@ -163,8 +217,8 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="input-group2" style="max-height: 400px;">
             <div class="task_icon_box1">
                 <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=cfae9e268527a6f7007fe81fd49cab2c9659eea3" style="margin-right: 16px;" />
-                <input type="datetime-local" id="start" name="startDate"/>&ensp;-&ensp; 
-                <input type="datetime-local" id="end" name="endDate"/>
+                <input type="datetime-local" id="start" name="startDatetime"/>&ensp;-&ensp; 
+                <input type="datetime-local" id="end" name="endDatetime"/>
                 <input type="checkbox" id="allDay" name="allDay"/>
                 <label for="allDay">종일</label>
             </div>
@@ -188,10 +242,14 @@ document.addEventListener('DOMContentLoaded', function() {
 			const endInput = document.getElementById('end');
 			if (this.checked) {
 				startInput.type = 'date';
+				startInput.name = 'startDate';
 				endInput.type = 'date';
+				endInput.name = 'endDate';
 			} else {
 				startInput.type = 'datetime-local';
+				startInput.name = 'startDatetime';
 				endInput.type = 'datetime-local';
+				endInput.name = 'endDatetime';
 			}
 		});
 	});
@@ -293,10 +351,10 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="input-group2" style="max-height: 400px;">
             <input type="text" id="vote_detail" name="vote_detail" placeholder="투표에 관한 설명 입력(옵션)"/>
             <div class="div_voteitem_edit">
-                <input type="text" placeholder="항목 추가 (Enter 또는 Tab) / 최대 60자" class="voteitem_input" id="voteitem" name="voteitem"/>
+                <input type="text" placeholder="항목 추가 (Enter 또는 Tab) / 최대 60자" class="voteitem_input" id="voteitem" name="voteItems"/>
             </div>
             <div class="div_voteitem_edit">
-                <input type="text" placeholder="항목 추가 (Enter 또는 Tab) / 최대 60자" class="voteitem_input" id="voteitem" name="voteitem"/>
+                <input type="text" placeholder="항목 추가 (Enter 또는 Tab) / 최대 60자" class="voteitem_input" id="voteitem" name="voteItems"/>
             </div>
             <div class="voteContainer">              
                 <button type="button" class="add_voteitem" id="addVoteitem">투표 항목 추가</button>
@@ -345,7 +403,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			newInput.type = 'text';
 			newInput.placeholder = '항목 추가 (Enter 또는 Tab) / 최대 60자';
 			newInput.className = 'voteitem_input';
-			newInput.name = 'voteitem';
+			newInput.name = 'voteItems';
 
 			const removeButton = document.createElement('button');
 			removeButton.textContent = 'x';

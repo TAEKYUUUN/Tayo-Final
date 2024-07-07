@@ -36,18 +36,11 @@ public class LowerTask {
 	@Column(name = "condition")
 	private Integer condition;
 	
-	@Column(name = "task_priority")
-	private Integer taskPriority;
-	
-	@Column(name = "manager_idx")
-	private Integer managerIdx;
-	
-	@Column(name = "start_date")
-	private Date startDate;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "manager_idx", referencedColumnName = "member_idx")
+	private Member manager;
 	
 	@Column(name = "end_date")
 	private Date endDate;
-	
-	@Column(name = "upload_date")
-	private Date uploadDate;
+
 }

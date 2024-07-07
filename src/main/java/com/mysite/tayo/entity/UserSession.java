@@ -24,6 +24,7 @@ public class UserSession {
 	 @Id
 	 @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "session_seq")
 	 @SequenceGenerator(name = "session_seq", sequenceName = "SESSION_SEQ", allocationSize = 1)
+	 @Column(name = "session_idx")
 	 private Long SessionIdx;
 	 
 	 @Column(name = "device_type", length=100)

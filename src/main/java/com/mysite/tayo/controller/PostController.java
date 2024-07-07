@@ -1,9 +1,13 @@
 package com.mysite.tayo.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -13,20 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mysite.tayo.entity.Member;
 import com.mysite.tayo.entity.Project;
-import com.mysite.tayo.repository.LowerTaskRepository;
 import com.mysite.tayo.repository.MemberRepository;
-import com.mysite.tayo.repository.ParagraphRepository;
 import com.mysite.tayo.repository.PostRepository;
+import com.mysite.tayo.repository.ProjectMemberRepository;
 import com.mysite.tayo.repository.ProjectRepository;
-import com.mysite.tayo.repository.ScheduleAttenderRepository;
-import com.mysite.tayo.repository.ScheduleRepository;
-import com.mysite.tayo.repository.TaskRepository;
-import com.mysite.tayo.repository.TodoMemberRepository;
-import com.mysite.tayo.repository.TodoNameRepository;
-import com.mysite.tayo.repository.TodoRepository;
-import com.mysite.tayo.repository.VoteItemRepository;
-import com.mysite.tayo.repository.VoteRepository;
-import com.mysite.tayo.repository.VoterRepository;
 import com.mysite.tayo.service.MemberService;
 import com.mysite.tayo.service.PostService;
 
@@ -36,22 +30,19 @@ import lombok.RequiredArgsConstructor;
 @Controller
 public class PostController {
 
-	private final PostService postService;
-	private final MemberService memberService;
-	private final MemberRepository memberRepository;
-	private final ProjectRepository projectRepository;
-	private final PostRepository postRepository;
-	private final ParagraphRepository paragraphRepository;
-	private final TaskRepository taskRepository;
-	private final LowerTaskRepository lowerTaskRepository;
-	private final ScheduleRepository scheduleRepository;
-	private final ScheduleAttenderRepository scheduleAttenderRepository;
-	private final TodoRepository todoRepository;
-	private final TodoNameRepository todoNameRepository;
-	private final TodoMemberRepository todoMemberRepository;
-	private final VoteRepository voteRepository;
-	private final VoteItemRepository voteItemRepository;
-	private final VoterRepository voterRepository;
+	@Autowired
+    private MemberService memberService;
+	@Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private ProjectRepository projectRepository;
+    @Autowired
+    private ProjectMemberRepository projectMemberRepository;
+    @Autowired
+    private PostRepository postRepository;
+    @Autowired
+    private PostService postService;
+
 
 	
 	@PostMapping("/projectFeed2/{projectIdx}")
@@ -62,6 +53,8 @@ public class PostController {
 	        @RequestParam(value = "content", required = false) String content,
 	        @RequestParam(value = "condition", required = false) Integer condition,
 	        @RequestParam(value = "managerIdx", required = false) Long managerIdx,
+	        @RequestParam(value = "startDatetime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date startDatetime,
+            @RequestParam(value = "endDatetime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date endDatetime,
 	        @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
 	        @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
 	        @RequestParam(value = "place", required = false) String place,
@@ -74,7 +67,6 @@ public class PostController {
 	        @RequestParam(value = "todoDeadlines", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") List<Date> todoDeadlineList,
 	        @RequestParam(value = "voteEnddate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date voteEnddate,
 	        @RequestParam(value = "voteItems", required = false) List<String> voteItemList) {
-
 	    Member member = memberService.infoFromLogin(authentication);
 	    Optional<Project> projectOpt = projectRepository.findById(projectIdx);
 	    
@@ -82,7 +74,9 @@ public class PostController {
 	        // Handle project not found
 	        return "redirect:/error";
 	    }
-
+	    
+	    System.out.println("Received content: " + content);
+	    
 	    Project project = projectOpt.get();
 	    
 	    switch (tabType) {
@@ -90,6 +84,15 @@ public class PostController {
 	            postService.createParagraph(member, project, title, content, openRange);
 	            break;
 	        case 2: // task
+	        	// test
+	        	managerIdx = 1l;
+	        	SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+	        	try {
+	                endDate = formatter.parse("2024/07/08");
+	                System.out.println(endDate);
+	            } catch (ParseException e) {
+	                System.out.println("Invalid date format: " + e.getMessage());
+	            }
 	            if (managerIdx == null || !memberRepository.findById(managerIdx).isPresent()) {
 	                // Handle manager not found
 	                return "redirect:/error";
@@ -98,12 +101,23 @@ public class PostController {
 	            postService.createTask(member, project, title, condition, manager, endDate, content, lowerTaskNameList, lowerTaskConditionList);
 	            break;
 	        case 3: // schedule
-	            postService.createSchedule(member, project, title, startDate, endDate, place, content, scheduleAttenderList);
+	        	Date finalStartDate = startDatetime != null ? startDatetime : startDate;
+	            Date finalEndDate = endDatetime != null ? endDatetime : endDate;
+	            // 회사멤버가 아닌 프로젝트 멤버로 수정할것!!!!! - 우태균 정신 차려
+	        	scheduleAttenderList = memberRepository.findByCompanyCompanyIdx(member.getCompany().getCompanyIdx());
+	            postService.createSchedule(member, project, title, finalStartDate, finalEndDate, place, content, scheduleAttenderList);
 	            break;
 	        case 4: // todo
 	            postService.createTodo(member, project, title, todoNameList, todoManagerList, todoDeadlineList);
 	            break;
 	        case 5: // vote
+	        	Date currentDate = new Date();
+
+	            // Calendar 객체를 사용하여 하루를 더합니다.
+	            Calendar calendar = Calendar.getInstance();
+	            calendar.setTime(currentDate);
+	            calendar.add(Calendar.DAY_OF_YEAR, 1);
+	        	voteEnddate = calendar.getTime();
 	            postService.createVote(member, project, title, voteDetail, voteEnddate, voteItemList);
 	            break;
 	        default:

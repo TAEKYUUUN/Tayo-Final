@@ -381,20 +381,20 @@ li {
 #div_project_option {
 	width: 56px;
 	height: 24px;
-	display : flex;
+	display: flex;
 	align-items: center;
 }
 
 .project_option_btn {
-	width : 25px;
-	height : 25px;
+	width: 25px;
+	height: 25px;
 	position: fixed;
-    top: 69px;
-    left: 359px;
+	top: 69px;
+	left: 359px;
 }
 
-.project_option_btn > img {
-	width : 25px;
+.project_option_btn>img {
+	width: 25px;
 }
 
 #div_invite_prjmem {
@@ -656,14 +656,14 @@ li {
 	background-color: rgb(255, 255, 255);
 }
 
-.participants_title > em {
+.participants_title>em {
 	font-size: 12px;
 	font-style: normal;
 	color: #333333;
 	font-weight: 700;
 }
 
-.participants_title > span {
+.participants_title>span {
 	font-size: 12px;
 	color: #999999;
 	margin: 0px 0px 0px 2px;
@@ -895,7 +895,7 @@ li {
 	padding: 10px 30px;
 	font-size: 18px;
 	border-bottom: 1px solid #eee;
-	flex-direction: column;
+	flex-direction: row;
 }
 
 .post_author {
@@ -943,7 +943,6 @@ li {
 
 .post_card_container {
 	width: 100%;
-	padding: 10px 0px 0px;
 	height: fit-content;
 	font-size: 14px;
 }
@@ -953,7 +952,7 @@ li {
 	height: fit-content;
 	font-size: 14px;
 	line-height: 180%;
-	padding: 10px 30px 0px;
+	padding: 0px 30px 0px;
 }
 
 .post_bottom_area {
@@ -1232,7 +1231,7 @@ li {
 .task_option {
 	width: 612px;
 	height: fit-content;
-	margin-bottom: 25px;
+	margin-bottom: 15px;
 }
 
 .task_content_group {
@@ -1351,24 +1350,24 @@ li {
 .update_manager_btn {
 	cursor: pointer;
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: 700;
 	color: #999;
 	text-decoration: underline;
 	border: none;
 	background: none;
-	margin: 0px 0px 0px -10px;
+	margin: 0px 0px 0px 3px;
 	padding: 0px 10px;
 }
 
 .update_attender_btn {
 	cursor: pointer;
 	font-size: 14px;
-	font-weight: 500;
+	font-weight: 700;
 	color: #999;
 	text-decoration: underline;
 	border: none;
 	background: none;
-	margin: 0px 0px 0px -10px;
+	margin: 0px 0px 0px 3px;
 	padding: 0px 10px;
 }
 
@@ -1457,6 +1456,7 @@ li {
 	border: 1px solid #eee;
 	box-shadow: 0 0 15px rgba(0, 0, 0, .04);
 	border-radius: 2px;
+	margin-bottom : 10px;
 }
 
 .subtask_state_btn {
@@ -1829,7 +1829,7 @@ li {
 }
 
 .todo_deadline {
-	width : 36px;
+	width: 36px;
 	height: 36px;
 }
 
@@ -2070,7 +2070,7 @@ li {
 .modal {
 	z-index: 20000;
 	width: 674px;
-	height : 780px;
+	height: 780px;
 	background: white;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	border-radius: 8px;
@@ -2097,8 +2097,8 @@ li {
 .project-name {
 	display: flex;
 	align-items: center;
-	position : fixed;
-	left : 125px;
+	position: fixed;
+	left: 125px;
 }
 
 .project-name span {
@@ -2136,8 +2136,8 @@ li {
 }
 
 .input-group2 {
-	min-height : 465px;
-	margin-bottom : 34px;
+	min-height: 465px;
+	margin-bottom: 34px;
 }
 
 .input-group1 label,
@@ -2250,7 +2250,6 @@ li {
 .task_icon_box2 {
 	display: flex;
 	align-items: center;
-	margin-left: 20px;
 	margin-top: 20px;
 }
 
@@ -2306,8 +2305,12 @@ li {
 	text-decoration: underline;
 	border: none;
 	background: none;
-	margin: 0px 0px 0px -10px;
+	margin: 0px 0px 0px 7px;
 	padding: 0px 10px;
+}
+
+.update_btn:hover {
+	color: #6449FC;
 }
 
 .div_textarea {
@@ -2604,58 +2607,63 @@ input:checked+.slider:before {
 }
 
 #content:focus {
-	outline : none;
-	border : none;
+	outline: none;
+	border: none;
 }
 
 .project_hotlist {
-   width: 24px;
-   height: 24px;
-   margin-right : 2px;
+	width: 24px;
+	height: 24px;
+	margin-right: 2px;
 }
 
 .project_hotlist>img {
-   width: 24px;
-   height: 24px;
+	width: 24px;
+	height: 24px;
 }
 
 .star_btn {
-   width: 24px;
-   height: 24px;
-   background: none;
-   border: none;
-   padding: 0;
-   cursor: pointer;
+	width: 24px;
+	height: 24px;
+	background: none;
+	border: none;
+	padding: 0;
+	cursor: pointer;
 }
 
 .star_btn>img {
-   width: 24px;
-   height: 24px;
+	width: 24px;
+	height: 24px;
 }
 
 .star_btn .star_img:hover {
-   content: url('https://flow.team/flow-renewal/assets/images/icons/icon_star_hover.png?v=ec4598971c09ac473b7c177e221dbb2dbef6e594');
+	content: url('https://flow.team/flow-renewal/assets/images/icons/icon_star_hover.png?v=ec4598971c09ac473b7c177e221dbb2dbef6e594');
 }
 
 .mini_subwork_img_div:hover {
 	border: 1px solid #6449fc;
-	
+
 }
-.mini_subwork_img_div:hover .mini_subwork_img, .mini_subwork_img_div:hover .mini_subwork_img2{
+
+.mini_subwork_img_div:hover .mini_subwork_img,
+.mini_subwork_img_div:hover .mini_subwork_img2 {
 	filter: invert(28%) sepia(63%) saturate(3185%) hue-rotate(240deg) brightness(97%) contrast(105%);
-	
+
 }
+
 .mini_subwork_img {
 	width: 14px;
 	margin: 7px 0 0 7px;
-	
+
 }
+
 .mini_subwork_img2 {
 	margin: 4px 0 0 4px;
 }
+
 .mini_subwork_icon {
-	display : flex;
-	align-items : center;
+	display: flex;
+	align-items: center;
 }
 
 .mini_subwork_img_div {
@@ -2665,4 +2673,42 @@ input:checked+.slider:before {
 	margin-left: 10px;
 	border-radius: 15px;
 	background: #eeeeee;
+}
+
+.icon {
+	margin: -2px 4px 0 0;
+	content: "";
+	background-image: url(https://flow.team/flow-renewal/assets/images/sprite-project-detail.png?v=1167b8783aab4ef63be37735561d7f005ae5f9e4);
+	background-size: 844px auto;
+}
+
+.like_icon {
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	margin-top: -2px;
+	background-position: -300px -75px;
+	vertical-align: middle;
+}
+
+.bookmark_icon {
+	display: inline-block;
+	width: 10px;
+	height: 14px;
+	background-position: -334px -75px;
+	vertical-align: middle;
+}
+
+.realarm_icon {
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	vertical-align: middle;
+}
+
+.task_textarea {
+	white-space: pre-line;
+	height:fit-content;
+	max-height: 250px;
+	overflow-y: auto;
 }

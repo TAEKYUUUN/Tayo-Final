@@ -1,7 +1,15 @@
 package com.mysite.tayo.service;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -133,19 +141,18 @@ public class PostService {
 		task.setPost(post);
 		task.setTaskName(taskName);
 		task.setCondition(condition);
-		task.setMember(member);	// manager
+		task.setManager (manager);
 		task.setStartDate(date);
 		task.setEndDate(endDate);
-		task.setUploadDate(date);
 		task.setContents(contents);
 		this.taskRepository.save(task);
 		
+		// 이후 하위업무 별 마감일, 담당자, condition 세팅
 		for(int i=0; i<lowerTaskNameList.size(); i++) {
 			LowerTask lowerTask = new LowerTask();
 			lowerTask.setTask(task);
 			lowerTask.setTaskName(lowerTaskNameList.get(i));
 			lowerTask.setCondition(lowertTaskConditionList.get(i));
-			lowerTask.setUploadDate(date);
 			lowerTask.setEndDate(endDate);
 			this.lowerTaskRepository.save(lowerTask);
 		}
@@ -197,8 +204,10 @@ public class PostService {
 		Schedule schedule = new Schedule();
 		schedule.setTitle(title);
 		schedule.setStartDate(startDate);
+		schedule.setPost(post);
 		schedule.setEndDate(endDate);
 		schedule.setPlace(place);
+		schedule.setContents(contents);
 		this.scheduleRepository.save(schedule);
 
 		for (Member attender : scheduleAttenderList) {
@@ -370,4 +379,127 @@ public class PostService {
 			this.unreadRepository.save(unread);
 		}
 	}
+	
+	// postId를 받아서 글(Paragraph)의 데이터 가져오기
+	public Map<String, String> getParagraph(Long postIdx) {
+		Optional<Post> postOptional = postRepository.findById(postIdx);
+		if(postOptional.isPresent()) {
+			Post post = postOptional.get();
+			Paragraph paragraph = post.getParagraph();
+			if(paragraph != null) {
+				Map<String, String> paragraphData = new HashMap<>();
+				paragraphData.put("title", paragraph.getTitle());
+				paragraphData.put("contents", paragraph.getContents());
+				return paragraphData;
+			}
+		}
+		
+		return Collections.emptyMap();
+	}
+	
+	// postId를 받아서 업무(Task)의 데이터 가져오기
+	public Map<String, Object> getTask(Long postIdx) {
+	    Optional<Post> postOptional = postRepository.findById(postIdx);
+	    if (postOptional.isPresent()) {
+	        Post post = postOptional.get();
+	        Task task = post.getTask();
+	        if (task != null) {
+	            Map<String, Object> taskData = new HashMap<>();
+	            taskData.put("taskName", task.getTaskName());
+	            taskData.put("condition", Integer.toString(task.getCondition()));
+	            taskData.put("manager", task.getManager());	// manager 객체 추가
+	            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	            taskData.put("endDate", dateFormat.format(task.getEndDate()));
+
+	            taskData.put("contents", task.getContents());
+	            taskData.put("taskId", Long.toString(task.getTaskIdx()));
+
+	            // 하위 업무가 존재하는지 확인하고, 비어있지 않다면 진행
+	            List<LowerTask> lowerTasks = task.getLowerTasks();
+	            if (lowerTasks != null && !lowerTasks.isEmpty()) {
+	                List<Map<String, String>> lowerTasksData = new ArrayList<>();
+	                for (LowerTask lowerTask : lowerTasks) {
+	                    Map<String, String> lowerTaskData = new HashMap<>();
+	                    lowerTaskData.put("LowerTaskIdx", Long.toString(lowerTask.getLowerTaskIdx()));
+	                    lowerTaskData.put("taskName", lowerTask.getTaskName());
+	                    lowerTaskData.put("condition", Integer.toString(lowerTask.getCondition()));
+	                    lowerTaskData.put("managerIdx", lowerTask.getManager() != null ? lowerTask.getManager().getMemberIdx().toString() : "No manager");
+	                    lowerTaskData.put("endDate", lowerTask.getEndDate() != null ? dateFormat.format(lowerTask.getEndDate()) : "No end date");
+	                    lowerTasksData.add(lowerTaskData);
+	                }
+	                taskData.put("lowerTasks", lowerTasksData);
+	            } else {
+	                taskData.put("lowerTasks", Collections.emptyList());
+	            }
+
+	            return taskData;
+	        }
+	    }
+
+	    return Collections.emptyMap();
+	}
+	
+	// postIdx를 받아서 일정(Schedule)의 데이터 가져오기
+	public Map<String, Object> getSchedule(Long postIdx) {
+	    Optional<Post> postOptional = postRepository.findById(postIdx);
+	    if (postOptional.isPresent()) {
+	        Post post = postOptional.get();
+	        Schedule schedule = post.getSchedule();
+	        if (schedule != null) {
+	            Map<String, Object> scheduleData = new HashMap<>();
+	            SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd (E), HH:mm");
+	            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd (E)");
+	            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+	            SimpleDateFormat monthFormat = new SimpleDateFormat("yyyy-MM");
+
+	            Date startDate = schedule.getStartDate();
+	            Date endDate = schedule.getEndDate();
+	            
+	            String startDateStr = dateTimeFormat.format(startDate);
+	            String endDateStr;
+	            if (dateFormat.format(startDate).equals(dateFormat.format(endDate))) {
+	                endDateStr = "~ " + timeFormat.format(endDate);
+	            } else {
+	                endDateStr = dateTimeFormat.format(endDate);
+	            }
+
+	            scheduleData.put("title", schedule.getTitle());
+	            scheduleData.put("startDate", startDateStr);
+	            scheduleData.put("endDate", endDateStr);
+	            scheduleData.put("place", schedule.getPlace());
+	            scheduleData.put("contents", schedule.getContents());
+
+	            // startDate의 month와 day를 별도로 추출하여 추가
+	            String startMonth = monthFormat.format(startDate);
+	            LocalDate startDateLocal = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+	            scheduleData.put("startMonth", startMonth);
+	            scheduleData.put("startDay", startDateLocal.getDayOfMonth());
+	            
+	            // 스케줄 참석자 리스트를 추가
+	            List<ScheduleAttender> attenders = schedule.getScheduleAttenders();
+	            if (attenders != null && !attenders.isEmpty()) {
+	                List<Map<String, String>> attendersData = new ArrayList<>();
+	                for (ScheduleAttender attender : attenders) {
+	                    Map<String, String> attenderData = new HashMap<>();
+	                    attenderData.put("scheduleAttenderIdx", Long.toString(attender.getScheduleAttenderIdx()));
+	                    attenderData.put("memberIdx", attender.getMember().getMemberIdx().toString());
+	                    attenderData.put("memberName", attender.getMember().getName());
+	                    attenderData.put("memberProfileImg", attender.getMember().getProfileImage());
+	                    attenderData.put("isAttend", attender.getIsAttend() != null ? Integer.toString(attender.getIsAttend()) : "0");
+	                    attendersData.add(attenderData);
+	                }
+	                scheduleData.put("attenders", attendersData);
+	            } else {
+	                scheduleData.put("attenders", Collections.emptyList());
+	            }
+
+	            return scheduleData;
+	        }
+	    }
+
+	    return Collections.emptyMap();
+	}
+	// postIdx를 받아서 할 일(Todo)의 데이터 가져오기
+	
+	// postIdx를 받아서 투표(Vote)의 데이터 가져오기
 }
