@@ -6,10 +6,25 @@ document.addEventListener('DOMContentLoaded', function() {
 	const tabs = document.querySelectorAll('.tabs');
 	const tabTypeInput = document.getElementById('tabType');
 
+	function resetModalFields() {
+		const fields = modal.querySelectorAll('input[type="text"], input[type="hidden"], input[type="datetime-local"], input[type="checkbox"], textarea');
+		fields.forEach(field => {
+			field.value = '';
+			if (field.type === 'checkbox') {
+				field.checked = false;
+			}
+		});
+		const hiddenFields = modal.querySelectorAll('input[type="hidden"]');
+		hiddenFields.forEach(hiddenField => {
+			hiddenField.value = '0';
+		});
+	}
+
 	createPostArea.addEventListener('click', function() {
 		modal.style.display = 'block';
 		backgroundFull.style.display = 'block';
 		tabTypeInput.value = 1;
+		resetModalFields();
 	});
 
 	closeBtn.addEventListener('click', function() {
@@ -22,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			tabs.forEach(t => t.style = ""); // Reset styles for all tabs
 			this.style.color = 'black';
 			this.style.borderBottom = '2px solid #666';
+			resetModalFields(); // Reset fields when switching tabs
 			const tabType = document.getElementById('tabType');
 			if (this.classList.contains('tab-paragraph')) {
 				tabType.value = 1;
@@ -45,41 +61,41 @@ document.addEventListener('DOMContentLoaded', function() {
 		modal.style.height = '780px';
 
 		const taskContent = `
-        <div class="input-group1">
-            <input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
-        </div>
-        <div class="input-group2" style="max-height: 400px;">
-        	<input type="hidden" id="hiddenCondition" name="condition" value="1">
-            <div class="task_icon_box1">
-                <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-status.svg?v=b3a5b7f86f05f658d1ce954c34f8c33a61ea8873" style="margin-right: 10px;"/>
-                <button type="button" class="task_state_btn request active" name="condition" value="1">요청</button>
-                <button type="button" class="task_state_btn progress" name="condition" value="2">진행</button>
-                <button type="button" class="task_state_btn feedback" name="condition" value="3">피드백</button>
-                <button type="button" class="task_state_btn completion" name="condition" value="4">완료</button>
-                <button type="button" class="task_state_btn hold" name="condition" value="5">보류</button>
-            </div>
-            <div class="task_icon_box2">
-                <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d" style="margin-right: 16px;"/>
-                <button type="button" class="update_btn" name="manager">담당자 추가</button>
-            </div>
-            <div class="task_icon_box1">
-                <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=cfae9e268527a6f7007fe81fd49cab2c9659eea3" style="margin-right:16px;"/>
-                <button type="button" class="update_btn" name="endDate">마감일 추가</button>
-            </div>
-            <div class="div_textarea" style="height:270px;">
-                <textarea id="content" name="content" placeholder="내용을 입력하세요." style="height:270px;"></textarea>
-            </div>
-            <div class="subtask_header">
-                <span class="subtask_title" style="font-size:14px;">
-                	<img src="/img/subtask_icon.png"/>
-                    하위업무
-                </span>
-            </div>
-            <div id="taskContainer">              
-                <button type="button" class="add_lowertask" id="addLowerTask">추가</button>
-            </div>
-        </div>
-        `;
+			<div class="input-group1">
+				<input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
+			</div>
+			<div class="input-group2" style="max-height: 400px;">
+				<input type="hidden" id="hiddenCondition" name="condition" value="1">
+				<div class="task_icon_box1">
+					<img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-status.svg?v=b3a5b7f86f05f658d1ce954c34f8c33a61ea8873" style="margin-right: 10px;"/>
+					<button type="button" class="task_state_btn request active" name="condition" value="1">요청</button>
+					<button type="button" class="task_state_btn progress" name="condition" value="2">진행</button>
+					<button type="button" class="task_state_btn feedback" name="condition" value="3">피드백</button>
+					<button type="button" class="task_state_btn completion" name="condition" value="4">완료</button>
+					<button type="button" class="task_state_btn hold" name="condition" value="5">보류</button>
+				</div>
+				<div class="task_icon_box2">
+					<img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d" style="margin-right: 16px;"/>
+					<button type="button" class="update_btn" name="manager">담당자 추가</button>
+				</div>
+				<div class="task_icon_box1">
+					<img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=cfae9e268527a6f7007fe81fd49cab2c9659eea3" style="margin-right:16px;"/>
+					<button type="button" class="update_btn" name="endDate">마감일 추가</button>
+				</div>
+				<div class="div_textarea" style="height:270px;">
+					<textarea id="content" name="content" placeholder="내용을 입력하세요." style="height:270px;"></textarea>
+				</div>
+				<div class="subtask_header">
+					<span class="subtask_title" style="font-size:14px;">
+						<img src="/img/subtask_icon.png"/>
+						하위업무
+					</span>
+				</div>
+				<div id="taskContainer">              
+					<button type="button" class="add_lowertask" id="addLowerTask">추가</button>
+				</div>
+			</div>
+		`;
 		modalContent.innerHTML = taskContent;
 
 		const taskStateButtons = document.querySelectorAll('.task_state_btn');
@@ -158,7 +174,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			hiddenInput.value = requestButton.value; // 초기 값 설정
 			newTaskDiv.appendChild(hiddenInput);
 
-
 			const removeButton = document.createElement('button');
 			removeButton.textContent = 'x';
 			removeButton.className = 'remove-btn';
@@ -193,13 +208,13 @@ document.addEventListener('DOMContentLoaded', function() {
 		modal.style.height = '780px';
 
 		const paragraphContent = `
-        <div class="input-group1">
-            <input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
-        </div>
-        <div class="input-group2" style="min-height: 465px; margin-bottom:34px">
-            <textarea id="content" name="content" placeholder="내용을 입력하세요."></textarea>
-        </div>
-        `;
+			<div class="input-group1">
+				<input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
+			</div>
+			<div class="input-group2" style="min-height: 465px; margin-bottom:34px">
+				<textarea id="content" name="content" placeholder="내용을 입력하세요."></textarea>
+			</div>
+		`;
 		modalContent.innerHTML = paragraphContent;
 	});
 
@@ -211,30 +226,30 @@ document.addEventListener('DOMContentLoaded', function() {
 		modal.style.height = '780px';
 
 		const scheduleContent = `
-        <div class="input-group1">
-            <input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
-        </div>
-        <div class="input-group2" style="max-height: 400px;">
-            <div class="task_icon_box1">
-                <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=cfae9e268527a6f7007fe81fd49cab2c9659eea3" style="margin-right: 16px;" />
-                <input type="datetime-local" id="start" name="startDatetime"/>&ensp;-&ensp; 
-                <input type="datetime-local" id="end" name="endDatetime"/>
-                <input type="checkbox" id="allDay" name="allDay"/>
-                <label for="allDay">종일</label>
-            </div>
-            <div class="task_icon_box2">
-                <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d" style="margin-right: 16px;"/>
-                <button type="button" class="update_btn">참석자 추가</button>
-            </div>
-            <div class="task_icon_box1">
-                <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-place.svg?v=4475443d9f93bbbc02e906dbdac60bcfd1fd021d" style="margin-right : 16px;"/>
-                <input type="text" placeholder="장소를 입력하세요" id="place" name="place"/>
-            </div>
-            <div class="div_textarea">
-                <textarea id="content" name="content" placeholder="내용을 입력하세요."></textarea>
-            </div>
-        </div>
-        `;
+			<div class="input-group1">
+				<input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
+			</div>
+			<div class="input-group2" style="max-height: 400px;">
+				<div class="task_icon_box1">
+					<img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=cfae9e268527a6f7007fe81fd49cab2c9659eea3" style="margin-right: 16px;" />
+					<input type="datetime-local" id="start" name="startDatetime"/>&ensp;-&ensp; 
+					<input type="datetime-local" id="end" name="endDatetime"/>
+					<input type="checkbox" id="allDay" name="allDay"/>
+					<label for="allDay">종일</label>
+				</div>
+				<div class="task_icon_box2">
+					<img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d" style="margin-right: 16px;"/>
+					<button type="button" class="update_btn">참석자 추가</button>
+				</div>
+				<div class="task_icon_box1">
+					<img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-place.svg?v=4475443d9f93bbbc02e906dbdac60bcfd1fd021d" style="margin-right : 16px;"/>
+					<input type="text" placeholder="장소를 입력하세요" id="place" name="place"/>
+				</div>
+				<div class="div_textarea">
+					<textarea id="content" name="content" placeholder="내용을 입력하세요."></textarea>
+				</div>
+			</div>
+		`;
 		modalContent.innerHTML = scheduleContent;
 
 		document.getElementById('allDay').addEventListener('change', function() {
@@ -262,19 +277,19 @@ document.addEventListener('DOMContentLoaded', function() {
 		modal.style.height = '780px';
 
 		const todoContent = `
-        <div class="input-group1">
-            <input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
-        </div>
-        <div class="input-group2" style="max-height: 400px;">
-            <div class="div_todo_edit">
-                <input type="text" placeholder="할 일 추가 (Enter 또는 Tab) / 최대 60자" class="todo_input" id="todoNames" name="todoNames"/>
-                <div class="mini_subwork_icon">
-					<div class="mini_subwork_img_div"><img class="mini_subwork_img2" src="https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=dab609f4e3114ab334c0216bd41d1a6e27b6503a"></div>
-					<div class="mini_subwork_img_div"><img class="mini_subwork_img2" src="https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=118ef1e91b7ced5f275a138083d2ddd7cf94773d"></div>
+			<div class="input-group1">
+				<input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
+			</div>
+			<div class="input-group2" style="max-height: 400px;">
+				<div class="div_todo_edit">
+					<input type="text" placeholder="할 일 추가 (Enter 또는 Tab) / 최대 60자" class="todo_input" id="todoNames" name="todoNames"/>
+					<div class="mini_subwork_icon">
+						<div class="mini_subwork_img_div"><img class="mini_subwork_img2" src="https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=dab609f4e3114ab334c0216bd41d1a6e27b6503a"></div>
+						<div class="mini_subwork_img_div"><img class="mini_subwork_img2" src="https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=118ef1e91b7ced5f275a138083d2ddd7cf94773d"></div>
+					</div>
 				</div>
-            </div>
-        </div>
-        `;
+			</div>
+		`;
 		modalContent.innerHTML = todoContent;
 
 		function createNewTodoEdit() {
@@ -345,51 +360,53 @@ document.addEventListener('DOMContentLoaded', function() {
 		modal.style.height = '780px';
 
 		const voteContent = `
-        <div class="input-group1">
-            <input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
-        </div>
-        <div class="input-group2" style="max-height: 400px;">
-            <input type="text" id="vote_detail" name="vote_detail" placeholder="투표에 관한 설명 입력(옵션)"/>
-            <div class="div_voteitem_edit">
-                <input type="text" placeholder="항목 추가 (Enter 또는 Tab) / 최대 60자" class="voteitem_input" id="voteitem" name="voteItems"/>
-            </div>
-            <div class="div_voteitem_edit">
-                <input type="text" placeholder="항목 추가 (Enter 또는 Tab) / 최대 60자" class="voteitem_input" id="voteitem" name="voteItems"/>
-            </div>
-            <div class="voteContainer">              
-                <button type="button" class="add_voteitem" id="addVoteitem">투표 항목 추가</button>
-            </div>
-            <div class="vote_option_container">
-                <div class="endDate vote_option">
-                    <div class="option_name">
-                        <img src="/img/vote_enddate.png"/>
-                        <span>투표 마감일</span>
-                    </div>
-                    <button type="button" id="add_voteEndDate">마감일 추가</button>
-                </div>
-                <div class="pluralVote vote_option">
-                    <div class="option_name">
-                        <img src="/img/vote_doublecheck.png"/>
-                        <span>복수 투표</span>
-                    </div>
-                    <label class="switch" style="margin-top:4px;">
-                        <input type="checkbox" name="pluralVote" value="1" checked>
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                <div class="anonymousVote vote_option">
-                    <div class="option_name">
-                        <img src="/img/vote_anonymous.png"/>
-                        <span>익명 투표</span>
-                    </div>
-                    <label class="switch" style="margin-top:4px;">
-                        <input type="checkbox" name="anonymousVote" value="1" checked>
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-            </div>
-        </div>
-        `;
+			<div class="input-group1">
+				<input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
+			</div>
+			<div class="input-group2" style="max-height: 400px;">
+				<input type="text" id="vote_detail" name="voteDetail" placeholder="투표에 관한 설명 입력(옵션)"/>
+				<div class="div_voteitem_edit">
+					<input type="text" placeholder="항목 추가 (Enter 또는 Tab) / 최대 60자" class="voteitem_input" id="voteitem" name="voteItems"/>
+				</div>
+				<div class="div_voteitem_edit">
+					<input type="text" placeholder="항목 추가 (Enter 또는 Tab) / 최대 60자" class="voteitem_input" id="voteitem" name="voteItems"/>
+				</div>
+				<div class="voteContainer">              
+					<button type="button" class="add_voteitem" id="addVoteitem">투표 항목 추가</button>
+				</div>
+				<div class="vote_option_container">
+					<div class="endDate vote_option">
+						<div class="option_name">
+							<img src="/img/vote_enddate.png"/>
+							<span>투표 마감일</span>
+						</div>
+						<button type="button" id="add_voteEndDate">마감일 추가</button>
+					</div>
+					<div class="pluralVote vote_option">
+						<div class="option_name">
+							<img src="/img/vote_doublecheck.png"/>
+							<span>복수 투표</span>
+						</div>
+						<label class="switch" style="margin-top:4px;">
+							<input type="hidden" name="isplural" value="0">
+							<input type="checkbox" name="isplural" value="1" checked>
+							<span class="slider round"></span>
+						</label>
+					</div>
+					<div class="anonymousVote vote_option">
+						<div class="option_name">
+							<img src="/img/vote_anonymous.png"/>
+							<span>익명 투표</span>
+						</div>
+						<label class="switch" style="margin-top:4px;">
+							<input type="hidden" name="isanonymous" value="0">
+							<input type="checkbox" name="isanonymous" value="1" checked>
+							<span class="slider round"></span>
+						</label>
+					</div>
+				</div>
+			</div>
+		`;
 		modalContent.innerHTML = voteContent;
 
 		const voteContainer = document.querySelector('.voteContainer');
@@ -422,6 +439,21 @@ document.addEventListener('DOMContentLoaded', function() {
 		addVoteitemBtn.addEventListener('click', createNewVoteItemEdit);
 	});
 
+	const form = document.querySelector('form');
+	form.addEventListener('submit', function() {
+		// 복수 투표 체크박스와 hidden input
+		const isPluralCheckbox = document.querySelector('input[name="isplural"][type="checkbox"]');
+		const isPluralHidden = document.querySelector('input[name="isplural"][type="hidden"]');
+
+		// 익명 투표 체크박스와 hidden input
+		const isAnonymousCheckbox = document.querySelector('input[name="isanonymous"][type="checkbox"]');
+		const isAnonymousHidden = document.querySelector('input[name="isanonymous"][type="hidden"]');
+
+		// 체크박스 상태에 따라 hidden input 값 업데이트
+		isPluralHidden.value = isPluralCheckbox.checked ? '1' : '0';
+		isAnonymousHidden.value = isAnonymousCheckbox.checked ? '1' : '0';
+	});
+
 	// 왼쪽 사이드 바 '새 프로젝트' 클릭 시 createNewProject로 이동
 	document.getElementById('div_new_project').addEventListener('click', function() {
 		var href = this.getAttribute('data-href');
@@ -445,4 +477,67 @@ document.addEventListener('DOMContentLoaded', function() {
 		var href = this.getAttribute('data-href');
 		location.href = href;
 	});
+});
+
+// Modal functions for inviting participants
+document.addEventListener('DOMContentLoaded', (event) => {
+	// modal 열기 및 닫기 기능
+	const inviteButton = document.querySelector('#div_invite_prjmem img');
+	const modal = document.getElementById("invite-participants-modal");
+	const closeButton = document.querySelector('.invite-modal-header .close');
+	const inviteModalButton = document.querySelector('.invite-modal-footer .btn');
+
+	inviteButton.addEventListener('click', openInviteModal);
+	closeButton.addEventListener('click', closeInviteModal);
+	inviteModalButton.addEventListener('click', inviteParticipants);
+
+	function openInviteModal() {
+		modal.style.display = "block";
+		document.getElementById("div_backgroundfull").style.display = "block";
+	}
+
+	function closeInviteModal() {
+		modal.style.display = "none";
+		document.getElementById("div_backgroundfull").style.display = "none";
+	}
+
+	// 참여자 선택 기능
+	document.querySelectorAll('#employeeList li').forEach(item => {
+		item.addEventListener('click', event => {
+			const id = item.getAttribute('data-id');
+			const name = item.getAttribute('data-name');
+			addToSelectedList(id, name);
+		});
+	});
+
+	function addToSelectedList(id, name) {
+		const selectedList = document.getElementById('selectedList');
+		const existingItem = document.querySelector(`#selectedList li[data-id="${id}"]`);
+		if (!existingItem) {
+			const li = document.createElement('li');
+			li.setAttribute('data-id', id);
+			li.innerHTML = `<span>${name}</span> <button onclick="removeFromSelectedList(${id})">X</button>`;
+			selectedList.appendChild(li);
+		}
+	}
+
+	function removeFromSelectedList(id) {
+		const item = document.querySelector(`#selectedList li[data-id="${id}"]`);
+		if (item) {
+			item.remove();
+		}
+	}
+
+	function inviteParticipants() {
+		const selectedList = document.getElementById('selectedList');
+		const selectedParticipants = [];
+		selectedList.querySelectorAll('li').forEach(item => {
+			selectedParticipants.push({
+				id: item.getAttribute('data-id'),
+				name: item.querySelector('span').innerText
+			});
+		});
+		console.log('Invited participants:', selectedParticipants);
+		closeInviteModal();
+	}
 });

@@ -66,7 +66,9 @@ public class PostController {
 	        @RequestParam(value = "todoManagers", required = false) List<Member> todoManagerList,
 	        @RequestParam(value = "todoDeadlines", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") List<Date> todoDeadlineList,
 	        @RequestParam(value = "voteEnddate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date voteEnddate,
-	        @RequestParam(value = "voteItems", required = false) List<String> voteItemList) {
+	        @RequestParam(value = "voteItems", required = false) List<String> voteItemList,
+	        @RequestParam(value = "isplural", required = false) Integer isPlural,
+	        @RequestParam(value = "isanonymous", required = false) Integer isAnonymous) {
 	    Member member = memberService.infoFromLogin(authentication);
 	    Optional<Project> projectOpt = projectRepository.findById(projectIdx);
 	    
@@ -118,7 +120,7 @@ public class PostController {
 	            calendar.setTime(currentDate);
 	            calendar.add(Calendar.DAY_OF_YEAR, 1);
 	        	voteEnddate = calendar.getTime();
-	            postService.createVote(member, project, title, voteDetail, voteEnddate, voteItemList);
+	            postService.createVote(member, project, title, voteDetail, voteEnddate, voteItemList, isPlural, isAnonymous);
 	            break;
 	        default:
 	            // Handle invalid tabType

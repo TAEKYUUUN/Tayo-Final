@@ -20,7 +20,7 @@ import lombok.Setter;
 public class UncheckPostReact {
 	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "uncheck_post_react_seq")
-    @SequenceGenerator(name = "uncheck_post_seq", sequenceName = "UNCHECK_POST_REACT_SEQ", allocationSize = 1)
+    @SequenceGenerator(name = "uncheck_post_react_seq", sequenceName = "UNCHECK_POST_REACT_SEQ", allocationSize = 1)
     @Column(name = "uncheck_post_react_idx")
     private Long uncheckPostReactIdx;
 	
