@@ -13,7 +13,6 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-
 @Getter
 @Setter
 @Entity
@@ -25,6 +24,7 @@ public class Chat {
     @Column(name = "chat_idx")
 	private Long chatIdx;
 	
+//dads
 	@Column(name = "company_idx")
 	private Integer companyIdx;
 	
