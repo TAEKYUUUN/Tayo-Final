@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Document</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/chatCollection.css}">
+	<script th:src="@{/js/chatCollection.js}"></script>
+</head>
+
+<body>
+	<div class="chat-all-wr">
+		<article class="chat-all-left">
+			<ul class="section-list-1 chat-list scroll-mask">
+				<li>
+					<a href="">
+						<div class="mini-mode-main-picture profile profile-img">
+							<div class="profile-img" style="
+                    background-image: url(https://flow.team/flow-renewal/assets/images/profile-default.png),
+                      url(https://flow.team/flow-renewal/assets/images/profile-default.png),
+                      url(https://flow.team/flow-renewal/assets/images/profile-default.svg);
+                  "></div>
+						</div>
+						<span class="project-ttl">이태호</span>
+					</a>
+				</li>
+			</ul>
+		</article>
+		<div class="chat-all-right">
+			<ul class="menu-btns">
+				<li id="chat-image-btn">
+					<i class="chat-icon-images basic">
+						<img src="https://flow.team/flow-renewal/assets/images/chat-images-purple.svg" alt="" />
+					</i>
+					<span>이미지</span>
+				</li>
+				<li id="chat-file-btn">
+					<i class="chat-icon-images basic">
+						<img src="https://flow.team/flow-renewal/assets/images/chat-files-purple.svg" alt="" />
+					</i>
+					<span>파일</span>
+				</li>
+				<li id="chat-link-btn">
+					<i class="chat-icon-images basic">
+						<img src="https://flow.team/flow-renewal/assets/images/chat-links-purple.svg" alt="" />
+					</i>
+					<span>링크</span>
+				</li>
+				<li id="chat-notice-btn">
+					<i class="chat-icon-images basic">
+						<img src="https://flow.team/flow-renewal/assets/images/chat-notices-purple.svg" alt="" />
+					</i>
+					<span>공지</span>
+				</li>
+			</ul>
+			<div class="search-wr">
+				<i class="btn-search">
+					<img src="/img/chat-plus-search-icon.png" alt="" />
+				</i>
+				<input id="collectionSearchInput" type="text" placeholder="검색" autocomplete="off" maxlength="20" />
+			</div>
+			<ul 	th:each="chat : ${chatList}" 
+					th:if="${chat.chatIdx == 1}"
+					class="all-view img-all scroll-mask">
+									<!-- 공지 -->
+					<li 	th:each="chatContents : ${chat.chatContentsList}" 
+							th:if="${chatContents.notice != null}" 
+							class="js-collection-item collection-notice-item">
+						<i class="icon-notice-chat">
+							<img src="https://flow.team/flow-renewal/assets/images/icon-notice-chat.svg" alt="" />
+						</i>
+						<ul class="info">
+							<li class="name">
+								<div th:text="${chatContents.text}"></div>
+							</li>
+							<li>이태호</li>
+							<li>2024-06-21 11:44</li>
+						</ul>
+					</li>
+				<!-- 링크 -->
+				<li	th:each="chatContents : ${chat.chatContentsList}" 
+					th:if="${chatContents.link != false}"
+					class="js-collection-item collection-link-item">
+					<i class="icon-view">
+						<img src="https://flow.team/flow-renewal/assets/images/icons/icon-link.png?width=40&height=40"
+							alt="" />
+					</i>
+					<ul class="info">
+						<li th:text="${chatContents.member.name}" class="name"></li>
+						<li th:utext="${chatContents.text}" class="link"></li>
+					</ul>
+				</li>
+				<!-- 파일 -->
+				<li th:each="chatContents : ${chat.chatContentsList}" 
+					th:if="${chatContents.hasFile != null
+								and chatContents.hasFile.fileType != 'img'}"					
+					class="js-collection-item collection-file-item">
+					<div class="check-menu-item"></div>
+					<i th:text="${chatContents.hasFile.fileType}" class="icon-file"></i>
+					<ul class="info">
+						<li th:text="${chatContents.hasFile.fileName}" class="name"></li>
+						<li th:text="${chatContents.hasFile.fileSize}"></li>
+						<li th:text="${chatContents.member.name}"></li>
+						<li th:text="${chatContents.time}"></li>
+					</ul>
+					<button class="js-collection-more-button btn-more"></button>
+					<ul class="more-contents">
+						<li class="js-save-file">저장</li>
+						<li class="js-open-file js-file">파일 열기</li>
+					</ul>
+				</li>
+				<!-- 이미지 -->
+				<li th:each="chatContents : ${chat.chatContentsList}"
+					th:if="${ chatContents.hasFile != null
+						and chatContents.hasFile.fileType == 'img'}" class="js-collection-item collection-img-item">
+					<div class="check-menu-item"></div>
+					<i class="icon-view" style="
+                background-image: url(https://flow.team/flowImg/FLOW_2024070227817_d98ec06e-a8b3-42fb-b695-88e539d282a0_thumb.png?width=40&height=40);
+              "></i>
+					<ul class="info">
+						<li class="name">사진.png</li>
+						<li>1.69 KB</li>
+						<li>이태호</li>
+						<li>2024-07-03 12:15</li>
+					</ul>
+					<button class="js-collection-more-button btn-more"></button>
+					<ul class="more-contents">
+						<li class="js-save-file">저장</li>
+						<li class="js-open-file js-file">파일 열기</li>
+					</ul>
+				</li>
+			</ul>
+			<div class="js-select-alert all-file-alert-type-2" style="display: none">
+				<span class="js-select-count">개 선택</span>
+				<em class="js-select-cancle">선택취소</em>
+			</div>
+			<button class="js-save-btn btn-type-01" style="display: none">
+				저장
+			</button>
+		</div>
+	</div>
+</body>
+
+</html>

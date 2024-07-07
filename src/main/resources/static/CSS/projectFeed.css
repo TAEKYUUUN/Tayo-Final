@@ -400,6 +400,7 @@ li {
 #div_invite_prjmem {
 	margin-top: 25px;
 	border-radius: 10px;
+	cursor: pointer;
 }
 
 #div_prj_detail_top {
@@ -1456,7 +1457,7 @@ li {
 	border: 1px solid #eee;
 	box-shadow: 0 0 15px rgba(0, 0, 0, .04);
 	border-radius: 2px;
-	margin-bottom : 10px;
+	margin-bottom: 10px;
 }
 
 .subtask_state_btn {
@@ -1749,7 +1750,7 @@ li {
 }
 
 .todo_status_area {
-	margin-top: 3px;
+	margin: 20px 0px 40px 0px;
 	height: fit-content;
 	width: 100%;
 	display: flex;
@@ -1845,7 +1846,9 @@ li {
 }
 
 .todo_manager_profile>i>img {
-	width: 24px;
+	width: 36px;
+	height: 36px;
+	border-radius: 14px;
 }
 
 .em_vote_proceed {
@@ -1890,7 +1893,7 @@ li {
 }
 
 .vote_participant_button_area {
-	margin: 0px 0px 15px;
+	margin: 15px 0px 15px;
 	display: flex;
 	flex-direction: row-reverse;
 }
@@ -1993,6 +1996,7 @@ li {
 	box-sizing: border-box;
 	color: #555;
 	border: 1px solid #777;
+	background: none;
 }
 
 .vote_progress_button_area>button:last-child {
@@ -2708,7 +2712,240 @@ input:checked+.slider:before {
 
 .task_textarea {
 	white-space: pre-line;
-	height:fit-content;
+	height: fit-content;
 	max-height: 250px;
 	overflow-y: auto;
+}
+
+/*참여자 초대 modal*/
+.invite-modal {
+	display: none;
+	/* Hidden by default */
+	position: fixed;
+	/* Stay in place */
+	z-index: 20000;
+	/* Sit on top */
+	padding-top: 100px;
+	/* Location of the box */
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	background: none;
+}
+
+.invite-modal-content {
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	width: 100%;
+	max-width: 650px;
+	min-width: 500px;
+	height: 680px;
+	margin: 0 auto;
+	padding: 0;
+	background: #fff;
+	overflow: hidden;
+	-webkit-box-shadow: 20px 20px 40px rgba(0, 0, 0, .2);
+	box-shadow: 20px 20px 40px rgba(0, 0, 0, .2);
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	position: absolute;
+	z-index: 4;
+	border: 1px solid #555;
+}
+
+.invite-modal-header,
+.invite-modal-footer {
+	padding: 10px;
+	text-align: center;
+}
+
+.invite-modal-nav {
+	height: 40px;
+	border-bottom: 1px solid #ddd;
+}
+
+.invite-modal-footer {
+	border-top: 1px solid #ddd;
+	height: 66px;
+}
+
+.invite-modal-body {
+	display: flex;
+	justify-content: space-between;
+	height: 517px;
+}
+
+.invite-modal-body .list,
+.invite-modal-body .selected-list {
+	width: 49%;
+}
+
+.selected-list {
+	padding: 10px 0px 0px 15px;
+	border-left: 1px solid #ddd;
+}
+
+.invite-modal-body ul {
+	list-style-type: none;
+	padding: 0;
+}
+
+.invite-modal-body li {
+	padding: 10px;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 5px;
+	cursor: pointer;
+}
+
+.invite-modal-body li:hover {
+	background-color: #f0f0f0;
+}
+
+.invite-modal-body .selected-list li {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.invite-modal-body .selected-list li span {
+	flex-grow: 1;
+}
+
+.invite-modal-body .btn {
+	margin-top: 20px;
+	padding: 10px 20px;
+	background-color: #6449fc;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.invite-modal-header .close {
+	color: #aaa;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+}
+
+.invite-modal-header .close:hover,
+.invite-modal-header .close:focus {
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.search-wrapper {
+	position: relative;
+	width: fit-content;
+}
+
+.search-wrapper::before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 32px;
+	transform: translateY(-50%);
+	width: 20px;
+	height: 20px;
+	background: url('https://cdn-icons-png.flaticon.com/512/2319/2319177.png') no-repeat center center;
+	background-size: cover;
+}
+
+.invite_searchbar {
+	margin: 15px 20px;
+	padding-left: 40px;
+	width: 110%;
+	-webkit-box-flex: 1;
+	-webkit-flex: 1;
+	-moz-box-flex: 1;
+	flex: 1;
+	height: 40px;
+	border: 1px solid #ddd;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+}
+
+.invite_searchbar:focus {
+	outline: none;
+	border: 1px solid #ddd;
+}
+
+.invite_list>div {
+	display: flex;
+}
+
+.invite_list>div dl {
+	width: 180px;
+	overflow: hidden;
+	display: inline-block;
+	width: 70%;
+	line-height: 18px;
+	margin-left: 10px;
+	vertical-align: middle;
+	text-align: left;
+}
+
+.invite_list>div dl dt {
+	display: flex;
+	color: #555;
+	line-height: 1.1;
+	align-items: center;
+}
+
+.invite_list>div dl dt strong {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	display: inline-block;
+	margin-right: 3px;
+	vertical-align: middle;
+	line-height: 18px;
+	max-width: 240px;
+}
+
+.invite_list>div dl dt em {
+	display: inline-block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	vertical-align: middle;
+	line-height: 18px;
+	max-width: 70%;
+}
+
+.invite_list>div dl dd {
+	display: flex;
+	font-size: 12px;
+	color: #999;
+}
+
+.invite_list>div dl dd strong {
+	display: inline-block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	vertical-align: middle;
+	line-height: 18px;
+	max-width: 70%;
+	margin-right: 3px;
+}
+
+.invite_list>div dl dd span {
+	display: inline-block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	vertical-align: middle;
+	line-height: 18px;
+	max-width: 68%;
+}
+.invite_list>div span img {
+	width : 40px;
+	height: 40px;
+	border-radius: 10px;
 }
