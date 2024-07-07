@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.hibernate.Hibernate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -49,6 +50,18 @@ public class AdminController {
 		return "/Admin/adminProjectControl";
 	}
 	
+	@PostMapping("/adminProjectControl")
+	public @ResponseBody Project projectDetail(@RequestBody Project project) {
+		Optional<Project> _project = projectRepository.findById(project.getProjectIdx());
+		Project newProject = _project.get();
+		Hibernate.initialize(newProject.getProjectMemberList());
+		 newProject.getProjectMemberList().forEach(member -> {
+		        Hibernate.initialize(member.getMember());
+		        Hibernate.initialize(member.getMember().getOrganization());
+		    });
+
+	    return newProject;
+	}
 	
 	@GetMapping("/AdminCompanyInfo")
 	public String companyInfo(Model model, Authentication authentication) {

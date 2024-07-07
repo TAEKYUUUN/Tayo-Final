@@ -7,6 +7,7 @@ import java.util.List;
 import org.checkerframework.common.aliasing.qual.Unique;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -92,6 +93,5 @@ public class Member {
 	    
 	 @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
 	 private List<UserSession> userSessionList;
-    
     
 }

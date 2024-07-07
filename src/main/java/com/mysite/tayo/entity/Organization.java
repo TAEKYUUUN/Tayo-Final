@@ -53,5 +53,6 @@ public class Organization {
 	private Organization upperOrganization;
 	
 	@OneToMany(mappedBy = "upperOrganization", fetch = FetchType.LAZY)
+	@JsonIgnore
 	private List<Organization> lowerOrganization;
 }
