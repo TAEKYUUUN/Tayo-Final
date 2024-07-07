@@ -8,10 +8,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mysite.tayo.entity.Chat;
 import com.mysite.tayo.entity.Member;
 import com.mysite.tayo.entity.ProjectMember;
-import com.mysite.tayo.repository.ProjectMemberRepository;
-import com.mysite.tayo.repository.ProjectRepository;
+import com.mysite.tayo.service.ChatService;
 import com.mysite.tayo.service.MemberService;
 import com.mysite.tayo.service.ProjectService;
 
@@ -23,6 +23,7 @@ public class MainController {
 	
 	private final MemberService memberService;
 	private final ProjectService projectService;
+	private final ChatService chatService; 
 	
 	@GetMapping("/tayo")
 	@ResponseBody
@@ -62,6 +63,8 @@ public class MainController {
 		model.addAttribute("member", member);
 		List<ProjectMember> myProject = projectService.getMyProject(member.getMemberIdx());
 		List<Member> companyMember = memberService.getListByCompanyIdx(member.getCompany().getCompanyIdx());
+		List<Chat> chatList = chatService.getList();
+		model.addAttribute("chatList", chatList);	
 		model.addAttribute("myproject", myProject);
 		model.addAttribute("companyMember", companyMember);
 		return "dashboard";

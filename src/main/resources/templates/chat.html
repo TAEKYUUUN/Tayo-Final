@@ -6,21 +6,72 @@
     <title>Chat Window</title>
 
     <link rel="stylesheet" type="text/css" th:href="@{/css/chat.css}">
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const openChatWindowBtn = document.getElementById('open-chat-window-btn');
+            const closeChatWindowBtn = document.getElementById('close-chat-window-btn');
+            const chatWindow = document.getElementById('chat-window-js');
+            const chatListItems = document.querySelectorAll('.chat-list-item');
+
+            // 채팅 창 열기 버튼 클릭 이벤트 리스너 추가
+            openChatWindowBtn.addEventListener('click', () => {
+                chatWindow.style.display = 'flex';
+            });
+
+            // 채팅 창 닫기 버튼 클릭 이벤트 리스너 추가
+            closeChatWindowBtn.addEventListener('click', () => {
+                chatWindow.style.display = 'none';
+            });
+
+            // 채팅 방을 새 창으로 여는 함수
+            function openChatWindow(chatRoomUrl) {
+                window.open(chatRoomUrl, 'ChatWindow', 'width=450,height=800');
+            }
+
+            // 각 채팅 리스트 항목을 form 요소로 대체하고 이벤트 리스너 추가
+            chatListItems.forEach(item => {
+                const chatIdx = item.querySelector('input').value;
+				// 새로운 form 요소 생성
+                const form = document.createElement('form');
+                form.action = 'chatRoom/' + chatIdx; // 원하는 URL로 action 설정
+                form.method = 'post'; // 원하는 HTTP 메서드로 method 설정
+			
+                // item의 자식 노드들을 form으로 이동
+                while (item.firstChild) {
+                    form.appendChild(item.firstChild);
+                }
+
+				// item의 클래스 이름을 form에 복사
+				form.className = item.className;
+
+				// item을 form으로 대체
+				item.parentNode.replaceChild(form, item);
+
+                // form 요소에 click 이벤트 리스너 추가
+                form.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    openChatWindow(form.getAttribute('action')); // form의 action 속성을 URL로 사용
+                });
+				
+            });
+        });
+    </script>
 </head>
 <body>
 
-<button class="chat-button" onclick="toggleChatWindow()">채팅 열기</button>
+<button class="chat-button" id="open-chat-window-btn">채팅 열기</button>
 
-<div class="chat-window" id="chatWindow">
+<div class="chat-window" id="chat-window-js" style="display: none;">
     <div class="chat-window-header">
         <h2>채팅</h2>
-        <button onclick="toggleChatWindow()">✕</button>
+        <button id="close-chat-window-btn">✕</button>
     </div>
     <div class="chat-search">
         <input type="text" placeholder="이름, 채팅방명 검색">
     </div>
     <div class="chat-list">
-        <div th:each="chat : ${chatList}" class="chat-list-item" onclick="openChatWindow()">
+        <div th:each="chat : ${chatList}" class="chat-list-item">
+			<input  type="hidden" th:value="${chat.chatIdx}"/>
             <img src="https://via.placeholder.com/40" alt="User">
             <div>
                 <div th:each="chatmember : ${chat.chatMemberList}">
@@ -36,21 +87,6 @@
         </div>
     </div>
 </div>
-
-<script>
-    function toggleChatWindow() {
-        var chatWindow = document.getElementById('chatWindow');
-        if (chatWindow.style.display === 'none' || chatWindow.style.display === '') {
-            chatWindow.style.display = 'flex';
-        } else {
-            chatWindow.style.display = 'none';
-        }
-    }
-
-    function openChatWindow() {
-        window.open('', 'ChatWindow', 'width=450,height=800');
-    }
-</script>
 
 </body>
 </html>
