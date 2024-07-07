@@ -2859,7 +2859,7 @@ input:checked+.slider:before {
 .invite_searchbar {
 	margin: 15px 20px;
 	padding-left: 40px;
-	width : 110%;
+	width: 110%;
 	-webkit-box-flex: 1;
 	-webkit-flex: 1;
 	-moz-box-flex: 1;
@@ -2873,4 +2873,79 @@ input:checked+.slider:before {
 .invite_searchbar:focus {
 	outline: none;
 	border: 1px solid #ddd;
+}
+
+.invite_list>div {
+	display: flex;
+}
+
+.invite_list>div dl {
+	width: 180px;
+	overflow: hidden;
+	display: inline-block;
+	width: 70%;
+	line-height: 18px;
+	margin-left: 10px;
+	vertical-align: middle;
+	text-align: left;
+}
+
+.invite_list>div dl dt {
+	display: flex;
+	color: #555;
+	line-height: 1.1;
+	align-items: center;
+}
+
+.invite_list>div dl dt strong {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	display: inline-block;
+	margin-right: 3px;
+	vertical-align: middle;
+	line-height: 18px;
+	max-width: 240px;
+}
+
+.invite_list>div dl dt em {
+	display: inline-block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	vertical-align: middle;
+	line-height: 18px;
+	max-width: 70%;
+}
+
+.invite_list>div dl dd {
+	display: flex;
+	font-size: 12px;
+	color: #999;
+}
+
+.invite_list>div dl dd strong {
+	display: inline-block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	vertical-align: middle;
+	line-height: 18px;
+	max-width: 70%;
+	margin-right: 3px;
+}
+
+.invite_list>div dl dd span {
+	display: inline-block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	vertical-align: middle;
+	line-height: 18px;
+	max-width: 68%;
+}
+.invite_list>div span img {
+	width : 40px;
+	height: 40px;
+	border-radius: 10px;
 }
