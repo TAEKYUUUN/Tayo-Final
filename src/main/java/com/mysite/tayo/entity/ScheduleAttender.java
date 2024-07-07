@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -21,11 +23,13 @@ public class ScheduleAttender {
 	@Column(name = "schedule_attender_idx")
 	private Long scheduleAttenderIdx;
 	
-	@Column(name = "schedule_idx")
-	private Integer scheduleIdx;
+	@ManyToOne
+	@JoinColumn(name = "schedule_idx", referencedColumnName = "schedule_idx")
+	private Schedule schedule;
 	
-	@Column(name = "member_idx")
-	private Integer memberIdx;
+	@ManyToOne
+	@JoinColumn(name = "member_idx", referencedColumnName = "member_idx")
+	private Member member;
 	
 	@Column(name = "is_attend")
 	private Integer isAttend;

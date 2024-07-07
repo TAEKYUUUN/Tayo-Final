@@ -7,5 +7,4 @@ import com.mysite.tayo.entity.LowerTask;
 
 @Repository
 public interface LowerTaskRepository extends JpaRepository<LowerTask, Long>{
-
 }

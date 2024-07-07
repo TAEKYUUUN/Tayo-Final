@@ -1,13 +1,20 @@
 package com.mysite.tayo.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -24,6 +31,10 @@ public class Schedule {
 	@Column(name = "schedule_idx")
 	private Long scheduleIdx;
 	
+	@OneToOne
+    @JoinColumn(name = "post_idx", referencedColumnName = "post_idx")
+    private Post post;
+	
 	@Column(name = "title", length = 100)
 	private String title;
 	
@@ -33,19 +44,13 @@ public class Schedule {
 	@Column(name = "end_date")
 	private Date endDate;
 	
-	@Column(name = "manager_idx")
-	private Integer managerIdx;
-	
 	@Column(name = "place", length = 200)
 	private String place;
-	
-	@Column(name = "can_online")
-	private Integer canOnline;
 	
 	@Lob
 	@Column(name = "contents", columnDefinition = "CLOB")
 	private String contents;
 	
-	@Column(name = "schedule_alarm")
-	private Integer number;
+	@OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ScheduleAttender> scheduleAttenders = new ArrayList<>();
 }

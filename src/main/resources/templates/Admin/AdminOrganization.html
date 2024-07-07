@@ -109,11 +109,15 @@
 					<span th:if="${organizationList.size()==0}">부서 등록이 되어 있지 않습니다.</span>
 					<ul style="margin-top:0;" id="organizationAllList">
 						<li th:id="'organization'+${organization.organizationIdx}" class="organizationList" th:each="organization : ${organizationList}" th:if="${organization.upperOrganization == null}">
-								<div id="organizationLists">
-									<p th:text="${organization.organizationName}"></p>
+								<div id="organizationLists" style="display:flex; align-items: center;">
+									<p th:text="${organization.organizationName}"></p>&nbsp;
 									<p id="organizationIdx" style="display:none;" th:text="${organization.organizationIdx}"></p>
+									<input type = "text" style="display:none;" id="changedOrganizationName" th:value="${organization.organizationName}">
+									
+									<button id="openAllChild" th:if="${organization.lowerOrganization.size != 0}"> +</button>
+									<button id="closeAllChild" th:if="${organization.lowerOrganization.size != 0}" style="display:none;"> -</button>
 								</div>
-								<ul th:if="${organization.lowerOrganization != null}" style="padding-left : 20px;">
+								<ul th:if="${organization.lowerOrganization != null}" style="padding-left : 20px;display:none;" >
 									<li th:each="lowOrganization : ${organization.lowerOrganization}" th:id="'organization'+${lowOrganization.organizationIdx}">
 										<div th:insert="~{/fragments/organization :: organizationFragment (organization = *{lowOrganization})}"></div>
 									</li>
@@ -125,9 +129,10 @@
 			</div>
 			<div id = "div_bottom">
 				<button id = "addOrganization" class="button2" style="width:65px;">추가</button>
-				<button class="button2" style="width:65px;margin-left : 6px;">수정</button>
-				<button class="button2" style="width:65px;margin-left : 6px;">삭제</button>
-				<button class="button2" style="width:78px; margin-left:1270px;">초기화</button>
+				<button id = "changeOrganizationName" class="button2" style="width:65px;margin-left : 6px;">수정</button>
+				<button id = "deleteOrganization" class="button2" style="width:65px;margin-left : 6px;">삭제</button>
+				<button id = "cancelOrganzation" class="button2" style="width:65px;margin-left : 6px;">취소</button>
+				<button id = "clearOrganization" class="button2" style="width:78px; margin-left:1270px;">초기화</button>
 			</div>
 			
 			</div>

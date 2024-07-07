@@ -4,9 +4,12 @@ import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -23,8 +26,9 @@ public class LowerTask {
     @Column(name = "lower_task_idx")
 	private Long LowerTaskIdx;
 	
-	@Column(name = "upper_idx")
-	private Integer upperIdx;
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "upperTask_idx", referencedColumnName = "task_idx")
+	private Task task;
 	
 	@Column(name = "task_name", length = 100)
 	private String taskName;
@@ -32,18 +36,11 @@ public class LowerTask {
 	@Column(name = "condition")
 	private Integer condition;
 	
-	@Column(name = "task_priority")
-	private Integer taskPriority;
-	
-	@Column(name = "manager_idx")
-	private Integer managerIdx;
-	
-	@Column(name = "start_date")
-	private Date startDate;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "manager_idx", referencedColumnName = "member_idx")
+	private Member manager;
 	
 	@Column(name = "end_date")
 	private Date endDate;
-	
-	@Column(name = "upload_date")
-	private Date uploadDate;
+
 }

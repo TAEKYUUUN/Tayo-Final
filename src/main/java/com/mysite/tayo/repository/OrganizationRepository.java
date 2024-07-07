@@ -13,4 +13,5 @@ public interface OrganizationRepository extends JpaRepository<Organization,Long>
 	Optional<Organization> findByOrganizationName(String organizationName);
 	
 	List<Organization> findByCompanyCompanyIdx(Long companyIdx);
+	void deleteAllByCompanyCompanyIdx(Long companyIdx);
 }

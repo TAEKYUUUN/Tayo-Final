@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>FLOW</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/adminProjectControl.css}">
+	<script th:src="@{/js/adminProjectControl.js}"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body style="overflow-y:hidden">
+	<div id="div_sidebar" class="fl">
+		<div id="div_header">
+			<div id="div_imagelogo">
+				<img src="https://flow.team/flow-renewal/assets/images/flow-logo-w.svg" />
+			</div>
+		</div>
+		<div id="div_side" class="scrollbar">
+			<div id="div_sidecontents">
+				<h2>회사</h2>
+				<div id="div_h3box">
+					<h3>회사 정보</h3>
+					<h3>구성원 관리</h3>
+					<h3>구성원 초대</h3>
+					<h3>조직도 관리</h3>
+					<h3>포털 앱 권한 관리</h3>
+				</div>
+				<h2>프로젝트</h2>
+				<div id="div_h3box2">
+					<h3 style="color : #7faeff">프로젝트 관리</h3>
+					<h3>회사 프로젝트 관리</h3>
+					<h3>공개 프로젝트 관리</h3>
+					<h3>공개 프로젝트 카테고리</h3>
+					<h3>프로젝트 템플릿 카테고리 관리</h3>
+					<h3>비활성화 프로젝트 관리</h3>
+				</div>
+				<h2>통계/리포트</h2>
+				<div id="div_h3box3">
+					<h3>접속 통계</h3>
+					<h3>사용 통계</h3>
+				</div>
+				<h2>보안 설정</h2>
+				<div id="div_h3box">
+					<h3>파일 보안 설정</h3>
+					<h3>로그인 보안 설정</h3>
+					<h3>화면 캡처 방지 설정</h3>
+					<h3>워터마크 설정</h3>
+					<h3>AI설정</h3>
+				</div>
+				<h2>로그</h2>
+				<div id="div_h3box3">
+					<h3>파일 다운로드 이력</h3>
+					<h3>관리자 변경 이력</h3>
+				</div>
+				<h2>결제</h2>
+				<div id="div_h3box4">
+					<h3>결제 정보</h3>
+				</div>
+			</div>
+		</div>
+		<div id="div_helpbutton"><img src="img/img_help.png" /></div>
+	</div>
+	<div id="div_content" class="fr scrollbar">
+		<div id="div_titleh1">
+			<h1>프로젝트 관리</h1>
+		</div>
+
+		<div id="div_headtab">
+			<a>프로젝트</a>
+		</div>
+		<div id="div_searchwrap">
+			<div id="div_searcharea">
+				<div id="div_search" class="fl">
+
+					<input type="text" id="searchword" placeholder="검색어를 입력해주세요" style="width:280px">
+					<a>검색</a>
+				</div>
+				<div id="div_buttons" class="fr">
+					<a id="div_buttonsA1">
+						<span>엑셀 다운로드</span>
+					</a>
+
+				</div>
+			</div>
+		</div>
+
+		<div id="div_table">
+			<table>
+				<thead>
+					<tr>
+						<th scope="col" style="width:318.8px;">
+							<div><span>프로젝트명</span></div>
+						</th>
+						<th scope="col">
+							<div><span>관리자</span></div>
+						</th>
+						<th scope="col">
+							<div><span>참여자</span></div>
+						</th>
+						<th scope="col">
+							<div><span>임직원</span></div>
+						</th>
+						<th scope="col">
+							<div><span>외부인</span></div>
+						</th>
+						<th scope="col">
+							<div><span>게시물</span></div>
+						</th>
+						<th scope="col">
+							<div><span>댓글</span></div>
+						</th>
+						<th scope="col">
+							<div><span>채팅</span></div>
+						</th>
+						<th scope="col">
+							<div><span>일정</span></div>
+						</th>
+						<th scope="col">
+							<div><span>업무</span></div>
+						</th>
+						<th scope="col">
+							<div><span>최근 활동일</span></div>
+						</th>
+						<th scope="col">
+							<div><span>개설일</span></div>
+						</th>
+
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="project : ${projectList}" th:id="'projectList' + ${project.projectIdx}">
+						<td style="display:none;" th:text="${project.projectIdx}"></td>
+						<td th:text="${project.projectName}" style="text-align:left; padding-left:10px;"></td>
+						<td th:each="projectMember : ${project.projectMemberList}">
+							<div th:text="${projectMember.member.name}" th:if="${projectMember.isManager == 1}"></div>
+						</td>
+						<td th:text="${project.projectMemberList.size()}"></td>
+						<td th:text="${project.projectMemberList.size()}"></td>
+						<td></td>
+						<td th:text="${project.postList.size()}">2</td>
+						<td></td>
+						<td></td>
+						<td th:text="${#lists.size(project.postList.?[fileType.value == 3])}">0</td>
+						<td th:text="${#lists.size(project.postList.?[fileType.value == 2])}">0</td>
+						<td>2024-06-02, 15:33</td>
+						<td th:text="${project.creationDate}"></td>
+					</tr>
+				</tbody>
+			</table>
+			<div id="div_projectInfopopup" style="display:none;">
+				<div id="div_popupTitle">
+					<div id="pt"><span>프로젝트 정보</span></div><a id="exitbutton"></a>
+				</div>
+				<div id="div_popupBody">
+					<div id="div_innertable">
+						<table style="table-layout:fixed; border-collapse:collapse;">
+							<colgroup>
+								<col style="width:150px;">
+								<col>
+							</colgroup>
+							<tbody>
+								<tr>
+									<th scope="row">프로젝트명</th>
+									<td>
+										<input id="outlinenone" type="text" placeholder="프로젝트명을 입력하세요"
+											style="width:98.5%; " maxlength="100">
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">관리자</th>
+									<td>
+										<button id="memberLittle" class="button2">추가</button>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div style="width:830px; margin-bottom: 20px;">
+											<table style="width:100%; table-layout:fixed; border-collapse:collapse;">
+												<thead>
+													<tr>
+														<th>직책</th>
+														<th>사용자명</th>
+														<th>아이디</th>
+														<th>부서</th>
+														<th>관리자</th>
+													</tr>
+												</thead>
+											</table>
+											<div style="width:830px;max-height:150px; height:fit-content; overflow:auto;"
+												class="scrollbar">
+												<table
+													style="width:100%; table-layout:fixed; border-collapse:collapse;">
+													<tbody id="popupTbody">
+														<tr>
+
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">글 작성 권한</th>
+									<td>
+										<input type="radio" name="canwritepost" id="All1" checked>
+										<label for="All1">전체</label>
+										<input type="radio" name="canwritepost" id="leaderOnly1">
+										<label for="leaderOnly1">관리자만 작성 가능</label>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">댓글 작성</th>
+									<td>
+										<input type="radio" name="canwritecomment" id="All2" checked>
+										<label for="All2">전체</label>
+										<input type="radio" name="canwritecomment" id="leaderOnly2">
+										<label for="leaderOnly2">관리자만 작성 가능</label>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">글 조회</th>
+									<td>
+										<input type="radio" name="viewpost" id="All3" checked>
+										<label for="All3">전체</label>
+										<input type="radio" name="viewpost" id="leaderOnly3">
+										<label for="leaderOnly3">관리자 + 글 작성 본인만 <span style="color:red">※ 등록된 게시물의 조회
+												권한은 변경되지 않음(직접 변경 필요)</span></label>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">파일 조회</th>
+									<td>
+										<input type="radio" name="viewfile" id="All4" checked>
+										<label for="All4">전체</label>
+										<input type="radio" name="viewfile" id="leaderOnly4">
+										<label for="leaderOnly4">관리자 + 글 작성 본인만 </label>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">파일 다운로드</th>
+									<td>
+										<input type="radio" name="filedownload" id="All5" checked>
+										<label for="All5">전체</label>
+										<input type="radio" name="filedownload" id="leaderOnly5">
+										<label for="leaderOnly5">관리자 + 글 작성 본인만 </label>
+									</td>
+								</tr>
+								<tr>
+									<th scope="row">글 수정</th>
+									<td>
+										<input type="radio" name="postedit" id="All6" checked>
+										<label for="All6">전체</label>
+										<input type="radio" name="postedit" id="leaderOnly6">
+										<label for="leaderOnly6">관리자 + 글 작성 본인만 </label>
+										<input type="radio" name="postedit" id="writeronly">
+										<label for="writeronly">글 작성 본인만 </label>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div id="div_popupbuttons">
+						<div id="div_redbuttoncover">
+							<div id="redbutton">삭제</div>
+						</div>
+						<button class="button1" style="width:120px; height:36px;">저장</button>
+						<button id="cancelbutton" class="button2" style="width:120px; height:36px;">취소</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="div_projectInfopopupSmall" style="display:none;">
+			<div id="div_popupTitlesmall">
+				<div id="ptsmall"><span>관리자 선택</span></div><a id="exitbutton2"></a>
+				<div>
+					<select id="searchingtype" name="selsearch" style="height:30px;">
+						<option value="name">이름</option>
+						<option value="ID">아이디</option>
+					</select>
+					<input style="height:30px;"><button class="button2" style="margin-left:5px;">검색</button>
+				</div>
+			</div>
+			<div id="div_popupBodysmall">
+				<div id="div_innertable">
+					<div style="width:440px; margin-bottom: 20px;">
+						<table style="width:100%; table-layout:fixed; border-collapse:collapse;">
+							<thead>
+								<tr>
+									<th>이름</th>
+									<th>아이디</th>
+									<th>관리자</th>
+								</tr>
+							</thead>
+						</table>
+						<div style="width:40px;max-height:150px; height:fit-content; overflow:auto;" class="scrollbar">
+							<table style="width:100%; table-layout:fixed; border-collapse:collapse;">
+								<tbody id="popupTbody">
+									<tr>
+
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+			<div id="div_popupbuttonssmall">
+				<button class="button1" style="width:120px; height:36px;">저장</button>
+				<button id="cancelbutton2" class="button2" style="width:120px; height:36px;">취소</button>
+			</div>
+		</div>
+	</div>
+
+
+	<div id="div_backgroundfull" style="display:none;">
+
+	</div>
+	</div>
+	<div style="clear:both;"></div>
+
+</body>
+
+</html>

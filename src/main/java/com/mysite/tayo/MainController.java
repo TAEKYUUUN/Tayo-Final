@@ -36,13 +36,16 @@ public class MainController {
 		if (authentication != null && authentication.isAuthenticated() 
 			    && !(authentication.getPrincipal() instanceof String)) {
 			Member member = memberService.infoFromLogin(authentication);
-			model.addAttribute("member", member);
-			List<ProjectMember> myProject = projectService.getMyProject(member.getMemberIdx());
-			List<Member> companyMember = memberService.getListByCompanyIdx(member.getCompany().getCompanyIdx());
-			model.addAttribute("myproject", myProject);
-			model.addAttribute("companyMember", companyMember);
-			return "dashboard";
-			
+			if(member.getCompany() != null) {
+				model.addAttribute("member", member);
+				List<ProjectMember> myProject = projectService.getMyProject(member.getMemberIdx());
+				List<Member> companyMember = memberService.getListByCompanyIdx(member.getCompany().getCompanyIdx());
+				model.addAttribute("myproject", myProject);
+				model.addAttribute("companyMember", companyMember);
+				return "dashboard";
+			}else {
+				return "redirect:/member/logout";
+			}
 		} else {
 			return "mainpage";
 		}
@@ -56,6 +59,7 @@ public class MainController {
 	@GetMapping("/dashboard")
 	public String dashboard(Authentication authentication, Model model) {
 		Member member = memberService.infoFromLogin(authentication);
+		System.out.println(member.getEmail());
 		model.addAttribute("member", member);
 		List<ProjectMember> myProject = projectService.getMyProject(member.getMemberIdx());
 		List<Member> companyMember = memberService.getListByCompanyIdx(member.getCompany().getCompanyIdx());

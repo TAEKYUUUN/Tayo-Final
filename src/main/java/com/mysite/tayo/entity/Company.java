@@ -2,11 +2,13 @@ package com.mysite.tayo.entity;
 
 
 import java.util.Date;
+import java.util.List;
 
 import org.checkerframework.common.aliasing.qual.Unique;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,6 +16,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -68,4 +71,6 @@ public class Company {
 	@Column(name="business_number")
 	private Integer businessNumber;
 	
+	@OneToMany(mappedBy = "company", cascade = CascadeType.REMOVE)
+	private List<Member> memberList;
 }

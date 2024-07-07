@@ -1,5 +1,9 @@
 package com.mysite.tayo.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -30,6 +34,7 @@ public class ProjectMember {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "project_idx")
+	@JsonBackReference
 	private Project project;
 	
 	@Column(name = "is_manager")
@@ -46,6 +51,7 @@ public class ProjectMember {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_idx", referencedColumnName = "company_idx")
+    @JsonIgnore
 	private Company company;
 	
 	@Column(name = "is_confirmed")

@@ -3,8 +3,10 @@ package com.mysite.tayo.entity;
 
 import java.util.List;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,8 +49,10 @@ public class Organization {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "upper_organization")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Organization upperOrganization;
 	
 	@OneToMany(mappedBy = "upperOrganization", fetch = FetchType.LAZY)
+	@JsonIgnore
 	private List<Organization> lowerOrganization;
 }

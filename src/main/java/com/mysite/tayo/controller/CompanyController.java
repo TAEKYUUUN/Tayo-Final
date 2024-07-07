@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.mysite.tayo.entity.Company;
 import com.mysite.tayo.entity.Member;
 import com.mysite.tayo.service.CompanyService;
+import com.mysite.tayo.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +22,9 @@ import lombok.RequiredArgsConstructor;
 @Controller
 public class CompanyController {
 	private final CompanyService companyService;
+	private final MemberService memberService;
+	
+	
 	@GetMapping("/JoinCompany")
 	public String joinCompany(){
 		return "JoinCompany";
@@ -54,14 +58,8 @@ public class CompanyController {
 	
 	@PostMapping("/CreateCompany")
 	public String createNewCompany(@RequestParam("companyName") String companyName, Authentication authentication) {
-		User user = (User) authentication.getPrincipal();  
-        String email = user.getUsername(); 
-        Optional<Member> _member = companyService.findMemberByEmail(email);
-        Member member = _member.get();
+        Member member = memberService.infoFromLogin(authentication);
 		companyService.companyCreate(companyName, member.getMemberIdx());
-		Optional<Company> company = companyService.findCompanyByCompanyManagerIdx(member);
-		member.setCompany(company.get());
-		companyService.saveMember(member);
-		return"dashboard";
+		return "dashboard";
 	}
 }
