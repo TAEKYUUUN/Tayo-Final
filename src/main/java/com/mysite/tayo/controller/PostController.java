@@ -45,7 +45,7 @@ public class PostController {
 
 
 	
-	@PostMapping("/projectFeed2/{projectIdx}")
+	@PostMapping("/projectFeed/{projectIdx}")
 	public String createPost(Authentication authentication, @PathVariable("projectIdx") Long projectIdx,
 	        @RequestParam("tabType") int tabType,
 	        @RequestParam("title") String title,
@@ -126,7 +126,7 @@ public class PostController {
 	            // Handle invalid tabType
 	            return "redirect:/error";
 	    }
-	    return "redirect:/projectFeed2/" + projectIdx;
+	    return "redirect:/projectFeed/" + projectIdx;
 	}
 
 }

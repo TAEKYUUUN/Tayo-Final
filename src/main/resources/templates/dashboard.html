@@ -143,7 +143,7 @@
 						<span class="prj_icon_box">+</span>
 						새 프로젝트
 					</div>
-					<div class="div_prj_item" th:each="projectMember : ${myproject}" th:data-href="@{projectFeed2}">
+					<div class="div_prj_item" th:each="projectMember : ${myproject}" th:data-href="@{projectFeed}">
 						<input type="hidden" th:value="${projectMember.project.projectIdx}"/>
 						<span class="prj_icon_box1" th:style="'background-color:' + ${projectMember.project.color}"></span>
 						<span th:text="${projectMember.project.projectName}"></span>
