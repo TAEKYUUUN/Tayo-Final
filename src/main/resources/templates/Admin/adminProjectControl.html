@@ -141,8 +141,8 @@
 						<td th:text="${project.postList.size()}">2</td>
 						<td></td>
 						<td></td>
-						<td th:text="${#lists.size(project.postList.?[fileType.value == 3])}">0</td>
-						<td th:text="${#lists.size(project.postList.?[fileType.value == 2])}">0</td>
+						<td th:text="${#lists.size(project.postList.?[fileType == 3])}">0</td>
+						<td th:text="${#lists.size(project.postList.?[fileType == 2])}">0</td>
 						<td>2024-06-02, 15:33</td>
 						<td th:text="${project.creationDate}"></td>
 					</tr>
@@ -266,7 +266,7 @@
 						<div id="div_redbuttoncover">
 							<div id="redbutton">삭제</div>
 						</div>
-						<button class="button1" style="width:120px; height:36px;">저장</button>
+						<button id="savebutton" class="button1" style="width:120px; height:36px;">저장</button>
 						<button id="cancelbutton" class="button2" style="width:120px; height:36px;">취소</button>
 					</div>
 				</div>
@@ -310,7 +310,7 @@
 				</div>
 			</div>
 			<div id="div_popupbuttonssmall">
-				<button class="button1" style="width:120px; height:36px;">저장</button>
+				<button id="savebutton2" class="button1" style="width:120px; height:36px;">저장</button>
 				<button id="cancelbutton2" class="button2" style="width:120px; height:36px;">취소</button>
 			</div>
 		</div>

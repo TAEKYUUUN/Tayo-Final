@@ -59,14 +59,54 @@
            <div id="div_top_right_menu">
               <div id="div_top_hirearchy"><img src="/img/hirearchy.png"/></div>
               <div id="div_top_chat"><img src="/img/chat.png"/></div>
-              <div id="div_top_alarm"><img src="/img/alarm.png"/></div>
+              <div id="div_top_alarm" style="cursor:pointer;"><img src="/img/alarm.png"/></div>
               <div id="div_top_profile">
 				<img src="https://flow.team/flow-renewal/assets/images/profile-default.svg"/>
 			</div>
-           </div>
-       </div>
-       <div id="div_content">
-          <div id="div_introwrap">
+           </div></div>
+		<div id="div_content">
+			<div id="alarmPopup" style="display:none;">
+				<div id="alarmHead">알림 <a id="exitlogoedit"></a></div>
+				<div id="alarmBody">
+					<ul>
+						<li id="unread" class="allOrUnread">미확인</li>
+						<li id="allalarm">전체</li>
+						<li id="readall" style="margin-left:188px;">모두 읽음</li>
+					</ul>
+					<div id="searchTab">
+						<img id="searchicon" src="img/search_bar_icon.png" alt="" />
+						<input id="searchInput" type="text" placeholder="검색">
+						<div id="searchOption">옵션</div>
+					</div>
+					<div id="alarms">
+						<ul>
+							<li class="alarmListClass unreadAlarm">
+								<div id="alarmProfile" >ㅇ</div>
+								<div id="div_alarmtext">
+									<div id="div_alarmTitle">
+										<span>for조</span>
+										<em>7분 전</em>
+									</div>
+									<div id="div_alarmContents">우태균님의 글 등록</div>
+									<div id="div_alarmDetails">for조 화이팅</div>
+								</div>								
+							</li>
+							<li class="alarmListClass">
+								<div id="alarmProfile" >ㅇ</div>
+								<div id="div_alarmtext">
+									<div id="div_alarmTitle">
+										<span>for조</span>
+										<em>7분 전</em>
+									</div>
+									<div id="div_alarmContents">우태균님의 글 등록</div>
+									<div id="div_alarmDetails">for조 화이팅</div>
+								</div>								
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div id="div_introwrap">
              <div id="div_profile_name">
                 <div id="div_profile">
 					<span th:text="${member.name}"></span>

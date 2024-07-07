@@ -5,7 +5,12 @@ document.addEventListener('DOMContentLoaded', () => {
 	const cancelbutton = document.querySelector('#cancelbutton');
 	const cancelbutton2 = document.querySelector('#cancelbutton2');
 	const memberLittle = document.querySelector('#memberLittle');
-
+	const savebutton = document.querySelector('#savebutton');
+	
+	savebutton.addEventListener('click', ()=>{
+		submitForm();
+	})
+	
 	memberLittle.addEventListener('click', () => {
 		document.querySelector('#div_projectInfopopupSmall').style.removeProperty('display');
 		document.querySelector('#div_backgroundfull').style.zIndex = '11500';
@@ -36,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	})
 
 })
-
 function showProjectDetails(projectIdx) {
 
 	$.ajax({
@@ -63,6 +67,8 @@ function showProjectDetails(projectIdx) {
 					let td4 = document.createElement('td');
 					let td5 = document.createElement('td');
 					let td6 = document.createElement('td');
+					let td7 = document.createElement('td');
+					let td8 = document.createElement('td');
 					td.textContent = e.member.rankName;
 					tr.appendChild(td);
 					td2.textContent = e.member.name;
@@ -78,7 +84,12 @@ function showProjectDetails(projectIdx) {
 					td6.textContent = e.projectMemberIdx;
 					td6.style.display='none';
 					tr.appendChild(td6);
-					
+					td7.textContent = response.projectIdx;
+					td7.style.display = 'none';
+					tr.appendChild(td7);
+					td8.textContent = e.member.memberIdx;
+					td8.style.display='none';
+					tr.appendChild(td8);
 				} else {
 					let tr = document.createElement('tr');
 					let td = document.createElement('td');
@@ -112,39 +123,34 @@ function showProjectDetails(projectIdx) {
 	});
 
 }
-
-const submitForm = function(event) {
-		    event.preventDefault();
-		    
-		    const members = [];
-		    const rows = document.querySelectorAll('#popupTbody tr');
-		    
-		    rows.forEach(row => {
-		        const member = {
-		            isManager: row.querySelector('td')[4].value,
-					isManager: row.querySelector('td')[5].value,
-		        };
-		        members.push(member);
-		    });
-		    
-		    const data = members;
-		    
-		    fetch('/Admin/memberAddAll', {
-		        method: 'POST',
-		        headers: {
-		            'Content-Type': 'application/json',
-		        },
-		        body: JSON.stringify(data), // corrected the typo
-		    })
-		    .then(response =>{ 
-				if (response.redirected) {
-				            window.location.href = response.url;
-				        }
-				 response.json()})
-		    .then(data => {
-		        console.log('Success:', data);
-		    })
-		    .catch((error) => {
-		        console.log('Error:', error);
-		    });
-		};
+const submitForm = function() {
+    const members = [];
+    const rows = document.querySelectorAll('#popupTbody tr');
+    rows.forEach(row => {
+        const projectMember = {
+            projectMemberIdx: row.querySelectorAll('td')[5].textContent,
+            project:{
+				projectName: document.querySelector('#outlinenone').value,
+	            projectIdx: row.querySelectorAll('td')[6].textContent,
+			},
+            member: {
+                memberIdx: row.querySelectorAll('td')[7].textContent,
+            }
+        };
+        members.push(projectMember);
+    });
+    
+    $.ajax({
+        url: "/Admin/adminProjectControl",
+        type: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify(members),
+        success: function(response) {
+			document.querySelector('#div_backgroundfull').style.display = 'none';
+			document.querySelector('#div_projectInfopopup').style.display = 'none';
+        },
+        error: function(error) {
+            console.log('Error:', error);
+        }
+    });
+};
