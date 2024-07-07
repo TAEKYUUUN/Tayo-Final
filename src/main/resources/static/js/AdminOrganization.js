@@ -144,9 +144,8 @@ const istargeted = function () {
 
 function clearOrganizations(){
 			var organizationData = {
-					action:"clear",
-			 };
-		    
+						action:"clear",
+				 };
 		    $.ajax({
 		        url:"/Admin/AdminOrganization",
 		        type:'POST',

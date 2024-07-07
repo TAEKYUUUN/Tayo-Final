@@ -211,7 +211,7 @@
 			margin-bottom : 15px; 
 		}
 		
-		#button1{
+		.button1{
 			color: #fff;
 		    border-color: #307cff;
 		    background-color: #307cff;
@@ -225,7 +225,7 @@
 		    cursor: pointer;
 		    display:inline-block;
 		}
-		#button2{
+		.button2{
 			padding: 0 10px;
 		    height: 30px;
 		    line-height: 28px;
@@ -369,7 +369,7 @@
 		}
 		
 		#div_projectInfopopup{
-			height:668.81px;
+			height:fit-content;
 			z-index:11000;
 			width:900px;
 			position:fixed;
@@ -377,6 +377,20 @@
 			left:50%;
 			margin-top:-370px;
 			margin-left:-450px;
+			display:block;
+			background:rgb(255,255,255);
+			border-radius:7px;
+		}
+		#div_projectInfopopupSmall{
+			min-height:500px;
+			height:fit-content;
+			z-index:12000;
+			width:500px;
+			position:fixed;
+			top:50%;
+			left:50%;
+			margin-top:-250px;
+			margin-left:-250px;
 			display:block;
 			background:rgb(255,255,255);
 			border-radius:7px;
@@ -392,13 +406,42 @@
 			border-radius: 7px 7px 0 0;
 			position:relative;
 		}
+		#div_popupTitlesmall{
+			width:500px;
+			height:120px;
+			padding:25px 30px 0 30px;
+			margin:0;
+			font-size: 19px;
+		    color: #111111;
+		    font-weight: 700;
+			border-radius: 7px 7px 0 0;
+			position:relative;
+			border-bottom:1px solid #e6e6e6;
+		}
 		#pt{
 			width:840px;
 			height:43px;
 			padding-bottom:14px;
 			border-bottom:1px solid #e6e6e6;
 		}
+		#ptsmall{
+			width:440px;
+			height:43px;
+			padding-bottom:14px;
+			
+		}
+		
 		#div_popupTitle > a{
+			display:block;
+			position:absolute;
+			top:20px;
+			right:30px;
+			width:30px;
+			height:30px;
+			background : url(https://flow.team/design2/flow_admin_2019/img/btn_popclose.gif) no-repeat center;
+			cursor:pointer;
+		}
+		#div_popupTitlesmall > a{
 			display:block;
 			position:absolute;
 			top:20px;
@@ -410,16 +453,23 @@
 		}
 		#div_popupBody{
 			width:900px;
-			height:570.81px;
+			max-height:570.81px;
+			height:fit-content;
 			padding:0 30px;
 			margin-bottom:30px;
-			overflow-y:auto;
-			overflow-x:hidden;
+		}
+		#div_popupBodysmall{
+			width:500px;
+			height:300px;
+			padding:0 30px;
+			margin-bottom:10px;
+			border-bottom:1px solid #e6e6e6;
 		}
 		
 		#div_innertable{
 			width:833px;
-			height:510px;
+			max-height:510px;
+			height:fit-content;
 			margin-top:10px;
 		}
 		
@@ -477,6 +527,16 @@
 			align-items:center;
 			justify-content:center;
 		}
+		#div_popupbuttonssmall{
+			width:500px;
+			height:36px;
+			position:relative;
+			margin-top:15px;
+			text-align:center;
+			display:flex;
+			align-items:center;
+			justify-content:center;
+		}
 		
 		#div_redbuttoncover{
 			position:absolute;
@@ -493,3 +553,14 @@
 		    background-color: #d03737;
 		    border-radius: 2px;
 		}
+		
+		.noMoreManager{
+			color:red;
+		}
+		.noMoreManager:hover{
+			text-decoration: underline;
+		}
+		
+		
+		
+		

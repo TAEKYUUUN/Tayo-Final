@@ -37,6 +37,7 @@ const popupappear = function(){
 			const editPopup = document.querySelector('.editpopup');
 			
 			const openOrgSelector = document.querySelector('#openOrgSelector');
+			const editopenOrgSelector = document.querySelector('#editopenOrgSelector');
 			const orgPopup = document.querySelector('#div_orgpopup');
 			
 			const noChangeOrg = document.querySelector('#noChangeOrg');
@@ -87,24 +88,34 @@ const popupappear = function(){
 			
 			
 			organizationSave.addEventListener('click', ()=>{
-				document.querySelector('.editpopup').style.removeProperty('display');
 				orgPopup.style.display="none";
 				const targetOrg = document.querySelector('.targetOrganization')
 				if(targetOrg){ // 뭐가 떠있는지에 따라 edit인지 create인지 차이 비교. 이후 controller에도 수정할 것
-					//if(document.querySelector('.insertpopup').style.display === 'none')
-					document.querySelector('#editpopupOrg').value=targetOrg.querySelector('p').innerHTML;
-					document.querySelector('#editpopupOrgIdx').value=targetOrg.querySelectorAll('p')[1].innerHTML;
+					if(document.querySelector('.insertpopup').style.display === 'none'){
+						document.querySelector('#editpopupOrg').value=targetOrg.querySelector('p').innerHTML;
+						document.querySelector('#editpopupOrgIdx').value=targetOrg.querySelectorAll('p')[1].innerHTML;
+					}else{
+						document.querySelector('#popupOrg').value=targetOrg.querySelector('p').innerHTML;
+						document.querySelector('#popupOrgIdx').value=targetOrg.querySelectorAll('p')[1].innerHTML;
+					}
+					
 				}
 			})
 			
 			noChangeOrg.addEventListener('click', ()=>{
-				document.querySelector('.editpopup').style.removeProperty('display');
+				//document.querySelector('.editpopup').style.removeProperty('display');
 				orgPopup.style.display="none";
 			})
 			
-			openOrgSelector.addEventListener('click', (event)=>{
+			openOrgSelector.addEventListener('click',(event)=>{
 				event.stopPropagation();
-				document.querySelector('.editpopup').style.display="none"
+				//document.querySelector('.insertpopup').style.display="none"
+				orgPopup.style.removeProperty('display');
+			})
+			
+			editopenOrgSelector.addEventListener('click', (event)=>{
+				event.stopPropagation();
+				//document.querySelector('.editpopup').style.display="none"
 				orgPopup.style.removeProperty('display');
 			})
 			

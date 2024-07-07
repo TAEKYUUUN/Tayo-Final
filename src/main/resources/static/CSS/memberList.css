@@ -455,6 +455,13 @@ td{
 	cursor:pointer;
 }
 
+#editopenOrgSelector{
+	position:absolute; 
+	right:10px; 
+	z-index: 10001;
+	cursor:pointer;
+}
+
 #div_insertpopuphead{
 	width:500px;
 	height:68px;
@@ -571,7 +578,6 @@ ul {
 	font-size: 15px;
     color: rgb(79, 84, 93);
     font-weight:700;
-    
 }
 #div_popupline>input{
 	height:30px;
