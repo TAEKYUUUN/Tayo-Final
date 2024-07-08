@@ -19,7 +19,7 @@ import lombok.Setter;
 @Table(name = "unread")
 public class Unread {
 	@Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "unreadseq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "unread_seq")
     @SequenceGenerator(name = "unread_seq", sequenceName = "UNREAD_SEQ", allocationSize = 1)
     @Column(name = "unread_idx")
     private Long unreadIdx;

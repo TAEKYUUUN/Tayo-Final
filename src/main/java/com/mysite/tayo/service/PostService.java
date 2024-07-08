@@ -147,14 +147,17 @@ public class PostService {
 		task.setContents(contents);
 		this.taskRepository.save(task);
 		
-		// 이후 하위업무 별 마감일, 담당자, condition 세팅
-		for(int i=0; i<lowerTaskNameList.size(); i++) {
-			LowerTask lowerTask = new LowerTask();
-			lowerTask.setTask(task);
-			lowerTask.setTaskName(lowerTaskNameList.get(i));
-			lowerTask.setCondition(lowertTaskConditionList.get(i));
-			lowerTask.setEndDate(endDate);
-			this.lowerTaskRepository.save(lowerTask);
+		// 하위업무의 존재 여부 확인 -> 아닐 경우에 하위업무 db에 추가하는 작업 진행
+		if(lowerTaskNameList != null) {
+			// 이후 하위업무 별 마감일, 담당자, condition 세팅
+			for(int i=0; i<lowerTaskNameList.size(); i++) {
+				LowerTask lowerTask = new LowerTask();
+				lowerTask.setTask(task);
+				lowerTask.setTaskName(lowerTaskNameList.get(i));
+				lowerTask.setCondition(lowertTaskConditionList.get(i));
+				lowerTask.setEndDate(endDate);
+				this.lowerTaskRepository.save(lowerTask);
+			}
 		}
 
 		// post_member 에 프로젝트 참여중인 모든 멤버 추가 (작성자 포함)
@@ -264,6 +267,7 @@ public class PostService {
 
 		Todo todo = new Todo();
 		todo.setTitle(title);
+		todo.setPost(post);
 		this.todoRepository.save(todo);
 
 		List<ProjectMember> projectMemberAll = projectMemberRepository.findByProjectProjectIdx(project.getProjectIdx());
@@ -272,8 +276,8 @@ public class PostService {
 			TodoName todoName = new TodoName();
 			todoName.setTodo(todo);
 			todoName.setTodoName(todoNameList.get(i));
-			todoName.setTodoManager(todoManagerList.get(i));
-			todoName.setDeadline(todoDeadlineList.get(i));
+//			todoName.setTodoManager(todoManagerList.get(i));
+//			todoName.setDeadline(todoDeadlineList.get(i));
 			this.todoNameRepository.save(todoName);
 
 			for (ProjectMember projectMember : projectMemberAll) {
@@ -318,7 +322,7 @@ public class PostService {
 
 	// 투표(Vote) 생성
 	public void createVote(Member member, Project project, String title, String voteDetail, Date voteEnddate,
-			List<String> voteItemList) {
+			List<String> voteItemList, Integer isPlural, Integer isAnonymous) {
 		Date date = new Date();
 
 		Post post = new Post();
@@ -333,6 +337,8 @@ public class PostService {
 		vote.setTitle(title);
 		vote.setVoteDetail(voteDetail);
 		vote.setVoteEndDate(voteEnddate);
+		vote.setIsPlural(isPlural);
+		vote.setIsAnonymous(isAnonymous);
 		this.voteRepository.save(vote);
 
 		for (int i = 0; i < voteItemList.size(); i++) {
@@ -500,6 +506,68 @@ public class PostService {
 	    return Collections.emptyMap();
 	}
 	// postIdx를 받아서 할 일(Todo)의 데이터 가져오기
-	
+	public Map<String, Object> getTodo(Long postIdx) {
+	    Optional<Post> postOptional = postRepository.findById(postIdx);
+	    if (postOptional.isPresent()) {
+	    	Post post = postOptional.get();
+	        Todo todo = post.getTodo();
+	        if (todo != null) {
+	            Map<String, Object> todoData = new HashMap<>();
+	            todoData.put("title", todo.getTitle());
+	            // 할일 항목 리스트 추가
+	            List<TodoName> todoNames = todo.getTodoNames();
+	            if(todoNames != null && !todoNames.isEmpty()) {
+	            	List<Map<String, String>> todoNamesData = new ArrayList<>();
+	            	for(TodoName todoName : todoNames) {
+	            		Map<String, String> todoNameData = new HashMap<>();
+	            		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd (E)");
+	            		todoNameData.put("todoName", todoName.getTodoName());
+//	            		todoNameData.put("managerIdx", todoName.getTodoManager().getMemberIdx().toString());
+//	            		todoNameData.put("managerName", todoName.getTodoManager().getName());
+//	                    todoNameData.put("managerProfileImg", todoName.getTodoManager().getProfileImage());
+	            		todoNameData.put("deadLine", todoName.getDeadline() != null ? dateFormat.format(todoName.getDeadline()) : "No end date");
+	            		todoNamesData.add(todoNameData);
+	            	}
+	            	todoData.put("todoNames", todoNamesData);
+	            }
+	            
+	            return todoData;
+	        }
+	    }
+	    return Collections.emptyMap();
+	}
 	// postIdx를 받아서 투표(Vote)의 데이터 가져오기
+	public Map<String, Object> getVote(Long postIdx) {
+		Optional<Post> postOptional = postRepository.findById(postIdx);
+		if(postOptional.isPresent()) {
+			Post post = postOptional.get();
+			Vote vote = post.getVote();
+			if(vote != null) {
+				Map<String, Object> voteData = new HashMap<>();
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd (E)");
+				voteData.put("title", vote.getTitle());
+				voteData.put("voteDetail", vote.getVoteDetail());
+				voteData.put("voteEndDate", vote.getVoteEndDate() != null ? dateFormat.format(vote.getVoteEndDate()) : "No end Date");
+				voteData.put("endVote", vote.getEndVote() != null ? Integer.toString(vote.getEndVote()) : "0");
+				voteData.put("isPlural", Integer.toString(vote.getIsPlural()));
+				voteData.put("isAnonymous", Integer.toString(vote.getIsAnonymous()));
+
+				// 투표 항목 리스트 추가
+				List<VoteItem> voteItems = vote.getVoteItems();
+				if(voteItems != null && !voteItems.isEmpty()) {
+					List<Map<String, String>> voteItemsData = new ArrayList<>();
+					for(VoteItem voteItem : voteItems) {
+						Map<String, String> voteItemData = new HashMap<>();
+						voteItemData.put("itemName", voteItem.getItemName());
+						voteItemData.put("voteItemIdx", Long.toString(voteItem.getVoteItemIdx()));
+						voteItemsData.add(voteItemData);
+					}
+					voteData.put("voteItems", voteItemsData);
+				}
+				
+				return voteData;
+			}
+		}
+		 return Collections.emptyMap();
+	}
 }

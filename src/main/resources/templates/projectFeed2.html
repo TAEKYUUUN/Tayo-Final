@@ -88,7 +88,8 @@
 						<h3 th:text="${project.projectName}"></h3>
 					</div>
 				</div>
-				<div id="div_invite_prjmem"><img src="/img/invite_prjmember.png" alt="Invite Project Member Icon" />
+				<div id="div_invite_prjmem">
+					<img src="/img/invite_prjmember.png" alt="Invite Project Member Icon" onclick="openInviteModal()"/>
 				</div>
 			</div>
 			<div id="div_prj_detail_top">
@@ -192,7 +193,7 @@
 								아직 참여중인 멤버들이 없습니다.<br />
 								함께할 멤버들을 지금 초대해 보세요!
 							</p>
-							<button class="nothing_btn invite" type="button">초대하기</button>
+							<button class="nothing_btn invite" type="button" onclick="openInviteModal()">초대하기</button>
 						</div>
 						<!-- 포스트 있는 경우 -->
 						<div th:if="${#lists.size(postsData) > 0}">
@@ -207,7 +208,7 @@
 										        </span>
 										        <div class="post_author">
 										            <strong th:text="${postData.member.name}"></strong>
-										            <span th:text="${#dates.format(postData.post.uploadDate, 'yyyy-MM-dd HH:MM')}"></span>
+										            <span th:text="${#dates.format(postData.post.uploadDate, 'yyyy-MM-dd HH:mm')}"></span>
 										        </div>
 										        <div class="post_option">
 										            <div><img th:src="@{/img/post_fix_icon.png}" /></div>
@@ -272,7 +273,7 @@
 									            </span>
 									            <div class="post_author">
 									                <strong th:text="${postData.member.name}"></strong>
-									                <span th:text="${#dates.format(postData.post.uploadDate, 'yyyy-MM-dd HH:MM')}"></span>
+									                <span th:text="${#dates.format(postData.post.uploadDate, 'yyyy-MM-dd HH:mm')}"></span>
 									            </div>
 									            <div class="post_option">
 									                <div><img th:src="@{/img/post_fix_icon.png}" /></div>
@@ -399,7 +400,7 @@
 									            </span>
 									            <div class="post_author">
 									                <strong th:text="${postData.member.name}"></strong>
-									                <span th:text="${#dates.format(postData.post.uploadDate, 'yyyy-MM-dd HH:MM')}"></span>
+									                <span th:text="${#dates.format(postData.post.uploadDate, 'yyyy-MM-dd HH:mm')}"></span>
 									            </div>
 									            <div class="post_option">
 									                <div><img th:src="@{/img/post_fix_icon.png}" /></div>
@@ -509,11 +510,209 @@
 									</div>
 									<!-- fileType=4 , Todo -->
 									<div th:case="'4'">
-										
+									    <div class="post_box">
+									        <div class="post_top_area">
+									            <span class="participants_profile">
+									                <i><img th:src="${postData.member.profileImage != null ? postData.member.profileImage : 'https://flow.team/flow-renewal/assets/images/profile-default.png'}" alt="Profile" /></i>
+									            </span>
+									            <div class="post_author">
+									                <strong th:text="${postData.member.name}"></strong>
+									                <span th:text="${#dates.format(postData.post.uploadDate, 'yyyy-MM-dd HH:mm')}"></span>
+									            </div>
+									            <div class="post_option">
+									                <div><img th:src="@{/img/post_fix_icon.png}" /></div>
+									                <div><img th:src="@{/img/post_option_icon.png}" /></div>
+									            </div>
+									        </div>
+									        <div class="post_title_area">
+									            <h4 th:text="${postData != null && postData['data'] != null ? postData['data'].title : ''}"></h4>
+									        </div>
+									        <div class="post_card_container">
+									            <div class="post_card_content">
+									                <div class="todo_status_area">
+									                    <div class="todo_progress_header">
+									                        <div class="progress_header_left">
+									                            <span class="progress_count">0</span>
+									                            <span class="progress_total" th:text="'/' + ${#lists.size(postData.data.todoNames)}"></span>
+									                        </div>
+									                        <div class="progress_header_right">
+									                            <span class="progress_percent">0%</span>
+									                        </div>
+									                    </div>
+									                    <div class="todo_progress_bar">
+									                        <span style="width:0%;"></span>
+									                    </div>
+									                    <ul class="todo_ul">
+									                        <li class="todo_item" th:each="todoName : ${postData.data.todoNames}">
+									                            <div class="todo_list_area">
+									                                <div class="todo_text">
+									                                    <div class="icon_checkbox"></div>
+									                                    <span class="todo_text_area" th:text="${todoName.todoName}"></span>
+									                                </div>
+									                                <span class="todo_manager_profile">
+									                                    <i>
+									                                        <img th:src="@{https://flow.team/flow-renewal/assets/images/profile-default.png}" alt="Manager Profile">
+									                                    </i>
+									                                </span>
+									                            </div>
+									                        </li>
+									                    </ul>
+									                </div>
+									            </div>
+									            <div class="post_bottom_area">
+									                <div class="bottom_btn_area">
+									                    <div class="post_reaction">
+									                        <i class="like_icon icon"></i>
+									                        <span>좋아요</span>
+									                    </div>
+									                    <div class="post_bookmark">
+									                        <i class="bookmark_icon icon"></i>
+									                        <span>북마크</span>
+									                    </div>
+									                    <div class="post_realarm">
+									                        <i class="realarm_icon" style="margin: -2px 4px 0 0;">
+									                            <img th:src="@{https://flow.team/flow-renewal/assets/images/icons/icon-reminder.svg?v=345bc9200371957f3d8999fbc954479740b37d77}" />
+									                        </i>
+									                        <span>다시 알림</span>
+									                    </div>
+									                </div>
+									                <div class="cmt_read_area">
+									                    <div class="comment_count_area">
+									                        <span>댓글</span>
+									                        <span>0</span>
+									                    </div>
+									                    <div class="read_count_area">
+									                        <span>읽음</span>
+									                        <span>0</span>
+									                    </div>
+									                </div>
+									            </div>
+									            <div class="post_comment_input_area">
+									                <div class="comment_profile">
+									                    <img th:src="@{https://flow.team/flow-renewal/assets/images/profile-default.png}" />
+									                </div>
+									                <div class="comment_input">
+									                    <input class="cmt_input" type="text" placeholder="줄바꿈 Shift + Enter / 입력 Enter 입니다.">
+									                    <div class="file_upload_box">
+									                        <img th:src="@{/img/file_upload.png}" />
+									                    </div>
+									                </div>
+									            </div>
+									        </div>
+									    </div>
 									</div>
 									<!-- fileType=5 , Vote -->
 									<div th:case="'5'">
-										
+									    <div class="post_box">
+									        <div class="post_top_area">
+									            <span class="participants_profile">
+									                <i><img th:src="${postData.member.profileImage != null ? postData.member.profileImage : 'https://flow.team/flow-renewal/assets/images/profile-default.png'}" alt="Profile" /></i>
+									            </span>
+									            <div class="post_author">
+									                <strong th:text="${postData.member.name}"></strong>
+									                <span th:text="${#dates.format(postData.post.uploadDate, 'yyyy-MM-dd HH:mm')}"></span>
+									            </div>
+									            <div class="post_option">
+									                <div><img th:src="@{/img/post_fix_icon.png}" /></div>
+									                <div><img th:src="@{/img/post_option_icon.png}" /></div>
+									            </div>
+									        </div>
+									        <div class="post_title_area" style="flex-direction: column;">
+									            <h4>
+									                <span th:text="${postData != null && postData['data'] != null ? postData['data'].title : ''}"></span>
+									                <span class="em_vote_proceed" th:if="${postData['data'] != null && postData['data'].endVote == 0}">
+									                    진행중
+									                </span>
+									                <span class="em_vote_proceed" th:if="${postData['data'] != null && postData['data'].endVote != 0 && postData['data'].endVote == 1}">
+									                    종료
+									                </span>
+									            </h4>
+									            <div class="vote_detail_title">
+									                <div th:text="${postData != null && postData['data'] != null ? postData['data'].voteDetail : ''}">
+									                </div>
+									            </div>
+									            <div class="vote_duedate_wrap">
+									                <p>2024-06-11 (금)까지</p>
+									                <span class="active"  th:if="${postData['data'].isPlural != null and postData['data'].isPlural.toString().equals('1')}">복수선택</span>
+									                <span class="active" th:if="${postData['data'].isAnonymous != null and postData['data'].isAnonymous.toString().equals('1')}">익명투표</span>
+									            </div>
+									        </div>
+									        <div class="post_card_container">
+									            <div class="post_card_content">
+									                <div class="vote_participant_button_area">
+									                    <button class="vote_result_btn">
+									                        <span>
+									                            <span class="participant_num">0</span>
+									                            <span> 명 참여 중 ></span>
+									                        </span>
+									                    </button>
+									                </div>
+									                <div class="vote_select_option_area">
+									                    <div class="vote_list_container">
+									                        <ul data-type="text">
+									                            <li class="vote_item" th:each="voteItem : ${postData.data.voteItems}">
+									                                <div class="vote_check_option">
+									                                    <input id="option1" type="checkbox" />
+									                                </div>
+									                                <div class="vote_option_content">
+									                                    <div class="vote_option_name">
+									                                        <span class="option_name" th:text="${voteItem.itemName}"></span>
+									                                        <span class="vote_count">0 명</span>
+									                                    </div>
+									                                    <div class="vote_graph">
+									                                        <span></span>
+									                                    </div>
+									                                </div>
+									                            </li>
+									                        </ul>
+									                    </div>
+									                </div>
+									                <div class="vote_progress_button_area">
+									                    <button class="vote_end_btn">투표 종료</button>
+									                    <button class="vote_btn">투표</button>
+									                </div>
+									            </div>
+									            <div class="post_bottom_area">
+									                <div class="bottom_btn_area">
+									                    <div class="post_reaction">
+									                        <i class="like_icon icon"></i>
+									                        <span>좋아요</span>
+									                    </div>
+									                    <div class="post_bookmark">
+									                        <i class="bookmark_icon icon"></i>
+									                        <span>북마크</span>
+									                    </div>
+									                    <div class="post_realarm">
+									                        <i class="realarm_icon" style="margin: -2px 4px 0 0;">
+									                            <img th:src="@{https://flow.team/flow-renewal/assets/images/icons/icon-reminder.svg?v=345bc9200371957f3d8999fbc954479740b37d77}" />
+									                        </i>
+									                        <span>다시 알림</span>
+									                    </div>
+									                </div>
+									                <div class="cmt_read_area">
+									                    <div class="comment_count_area">
+									                        <span>댓글</span>
+									                        <span>0</span>
+									                    </div>
+									                    <div class="read_count_area">
+									                        <span>읽음</span>
+									                        <span>0</span>
+									                    </div>
+									                </div>
+									            </div>
+									            <div class="post_comment_input_area">
+									                <div class="comment_profile">
+									                    <img th:src="${postData.member.profileImage != null ? postData.member.profileImage : 'https://flow.team/flow-renewal/assets/images/profile-default.png'}" />
+									                </div>
+									                <div class="comment_input">
+									                    <input class="cmt_input" type="text" placeholder="줄바꿈 Shift + Enter / 입력 Enter 입니다.">
+									                    <div class="file_upload_box">
+									                        <img th:src="@{/img/file_upload.png}" />
+									                    </div>
+									                </div>
+									            </div>
+									        </div>
+									    </div>
 									</div>
 								</div>
 							</div>
@@ -622,6 +821,7 @@
 			</div>
 		</div>
 		<div id="div_backgroundfull"></div>
+		<!-- Post 작성 Modal -->
 		<div class="modal" style="display: none;">
 			<form th:action="@{/projectFeed2/{projectIdx}(projectIdx=${projectIdx})}" method="post" enctype="application/x-www-form-urlencoded">
 				<input type="hidden" id="tabType" name="tabType"/>
@@ -667,6 +867,51 @@
 					<button class="submit" style="width:100px;">등록</button>
 				</div>
 			</form>
+		</div>
+		<!-- 참여자 초대 Modal -->
+		<div id="invite-participants-modal" class="invite-modal" style="display: none;">
+		    <div class="invite-modal-content">
+		        <div class="invite-modal-header">
+		            <span class="close" onclick="closeInviteModal()">&times;</span>
+		            <h2>참여자 초대</h2>
+		        </div>
+				<div class="invite-modal-nav">
+					<h4 style="margin-left : 20px;">임직원</h4>
+				</div>
+		        <div class="invite-modal-body">
+		            <div class="list">
+						<div class="search-wrapper">
+			                <input type="text" class="invite_searchbar" id="search" placeholder="이름, 소속, 전화번호 검색">
+						</div>
+		                <ul id="employeeList">
+							<li data-id="1" data-name="김민성" class="invite_list">
+								<div>
+									<span><img src="https://flow.team/flow-renewal/assets/images/profile-default.png" alt="" /></span>
+									<dl>
+										<dt>
+											<strong>이태호</strong>
+											<em>직급</em>
+										</dt>
+										<dd>
+											<strong>tayo</strong>
+											<span>부서</span>
+										</dd>
+									</dl>
+								</div>
+							</li>
+		                    <li data-id="2" data-name="우태균">우태균 - Kakao</li>
+		                    <li data-id="3" data-name="이태호">이태호 - Kakao</li>
+		                </ul>
+		            </div>
+		            <div class="selected-list">
+		                <h3>선택된 참여자</h3>
+		                <ul id="selectedList"></ul>
+		            </div>
+		        </div>
+		        <div class="invite-modal-footer">
+		            <button class="btn" onclick="inviteParticipants()">초대하기</button>
+		        </div>
+		    </div>
 		</div>
 	</div>
 	</div>

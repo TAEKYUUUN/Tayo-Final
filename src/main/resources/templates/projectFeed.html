@@ -66,7 +66,7 @@
 		<div id="div_content">
 			<div id="div_top_main_bar">
 				<div id="div_project_detail_title">
-					<div id="div_project_color" th:style="'background-color:' + ${project.color}"></div>
+					<div id="div_project_color" th:style="'background-color:' + (${project.color} ?: '#ffffff')"></div>
 					<div id="div_project_header">
 						<div id="div_project_option">
 							<div class="project_hotlist" th:if="${projectMember.hotlist==1}">
@@ -89,7 +89,7 @@
 					</div>
 				</div>
 				<div id="div_invite_prjmem">
-					<img src="/img/invite_prjmember.png" alt="Invite Project Member Icon" onclick="openInviteModal()"/>
+					<img src="/img/invite_prjmember.png" alt="Invite Project Member Icon"/>
 				</div>
 			</div>
 			<div id="div_prj_detail_top">
@@ -765,38 +765,40 @@
 										</li>
 
 										<!-- 임직원 -->
-										<div th:if="${#lists.size(projectMemberList.?[isManager == null]) > 0}">
-											<span class="participants_title">
-												<em>&nbsp;임직원</em>
-												<span
-													th:text="${#lists.size(projectMemberList.?[isManager == null])}"></span>
-											</span>
-											<li th:each="memberList : ${projectMemberList}"
-												th:if="${memberList.isManager == null}" class="participants_item">
-												<div class="post_author">
-													<span class="participants_profile">
-														<i><img src="https://flow.team/flow-renewal/assets/images/profile-default.png"
-																alt="Profile" /></i>
-													</span>
-													<dl class="post_author_info">
-														<dt>
-															<strong
-																th:if="${memberList.member.memberIdx == member.memberIdx}"
-																th:text="${memberList.member.name + '(나)'}"></strong>
-															<strong
-																th:unless="${memberList.member.memberIdx == member.memberIdx}"
-																th:text="${memberList.member.name}"></strong>
-														</dt>
-														<dd>
-															<strong
-																th:text="${memberList.member.company.companyName} + ' &nbsp;|&nbsp; ' + ${memberList.member.rankName}"></strong>
-														</dd>
-													</dl>
-												</div>
-												<button class="participants_chat_btn">
-													<img src="/img/participants_chat_icon.png" alt="Chat Icon" />
-												</button>
-											</li>
+										<div id="memberListContainer">
+											<div th:if="${#lists.size(projectMemberList.?[isManager == null]) > 0}">
+												<span class="participants_title">
+													<em>&nbsp;임직원</em>
+													<span
+														th:text="${#lists.size(projectMemberList.?[isManager == null])}"></span>
+												</span>
+												<li th:each="memberList : ${projectMemberList}"
+													th:if="${memberList.isManager == null}" class="participants_item">
+													<div class="post_author">
+														<span class="participants_profile">
+															<i><img src="https://flow.team/flow-renewal/assets/images/profile-default.png"
+																	alt="Profile" /></i>
+														</span>
+														<dl class="post_author_info">
+															<dt>
+																<strong
+																	th:if="${memberList.member.memberIdx == member.memberIdx}"
+																	th:text="${memberList.member.name + '(나)'}"></strong>
+																<strong
+																	th:unless="${memberList.member.memberIdx == member.memberIdx}"
+																	th:text="${memberList.member.name}"></strong>
+															</dt>
+															<dd>
+																<strong
+																	th:text="${memberList.member.company.companyName} + ' &nbsp;|&nbsp; ' + ${memberList.member.rankName}"></strong>
+															</dd>
+														</dl>
+													</div>
+													<button class="participants_chat_btn">
+														<img src="/img/participants_chat_icon.png" alt="Chat Icon" />
+													</button>
+												</li>
+											</div>
 										</div>
 									</ul>
 								</div>
@@ -870,48 +872,51 @@
 		</div>
 		<!-- 참여자 초대 Modal -->
 		<div id="invite-participants-modal" class="invite-modal" style="display: none;">
-		    <div class="invite-modal-content">
-		        <div class="invite-modal-header">
-		            <span class="close" onclick="closeInviteModal()">&times;</span>
-		            <h2>참여자 초대</h2>
-		        </div>
-				<div class="invite-modal-nav">
-					<h4 style="margin-left : 20px;">임직원</h4>
-				</div>
-		        <div class="invite-modal-body">
-		            <div class="list">
-						<div class="search-wrapper">
-			                <input type="text" class="invite_searchbar" id="search" placeholder="이름, 소속, 전화번호 검색">
-						</div>
-		                <ul id="employeeList">
-							<li data-id="1" data-name="김민성" class="invite_list">
-								<div>
-									<span><img src="https://flow.team/flow-renewal/assets/images/profile-default.png" alt="" /></span>
-									<dl>
-										<dt>
-											<strong>이태호</strong>
-											<em>직급</em>
-										</dt>
-										<dd>
-											<strong>tayo</strong>
-											<span>부서</span>
-										</dd>
-									</dl>
-								</div>
-							</li>
-		                    <li data-id="2" data-name="우태균">우태균 - Kakao</li>
-		                    <li data-id="3" data-name="이태호">이태호 - Kakao</li>
-		                </ul>
-		            </div>
-		            <div class="selected-list">
-		                <h3>선택된 참여자</h3>
-		                <ul id="selectedList"></ul>
-		            </div>
-		        </div>
-		        <div class="invite-modal-footer">
-		            <button class="btn" onclick="inviteParticipants()">초대하기</button>
-		        </div>
-		    </div>
+			<form id="invite_form">
+			    <div class="invite-modal-content">
+			        <div class="invite-modal-header">
+			            <span class="close" onclick="closeInviteModal()">&times;</span>
+			            <h2 style="margin-top:5px;">참여자 초대</h2>
+			        </div>
+					<div class="invite-modal-nav">
+						<h4 style="margin-left : 20px;">임직원</h4>
+					</div>
+			        <div class="invite-modal-body">
+			            <div class="list">
+							<div class="search-wrapper">
+				                <input type="text" class="invite_searchbar" id="search" placeholder="이름, 소속, 전화번호 검색">
+							</div>
+			                <ul id="employeeList">
+								<li th:each="companyMember : ${companyMemberList}" th:data-id="${companyMember.memberIdx}" th:data-name="${companyMember.name}" class="invite_list">
+									<div class="check_invite">
+										<img src="https://flow.team/flow-renewal/assets/images/icons/icon_check.png?v=7f39425e224a53bff0043caff9f6446b14c0f667"/>
+									</div>
+									<div class="company_member_info">
+										<span><img src="https://flow.team/flow-renewal/assets/images/profile-default.png" alt="" /></span>
+										<dl>
+											<dt>
+												<strong th:text="${companyMember.name}"></strong>
+												<em th:text="${companyMember.rankName}"></em>
+											</dt>
+											<dd>
+												<strong th:text="${companyMember.company.companyName}"></strong>
+												<span th:text="${companyMember.organization != null ? companyMember.organization.organizationName : '-'}"></span>
+											</dd>
+										</dl>
+									</div>
+								</li>
+			                </ul>
+			            </div>
+			            <div class="selected-list">
+			                <h3>선택된 참여자</h3>
+			                <ul id="selectedList"></ul>
+			            </div>
+			        </div>
+			        <div class="invite-modal-footer">
+			            <button class="invite_submit_btn">초대하기</button>
+			        </div>
+			    </div>
+			</form>
 		</div>
 	</div>
 	</div>

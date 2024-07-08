@@ -283,6 +283,113 @@ body {
 	font-weight: bold;
 	border: 1px solid black;
 	color: #CCC;
+	cursor: pointer;
+}
+
+#div_newprj_button {
+	width: 176px;
+	height: 40px;
+}
+
+#div_left_menu1 {
+	width: 234px;
+	height: 146px;
+	margin: 20px 0px 0px;
+	padding: 0px 0px 13px;
+	border-bottom: 1px solid rgb(72, 70, 84);
+}
+
+#div_left_menu1>div {
+	width: 100%;
+	height: 33px;
+	padding: 0 30px;
+	font-size: 13px;
+	display: flex;
+	align-items: center;
+	margin-bottom: -24px;
+	color: #CCC;
+	cursor: pointer;
+}
+
+#div_left_menu1>div:hover {
+	color: #36cfbd;
+}
+
+#div_left_menu1>div>img {
+	margin-right: 14px;
+}
+
+#div_left_menu1>div:first-child {
+	color: #CCC;
+}
+
+#div_left_menu1>div:first-child:hover {
+	color: #36cfbd;
+}
+
+#div_left_menu2 {
+	width: 100%;
+	height: 447px;
+	font-size: 14px;
+	color: #CCC;
+}
+
+#div_left_menu2>div {
+	width: 222px;
+	height: 43px;
+	padding: 12px 30px;
+	font-size: 13px;
+	font-weight: bold;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+#div_left_menu2>div:not(:last-child) {
+	border-bottom: 1px solid rgb(72, 70, 84);
+}
+
+
+#div_left_menu3 {
+	width: 100%;
+	height: 85px;
+	font-size: 13px;
+	padding: 10px 0px 8px;
+	border-top: 1px solid rgb(72, 70, 84);
+	color: #CCC;
+}
+
+#div_left_menu3>div {
+	width: 100%;
+	height: 33px;
+	padding: 0 30px;
+	font-size: 13px;
+	display: flex;
+	align-items: center;
+	color: #CCC;
+	cursor: pointer;
+}
+
+#div_left_menu3>div:hover {
+	color: #36cfbd;
+}
+
+#div_left_menu3>div>img {
+	margin-right: 14px;
+}
+
+#div_left_menu4 {
+	width: 100%;
+	height: 46px;
+	padding: 0px 0px 0px 30px;
+	display: flex;
+	align-items: center;
+	background-color: rgb(36, 34, 42);
+	font-size: 13px;
+	font-weight: bold;
+	border: 1px solid black;
+	color: #CCC;
+	cursor: pointer;
 }
 
 #div_left_menu4>img {

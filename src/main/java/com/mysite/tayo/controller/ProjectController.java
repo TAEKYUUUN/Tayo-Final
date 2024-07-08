@@ -1,7 +1,9 @@
 package com.mysite.tayo.controller;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mysite.tayo.entity.Company;
@@ -72,21 +75,22 @@ public class ProjectController {
 	@Autowired
 	private VoteRepository voteRepository;
 
-	// 테스트용
-	@GetMapping("/projectFeed2/{projectIdx}")
+	@GetMapping("/projectFeed/{projectIdx}")
 	public String feed(Model model, Authentication authentication, @PathVariable("projectIdx") Long projectIdx) {
-	    Member member = memberService.infoFromLogin(authentication);
-	    Optional<Project> project = projectRepository.findById(projectIdx);
-	    List<ProjectMember> projectMemberList = projectMemberRepository.findByProjectProjectIdx(projectIdx);
-	    Optional<ProjectMember> projectMember = projectMemberRepository.findByProjectProjectIdxAndMemberMemberIdx(projectIdx, member.getMemberIdx());
-	    List<Post> postList = postRepository.findAllByProjectProjectIdxOrderByUploadDateDesc(projectIdx);
+		Member member = memberService.infoFromLogin(authentication);
+		Optional<Project> project = projectRepository.findById(projectIdx);
+		List<ProjectMember> projectMemberList = projectMemberRepository.findByProjectProjectIdx(projectIdx);
+		Optional<ProjectMember> projectMember = projectMemberRepository
+				.findByProjectProjectIdxAndMemberMemberIdx(projectIdx, member.getMemberIdx());
+		List<Post> postList = postRepository.findAllByProjectProjectIdxOrderByUploadDateDesc(projectIdx);
+		List<Member> companyMemberNotInProject = projectService.findMembersNotInProject(projectIdx,
+				member.getCompany().getCompanyIdx());
+		List<Map<String, Object>> postsData = new ArrayList<>();
 
-	    List<Map<String, Object>> postsData = new ArrayList<>();
-
-	    for (Post post : postList) {
-	        Map<String, Object> postData = new HashMap<>();
-	        postData.put("post", post);
-	        postData.put("member", post.getMember()); // 포스트 작성자 member 객체
+		for (Post post : postList) {
+			Map<String, Object> postData = new HashMap<>();
+			postData.put("post", post);
+			postData.put("member", post.getMember()); // 포스트 작성자 member 객체
 
 			switch (post.getFileType()) {
 			case 1:
@@ -114,26 +118,41 @@ public class ProjectController {
 					postData.put("data", Collections.emptyMap());
 				}
 				break;
-//	            case 4:
-//	                postData.put("data", todoService.getTodoData(post.getPostId()));
-//	                break;
-//	            case 5:
-//	                postData.put("data", voteService.getVoteData(post.getPostId()));
-//	                break;
+			case 4:
+				Map<String, Object> todoData = postService.getTodo(post.getPostIdx());
+				if (todoData != null) {
+					postData.put("data", todoData);
+				} else {
+					postData.put("data", Collections.emptyMap());
+				}
+				break;
+			case 5:
+				Map<String, Object> voteData = postService.getVote(post.getPostIdx());
+				if (voteData != null) {
+					postData.put("data", voteData);
+				} else {
+					postData.put("data", Collections.emptyMap());
+				}
+				break;
 			}
-	        postsData.add(postData); // 추가된 부분
-	    }
+			postsData.add(postData);
+		}
+		// projectMemberList 정렬
+		projectMemberList.sort(Comparator.comparing(pm -> pm.getMember().getName(), Collator.getInstance()));
 
-	    model.addAttribute("postsData", postsData);
-	    model.addAttribute("member", member);
-	    model.addAttribute("projectMember", projectMember.orElse(null));
-	    model.addAttribute("projectMemberList", projectMemberList);
-	    model.addAttribute("project", project.orElse(null));
-	    model.addAttribute("postList", postList);
+		// companyMemberNotInProject 정렬
+		companyMemberNotInProject.sort(Comparator.comparing(Member::getName, Collator.getInstance()));
 
-	    return "projectFeed2";
+		model.addAttribute("postsData", postsData);
+		model.addAttribute("member", member);
+		model.addAttribute("projectMember", projectMember.orElse(null));
+		model.addAttribute("projectMemberList", projectMemberList);
+		model.addAttribute("project", project.orElse(null));
+		model.addAttribute("postList", postList);
+		model.addAttribute("companyMemberList", companyMemberNotInProject);
+
+		return "projectFeed";
 	}
-
 
 	// 프로젝트 생성 페이지 이동
 	@GetMapping("/createNewProject")
@@ -180,7 +199,6 @@ public class ProjectController {
 			}
 			projectMemberRepository.save(member);
 		}
-		projectMemberRepository.save(optionalMember.get());
 		return "redirect:/projectlist";
 	}
 
@@ -189,9 +207,11 @@ public class ProjectController {
 		return "companyOpenProject";
 	}
 
-	@GetMapping("/projectFeed")
-	public String projectFeed() {
-		return "projectFeed";
-	}
+	// 프로젝트 멤버 추가
+	@PostMapping("/inviteParticipants/{projectIdx}")
+	public String inviteParticipants(@RequestBody List<Member> members, @PathVariable("projectIdx") Long projectIdx) {
+		projectService.addProjectMembers(members, projectIdx);
 
+		return "redirect:/projectFeed";
+	}
 }

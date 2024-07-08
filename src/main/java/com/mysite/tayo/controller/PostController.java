@@ -45,7 +45,7 @@ public class PostController {
 
 
 	
-	@PostMapping("/projectFeed2/{projectIdx}")
+	@PostMapping("/projectFeed/{projectIdx}")
 	public String createPost(Authentication authentication, @PathVariable("projectIdx") Long projectIdx,
 	        @RequestParam("tabType") int tabType,
 	        @RequestParam("title") String title,
@@ -66,7 +66,9 @@ public class PostController {
 	        @RequestParam(value = "todoManagers", required = false) List<Member> todoManagerList,
 	        @RequestParam(value = "todoDeadlines", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") List<Date> todoDeadlineList,
 	        @RequestParam(value = "voteEnddate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date voteEnddate,
-	        @RequestParam(value = "voteItems", required = false) List<String> voteItemList) {
+	        @RequestParam(value = "voteItems", required = false) List<String> voteItemList,
+	        @RequestParam(value = "isplural", required = false) Integer isPlural,
+	        @RequestParam(value = "isanonymous", required = false) Integer isAnonymous) {
 	    Member member = memberService.infoFromLogin(authentication);
 	    Optional<Project> projectOpt = projectRepository.findById(projectIdx);
 	    
@@ -118,13 +120,13 @@ public class PostController {
 	            calendar.setTime(currentDate);
 	            calendar.add(Calendar.DAY_OF_YEAR, 1);
 	        	voteEnddate = calendar.getTime();
-	            postService.createVote(member, project, title, voteDetail, voteEnddate, voteItemList);
+	            postService.createVote(member, project, title, voteDetail, voteEnddate, voteItemList, isPlural, isAnonymous);
 	            break;
 	        default:
 	            // Handle invalid tabType
 	            return "redirect:/error";
 	    }
-	    return "redirect:/projectFeed2/" + projectIdx;
+	    return "redirect:/projectFeed/" + projectIdx;
 	}
 
 }
