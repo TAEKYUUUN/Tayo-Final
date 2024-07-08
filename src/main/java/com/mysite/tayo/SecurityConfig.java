@@ -36,7 +36,7 @@ public class SecurityConfig {
 	    		.requestMatchers("/member/login").not().authenticated()
                 .requestMatchers("/member/**").permitAll()  // 로그인 없이 접근 가능한 URL 패턴
                 .requestMatchers("/", "/mainpage").permitAll()
-                .requestMatchers("/css/**", "/js/**", "/img/**", "/images/**").permitAll()
+                .requestMatchers("/css/**", "/js/**", "/img/**").permitAll()
                 .anyRequest().authenticated()  // 그 외의 모든 URL은 로그인 필요
             )
 	        .formLogin((formLogin) -> formLogin

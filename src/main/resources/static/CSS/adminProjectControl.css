@@ -557,7 +557,14 @@
 		.noMoreManager{
 			color:red;
 		}
+		.makeManager{
+			color:blue;
+		}
 		.noMoreManager:hover{
+			text-decoration: underline;
+		}
+		
+		.makeManager:hover{
 			text-decoration: underline;
 		}
 		

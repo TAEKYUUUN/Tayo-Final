@@ -132,8 +132,10 @@
 					<tr th:each="project : ${projectList}" th:id="'projectList' + ${project.projectIdx}">
 						<td style="display:none;" th:text="${project.projectIdx}"></td>
 						<td th:text="${project.projectName}" style="text-align:left; padding-left:10px;"></td>
-						<td th:each="projectMember : ${project.projectMemberList}">
-							<div th:text="${projectMember.member.name}" th:if="${projectMember.isManager == 1}"></div>
+						<td>
+							<div th:each="projectMember : ${project.projectMemberList}"  th:if="${projectMember.isManager == 1}">
+								<span th:text="${projectMember.member.name}"></span>
+							</div>
 						</td>
 						<td th:text="${project.projectMemberList.size()}"></td>
 						<td th:text="${project.projectMemberList.size()}"></td>
@@ -192,9 +194,7 @@
 												<table
 													style="width:100%; table-layout:fixed; border-collapse:collapse;">
 													<tbody id="popupTbody">
-														<tr>
 
-														</tr>
 													</tbody>
 												</table>
 											</div>
@@ -295,9 +295,9 @@
 								</tr>
 							</thead>
 						</table>
-						<div style="width:40px;max-height:150px; height:fit-content; overflow:auto;" class="scrollbar">
+						<div style="width:100%;max-height:150px; height:fit-content; overflow:auto;" class="scrollbar">
 							<table style="width:100%; table-layout:fixed; border-collapse:collapse;">
-								<tbody id="popupTbody">
+								<tbody id="popupTbodysmall">
 									<tr>
 
 									</tr>
@@ -310,8 +310,7 @@
 				</div>
 			</div>
 			<div id="div_popupbuttonssmall">
-				<button id="savebutton2" class="button1" style="width:120px; height:36px;">저장</button>
-				<button id="cancelbutton2" class="button2" style="width:120px; height:36px;">취소</button>
+				<button id="cancelbutton2" class="button2" style="width:120px; height:36px;">확인</button>
 			</div>
 		</div>
 	</div>
