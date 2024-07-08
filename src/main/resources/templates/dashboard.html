@@ -80,26 +80,18 @@
 					</div>
 					<div id="alarms">
 						<ul>
-							<li class="alarmListClass unreadAlarm">
-								<div id="alarmProfile" >ㅇ</div>
-								<div id="div_alarmtext">
+							<li class="alarmListClass unreadAlarm" th:each="alarm : ${AlarmList}">
+								<div id="alarmProfile">
+									<img th:src="${alarm.member.profileImage != null ? companyMember.profileImage : 'https://flow.team/flow-renewal/assets/images/profile-default.png'}" alt="Profile Image"/>
+								</div>
+								<div th:id="${'projectAlarm' + alarm.project.projectIdx}" class="div_alarmtext" th:if="${alarm.alarmType == 6}">
+									<input type="hidden" th:value="${alarm.project.projectIdx}">
 									<div id="div_alarmTitle">
-										<span>for조</span>
+										<span th:text="${alarm.project.projectName}"></span>
 										<em>7분 전</em>
 									</div>
-									<div id="div_alarmContents">우태균님의 글 등록</div>
-									<div id="div_alarmDetails">for조 화이팅</div>
-								</div>								
-							</li>
-							<li class="alarmListClass">
-								<div id="alarmProfile" >ㅇ</div>
-								<div id="div_alarmtext">
-									<div id="div_alarmTitle">
-										<span>for조</span>
-										<em>7분 전</em>
-									</div>
-									<div id="div_alarmContents">우태균님의 글 등록</div>
-									<div id="div_alarmDetails">for조 화이팅</div>
+									
+									<div id="div_alarmDetails" th:text="${alarm.project.projectName + ' 프로젝트에 초대되었습니다.'}"></div>
 								</div>								
 							</li>
 						</ul>

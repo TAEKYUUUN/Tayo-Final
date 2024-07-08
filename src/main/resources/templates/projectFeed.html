@@ -825,7 +825,7 @@
 		<div id="div_backgroundfull"></div>
 		<!-- Post 작성 Modal -->
 		<div class="modal" style="display: none;">
-			<form th:action="@{/projectFeed2/{projectIdx}(projectIdx=${projectIdx})}" method="post" enctype="application/x-www-form-urlencoded">
+			<form th:action="@{/projectFeed/{projectIdx}(projectIdx=${projectIdx})}" method="post" enctype="application/x-www-form-urlencoded">
 				<input type="hidden" id="tabType" name="tabType"/>
 				<div class="modal-header">
 					<div class="modal-title">게시물 작성</div>
