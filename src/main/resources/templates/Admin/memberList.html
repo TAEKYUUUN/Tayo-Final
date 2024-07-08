@@ -256,7 +256,7 @@
 					</th>				
 				</tr>
 			</thead>
-			<tbody><tr th:each="member : ${memberList}" th:if="${member.isBanned == 1}">
+			<tbody id="bannedTbody"><tr th:each="member : ${memberList}" th:if="${member.isBanned == 1}">
 				<td th:text="${#strings.defaultString(member.company?.companyName, '')}"></td>
 				<td th:text="${member.name}" class="trName"></td>
 				<td th:text="${#strings.defaultString(member.organization?.organizationName, '')}" class="trOrganizationName"></td>
@@ -303,8 +303,8 @@
 				<td><span style="color:red">삭제</span></td>
 				<td th:text="${member.password}" class="trPw" style="display:none"></td>
 			</tr>
-			<tr th:if="${memberCount[2] == 0}">
-				<td colspan="14">결과값이 존재하지 않습니다</td>
+			<tr th:if="${memberCount[2] == 0}" id="noBannedMember">
+				<td colspan="13">결과값이 존재하지 않습니다</td>
 				</tr>
 			</tbody>
 			</table>

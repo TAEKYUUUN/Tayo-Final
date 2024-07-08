@@ -57,6 +57,12 @@ const popupappear = function(){
 					event.stopPropagation(); 
 					const memberIdx = event.currentTarget.parentElement.parentElement.firstElementChild.value;
 					banMember(memberIdx);
+					const bannedTbody = document.querySelector('#bannedTbody');
+					event.currentTarget.parentElement.parentElement.querySelectorAll('td')[0].remove();
+					bannedTbody.appendChild(event.currentTarget.parentElement.parentElement);
+					if(document.querySelector('#noBannedMember')){
+						document.querySelector('#noBannedMember').remove();
+					}
 				})
 			})
 			

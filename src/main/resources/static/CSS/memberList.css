@@ -632,3 +632,9 @@ ul {
 		        th.sorted.desc a {
 		            -webkit-transform: rotateX(0deg);
 		        }
+				
+				
+				
+#BannedFromCompany:hover{
+	text-decoration: underline;
+}
