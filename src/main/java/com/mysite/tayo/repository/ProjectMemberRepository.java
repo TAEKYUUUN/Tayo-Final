@@ -27,4 +27,5 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMember, Lo
 	
 	// 해당 프로젝트의 나를 제외한 모든 projectMember
 	List<ProjectMember> findByProjectProjectIdxAndMemberMemberIdxNot(Long projectIdx, Long memberIdx);
+	
 }

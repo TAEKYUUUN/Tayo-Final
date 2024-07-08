@@ -464,174 +464,137 @@ document.addEventListener('DOMContentLoaded', function() {
 		isAnonymousHidden.value = isAnonymousCheckbox.checked ? '1' : '0';
 	});
 
-	// 왼쪽 사이드 바 '새 프로젝트' 클릭 시 createNewProject로 이동
-	document.getElementById('div_new_project').addEventListener('click', function() {
-		var href = this.getAttribute('data-href');
-		location.href = href;
-		// 왼쪽 사이드 바 클릭 이벤트
-		document.querySelectorAll('#div_new_project, #div_toDashboard, #div_toProjectlist, #div_toCompanyOpenProject').forEach(item => {
-			item.addEventListener('click', function() {
-				var href = this.getAttribute('data-href');
-				location.href = href;
-			});
+	// 왼쪽 사이드 바 클릭 이벤트
+	document.querySelectorAll('#div_new_project, #div_toDashboard, #div_toProjectlist, #div_toCompanyOpenProject').forEach(item => {
+		item.addEventListener('click', function() {
+			var href = this.getAttribute('data-href');
+			location.href = href;
 		});
-
-		// Modal functions for inviting participants
-		const inviteButton = document.querySelector('#div_invite_prjmem img');
-		const inviteModal = document.getElementById("invite-participants-modal");
-		const closeInviteButton = document.querySelector('.invite-modal-header .close');
-		const inviteModalBtn = document.querySelector('.invite-modal-footer .btn');
-
-		inviteButton.addEventListener('click', openInviteModal);
-		closeInviteButton.addEventListener('click', closeInviteModal);
-		inviteModalBtn.addEventListener('click', inviteParticipants);
-
-		function openInviteModal() {
-			inviteModal.style.display = "block";
-			backgroundFull.style.display = "block";
-		}
-
-		function closeInviteModal() {
-			inviteModal.style.display = "none";
-			backgroundFull.style.display = "none";
-		}
-
-		document.querySelectorAll('#employeeList li').forEach(item => {
-			item.addEventListener('click', event => {
-				const id = item.getAttribute('data-id');
-				const name = item.getAttribute('data-name');
-				addToSelectedList(id, name);
-			});
-		});
-
-		function addToSelectedList(id, name) {
-			const selectedList = document.getElementById('selectedList');
-			const existingItem = document.querySelector(`#selectedList li[data-id="${id}"]`);
-			const itemToUpdate = document.querySelector(`#employeeList li[data-id="${id}"] .check_invite img`);
-
-			if (!existingItem) {
-				const li = document.createElement('li');
-				li.setAttribute('data-id', id);
-				li.classList.add('selected_member');
-				li.innerHTML = `<img src="https://flow.team/flow-renewal/assets/images/profile-default.png"/><span>${name}</span><button class="remove-btn" data-id="${id}" style="position:absolute; right:10px; color:#000;">X</button>`;
-
-				selectedList.appendChild(li);
-
-				li.querySelector('.remove-btn').addEventListener('click', event => {
-					removeFromSelectedList(id);
-				});
-			}
-
-			if (itemToUpdate) {
-				itemToUpdate.src = 'https://flow.team/flow-renewal/assets/images/icons/icon_check_on.png?v=8a10086b9d33ff65ead56b67a69de154fcbe2c4a';
-			}
-		}
-
-		function removeFromSelectedList(id) {
-			const item = document.querySelector(`#selectedList li[data-id="${id}"]`);
-			if (item) {
-				item.remove();
-			}
-
-			const itemToUpdate = document.querySelector(`#employeeList li[data-id="${id}"] .check_invite img`);
-			if (itemToUpdate) {
-				itemToUpdate.src = 'https://flow.team/flow-renewal/assets/images/icons/icon_check.png?v=7f39425e224a53bff0043caff9f6446b14c0f667';
-			}
-		}
-
-		document.querySelectorAll('#employeeList li').forEach(item => {
-			item.addEventListener('mouseover', event => {
-				const img = item.querySelector('.check_invite img');
-				const id = item.getAttribute('data-id');
-				const selectedItem = document.querySelector(`#selectedList li[data-id="${id}"]`);
-				if (img && !selectedItem) {
-					img.src = 'https://flow.team/flow-renewal/assets/images/icons/icon_check_hover.png?v=5244c8bcd5a25963296eb4e51fc2a65bcc3dc376';
-				}
-			});
-			item.addEventListener('mouseout', event => {
-				const img = item.querySelector('.check_invite img');
-				const id = item.getAttribute('data-id');
-				const selectedItem = document.querySelector(`#selectedList li[data-id="${id}"]`);
-				if (img && !selectedItem) {
-					img.src = 'https://flow.team/flow-renewal/assets/images/icons/icon_check.png?v=7f39425e224a53bff0043caff9f6446b14c0f667';
-				}
-			});
-		});
-
-		function inviteParticipants() {
-			const selectedList = document.getElementById('selectedList');
-			const selectedParticipants = [];
-			selectedList.querySelectorAll('li').forEach(item => {
-				selectedParticipants.push({
-					id: item.getAttribute('data-id'),
-					name: item.querySelector('span').innerText
-				});
-			});
-			console.log('Invited participants:', selectedParticipants);
-			closeInviteModal();
-		}
 	});
 
 	// Modal functions for inviting participants
-	document.addEventListener('DOMContentLoaded', (event) => {
-		// modal 열기 및 닫기 기능
-		const inviteButton = document.querySelector('#div_invite_prjmem img');
-		const modal = document.getElementById("invite-participants-modal");
-		const closeButton = document.querySelector('.invite-modal-header .close');
-		const inviteModalButton = document.querySelector('.invite-modal-footer .btn');
+	const inviteButton = document.querySelector('#div_invite_prjmem img');
+	const inviteModal = document.getElementById("invite-participants-modal");
+	const closeInviteButton = document.querySelector('.invite-modal-header .close');
+	const inviteModalBtn = document.querySelector('.invite-modal-footer .invite_submit_btn');
 
-		inviteButton.addEventListener('click', openInviteModal);
-		closeButton.addEventListener('click', closeInviteModal);
-		inviteModalButton.addEventListener('click', inviteParticipants);
+	inviteButton.addEventListener('click', openInviteModal);
+	closeInviteButton.addEventListener('click', closeInviteModal);
+	inviteModalBtn.addEventListener('click', inviteParticipants);
 
-		function openInviteModal() {
-			modal.style.display = "block";
-			document.getElementById("div_backgroundfull").style.display = "block";
+	function openInviteModal() {
+		inviteModal.style.display = "block";
+		backgroundFull.style.display = "block";
+	}
+
+	function closeInviteModal() {
+		inviteModal.style.display = "none";
+		backgroundFull.style.display = "none";
+	}
+
+	document.querySelectorAll('#employeeList li').forEach(item => {
+		item.addEventListener('click', event => {
+			const id = item.getAttribute('data-id');
+			const name = item.getAttribute('data-name');
+			toggleSelectedList(id, name);
+		});
+	});
+
+	function toggleSelectedList(id, name) {
+		const selectedList = document.getElementById('selectedList');
+		const existingItem = document.querySelector(`#selectedList li[data-id="${id}"]`);
+		const itemToUpdate = document.querySelector(`#employeeList li[data-id="${id}"] .check_invite img`);
+
+		if (existingItem) {
+			// 항목이 이미 선택된 경우 리스트에서 제거
+			existingItem.remove();
+			itemToUpdate.src = 'https://flow.team/flow-renewal/assets/images/icons/icon_check.png?v=7f39425e224a53bff0043caff9f6446b14c0f667';
+		} else {
+			// 항목이 선택되지 않은 경우 리스트에 추가
+			const li = document.createElement('li');
+			li.setAttribute('data-id', id);
+			li.classList.add('selected_member');
+			li.innerHTML = `<img src="https://flow.team/flow-renewal/assets/images/profile-default.png"/>
+                            <strong style="margin-left:2px;">${name}</strong>
+                            <button class="remove-btn" data-id="${id}" style="position:absolute; right:10px; color:#000;">X</button>`;
+
+			selectedList.appendChild(li);
+
+			li.querySelector('.remove-btn').addEventListener('click', event => {
+				removeFromSelectedList(id);
+			});
+
+			itemToUpdate.src = 'https://flow.team/flow-renewal/assets/images/icons/icon_check_on.png?v=8a10086b9d33ff65ead56b67a69de154fcbe2c4a';
+		}
+	}
+
+	function removeFromSelectedList(id) {
+		const item = document.querySelector(`#selectedList li[data-id="${id}"]`);
+		if (item) {
+			item.remove();
 		}
 
-		function closeInviteModal() {
-			modal.style.display = "none";
-			document.getElementById("div_backgroundfull").style.display = "none";
+		const itemToUpdate = document.querySelector(`#employeeList li[data-id="${id}"] .check_invite img`);
+		if (itemToUpdate) {
+			itemToUpdate.src = 'https://flow.team/flow-renewal/assets/images/icons/icon_check.png?v=7f39425e224a53bff0043caff9f6446b14c0f667';
+		}
+	}
+
+	document.querySelectorAll('#employeeList li').forEach(item => {
+		item.addEventListener('mouseover', event => {
+			const img = item.querySelector('.check_invite img');
+			const id = item.getAttribute('data-id');
+			const selectedItem = document.querySelector(`#selectedList li[data-id="${id}"]`);
+			if (img && !selectedItem) {
+				img.src = 'https://flow.team/flow-renewal/assets/images/icons/icon_check_hover.png?v=5244c8bcd5a25963296eb4e51fc2a65bcc3dc376';
+			}
+		});
+		item.addEventListener('mouseout', event => {
+			const img = item.querySelector('.check_invite img');
+			const id = item.getAttribute('data-id');
+			const selectedItem = document.querySelector(`#selectedList li[data-id="${id}"]`);
+			if (img && !selectedItem) {
+				img.src = 'https://flow.team/flow-renewal/assets/images/icons/icon_check.png?v=7f39425e224a53bff0043caff9f6446b14c0f667';
+			}
+		});
+	});
+
+	function inviteParticipants(event) {
+		 event.preventDefault();
+		const url = window.location.href;
+		const currentProjectIdx = url.split('/projectFeed/')[1];
+
+
+		const selectedList = document.getElementById('selectedList');
+		if (!selectedList) {
+			console.error('selectedList 요소를 찾을 수 없습니다.');
+			return;
 		}
 
-		// 참여자 선택 기능
-		document.querySelectorAll('#employeeList li').forEach(item => {
-			item.addEventListener('click', event => {
-				const id = item.getAttribute('data-id');
-				const name = item.getAttribute('data-name');
-				addToSelectedList(id, name);
+		const members = [];
+		selectedList.querySelectorAll('li').forEach(item => {
+			members.push({
+				memberIdx: item.getAttribute('data-id'),
 			});
 		});
+		
 
-		function addToSelectedList(id, name) {
-			const selectedList = document.getElementById('selectedList');
-			const existingItem = document.querySelector(`#selectedList li[data-id="${id}"]`);
-			if (!existingItem) {
-				const li = document.createElement('li');
-				li.setAttribute('data-id', id);
-				li.innerHTML = `<span>${name}</span> <button onclick="removeFromSelectedList(${id})">X</button>`;
-				selectedList.appendChild(li);
-			}
-		}
-
-		function removeFromSelectedList(id) {
-			const item = document.querySelector(`#selectedList li[data-id="${id}"]`);
-			if (item) {
-				item.remove();
-			}
-		}
-
-		function inviteParticipants() {
-			const selectedList = document.getElementById('selectedList');
-			const selectedParticipants = [];
-			selectedList.querySelectorAll('li').forEach(item => {
-				selectedParticipants.push({
-					id: item.getAttribute('data-id'),
-					name: item.querySelector('span').innerText
-				});
+		fetch(`/inviteParticipants/${currentProjectIdx}`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(members)
+		})
+			.then(response => response.json())
+			.then(data => {
+				closeInviteModal();
+				location.reload();
+			})
+			.catch((error) => {
+				console.error('오류:', error);
 			});
-			console.log('Invited participants:', selectedParticipants);
-			closeInviteModal();
-		}
-	});
+	}
+
+	document.querySelector('.invite_submit_btn').addEventListener('click', inviteParticipants);
 });
