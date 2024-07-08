@@ -81,7 +81,7 @@ public class ProjectController {
 		Optional<ProjectMember> projectMember = projectMemberRepository
 				.findByProjectProjectIdxAndMemberMemberIdx(projectIdx, member.getMemberIdx());
 		List<Post> postList = postRepository.findAllByProjectProjectIdxOrderByUploadDateDesc(projectIdx);
-
+		List<Member> companyMemberAll = memberService.getListByCompanyIdx(member.getCompany().getCompanyIdx());
 		List<Map<String, Object>> postsData = new ArrayList<>();
 
 		for (Post post : postList) {
@@ -141,6 +141,7 @@ public class ProjectController {
 		model.addAttribute("projectMemberList", projectMemberList);
 		model.addAttribute("project", project.orElse(null));
 		model.addAttribute("postList", postList);
+		model.addAttribute("companyMemberList", companyMemberAll);
 
 		return "projectFeed";
 	}

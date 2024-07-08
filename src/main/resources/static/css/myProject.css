@@ -180,6 +180,7 @@ body {
    display: flex;
    align-items: center;
    justify-content: center;
+   cursor: pointer;
 }
 
 #div_newprj_button {
@@ -204,6 +205,7 @@ body {
    align-items: center;
    margin-bottom: -24px;
    color: #CCC;
+   cursor: pointer;
 }
 
 #div_left_menu1>div:hover {
@@ -262,6 +264,7 @@ body {
    display: flex;
    align-items: center;
    color: #CCC;
+   cursor: pointer;
 }
 
 #div_left_menu3>div:hover {
@@ -283,6 +286,7 @@ body {
    font-weight: bold;
    border: 1px solid black;
    color: #CCC;
+   cursor : pointer;
 }
 
 #div_left_menu4>img {
@@ -447,6 +451,7 @@ body {
    padding: 25px 0px 0px;
    font-size: 16px;
    font-weight: 700;
+   cursor: pointer;
 }
 
 .project_title:hover {

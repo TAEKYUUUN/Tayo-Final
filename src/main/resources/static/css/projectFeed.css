@@ -2789,12 +2789,17 @@ input:checked+.slider:before {
 	border-left: 1px solid #ddd;
 }
 
-.invite-modal-body ul {
+.selected-list>h3 {
+	margin-top: 5px;
+	margin-bottom: 15px;
+}
+
+.list ul {
 	list-style-type: none;
 	padding: 0;
 }
 
-.invite-modal-body li {
+.list li {
 	padding: 10px;
 	border-bottom: 1px solid #ddd;
 	margin-bottom: 5px;
@@ -2875,6 +2880,11 @@ input:checked+.slider:before {
 	border: 1px solid #ddd;
 }
 
+.invite_list {
+	display: flex;
+	align-items: center;
+}
+
 .invite_list>div {
 	display: flex;
 }
@@ -2909,13 +2919,15 @@ input:checked+.slider:before {
 }
 
 .invite_list>div dl dt em {
+	margin-left: 3px;
+	font-size: 14px;
 	display: inline-block;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	vertical-align: middle;
 	line-height: 18px;
-	max-width: 70%;
+	max-width: 50%;
 }
 
 .invite_list>div dl dd {
@@ -2944,8 +2956,62 @@ input:checked+.slider:before {
 	line-height: 18px;
 	max-width: 68%;
 }
+
 .invite_list>div span img {
-	width : 40px;
+	width: 40px;
 	height: 40px;
 	border-radius: 10px;
+}
+
+.check_invte {
+	display: block;
+	background-size: 22px;
+	width: 22px;
+	height: 22px;
+	position: absolute;
+	top: 50%;
+	right: 0;
+	-webkit-transform: translateY(-50%);
+	transform: translateY(-50%);
+	cursor: pointer;
+}
+
+.check_invite>img {
+	width: 22px;
+	height: 22px;
+}
+
+#employeeList li:hover .check_invite img {
+	content: url('https://flow.team/flow-renewal/assets/images/icons/icon_check_hover.png?v=5244c8bcd5a25963296eb4e51fc2a65bcc3dc376');
+}
+
+.company_member_info {
+	margin-left: 15px;
+}
+
+.selected_member {
+	width: auto;
+	height: 32px;
+	padding: 0 30px 0 34px;
+	margin: 5px 10px 5px 0;
+	position: relative;
+	float: left;
+	line-height: 29px;
+	background: #eee;
+	border: 1px solid #eee;
+	border-radius: 5px;
+	color: #555;
+	text-align: center;
+	overflow: hidden;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.selected_member>img {
+	width: 30px;
+	height: 30px;
+	position: absolute;
+	left: 0px;
+
 }
