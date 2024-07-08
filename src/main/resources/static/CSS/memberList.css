@@ -603,32 +603,41 @@ ul {
 		    cursor: pointer;
 		    display:inline-block;
 		}
-.button2{
-			height:36px;
-			margin : 0px 0px 0px 8px;
-			padding : 0px 10px;
-			font-size : 14px;
-			font-weight:bold;
-			background : #ffffff;
-			color : #4c4c4c;
-			border : 1px solid #c9c9c9;
-			border-radius:2px;
-			cursor:pointer;
-		}
-		th a {
-		           display: none;
-		           vertical-align: middle;
-		           width: 20px;
-		           height: 20px;
-		           background: url(https://flow.team/design2/flow_admin_2019/img/bul_sort.png) no-repeat center;
-		           -webkit-transform: rotateX(0deg);
-		       }
-		        th.sorted a {
-		            display: inline;
-		        }
-		        th.sorted.asc a {
-		            -webkit-transform: rotateX(180deg);
-		        }
-		        th.sorted.desc a {
-		            -webkit-transform: rotateX(0deg);
-		        }
+.button2{height: 36px;
+	margin: 0px 0px 0px 8px;
+	padding: 0px 10px;
+	font-size: 14px;
+	font-weight: bold;
+	background: #ffffff;
+	color: #4c4c4c;
+	border: 1px solid #c9c9c9;
+	border-radius: 2px;
+	cursor: pointer;
+}
+
+th a {
+	display: none;
+	vertical-align: middle;
+	width: 20px;
+	height: 20px;
+	background: url(https://flow.team/design2/flow_admin_2019/img/bul_sort.png) no-repeat center;
+	-webkit-transform: rotateX(0deg);
+}
+
+th.sorted a {
+	display: inline;
+}
+
+th.sorted.asc a {
+	-webkit-transform: rotateX(180deg);
+}
+
+th.sorted.desc a {
+	-webkit-transform: rotateX(0deg);
+}
+#BannedFromCompany{
+	cursor:pointer;
+}
+#BannedFromCompany:hover{
+	text-decoration: underline;
+}

@@ -326,11 +326,12 @@ li {
 }
 
 #div_side2 {
-   position: relative;
-   min-height: 100vh;
-   margin-left: 234px;
-   margin-top: 40px;
-   background-color: rgb(255, 255, 255);
+	position: fixed;
+	    min-height: 100vh;
+	    left: 234px;
+	    width: calc(100vw - 234px);
+	    top: 40px;
+	    background-color: rgb(255, 255, 255);
 }
 
 #div_content {

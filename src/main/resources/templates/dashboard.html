@@ -93,6 +93,20 @@
 									
 									<div id="div_alarmDetails" th:text="${alarm.project.projectName + ' 프로젝트에 초대되었습니다.'}"></div>
 								</div>								
+								<div th:id="${'postAlarm' + alarm.post.postIdx}" class="div_alarmtext" th:if="${alarm.alarmType == 1}">
+									<input type="hidden" th:value="${alarm.post.postIdx}">
+									<input type="hidden" th:value="${alarm.post.project.projectIdx}">
+									<div id="div_alarmTitle">
+										<span th:text="${alarm.post.project.projectName}"></span>
+										<em>7분 전</em>
+									</div>
+										<div id="div_alarmContents" th:text="${alarm.post.member.name + '님의 게시글 등록'}"></div>
+										<div  th:text="${alarm.post.paragraph.title}" th:if="${alarm.post.fileType ==1}">ㅇㅇ</div>
+										<div  th:text="${alarm.post.task.taskName}" th:if="${alarm.post.fileType ==2}">ㅇㅇ</div>
+										<div  th:text="${alarm.post.schedule.title}" th:if="${alarm.post.fileType ==3}">ㅇㅇ</div>
+										<div  th:text="${alarm.post.todo.title}" th:if="${alarm.post.fileType ==4}">ㅇㅇ</div>
+										<div  th:text="${alarm.post.vote.title}" th:if="${alarm.post.fileType ==5}">ㅇㅇ</div>
+								</div>								
 							</li>
 						</ul>
 					</div>

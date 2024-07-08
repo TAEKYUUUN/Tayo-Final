@@ -198,6 +198,7 @@
 						<!-- 포스트 있는 경우 -->
 						<div th:if="${#lists.size(postsData) > 0}">
 							<div th:each="postData : ${postsData}">
+								<a th:id="|postIdx_${postData.post.postIdx}|"></a>
 								<div th:switch="${postData.post.fileType}">
 									<!-- fileType=1 , Paragraph -->
 									<div th:case="'1'">
