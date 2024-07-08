@@ -1,4 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
+	
+	const projectAlarm = document.querySelectorAll(`[id*="${'projectAlarm'}"]`);
+	
+	projectAlarm.forEach(div =>{
+		div.parentElement.addEventListener('click', ()=>{
+			const afterMove = div.firstElementChild.value;
+			window.location.href = '/projectFeed/' + afterMove;
+		})
+	})
+	
+	
+	
 	// 페이지 이동 관련 기능
 	const navigationMappings = {
 		'new_prj_default': 'createNewProject로 이동',

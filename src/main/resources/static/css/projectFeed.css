@@ -2797,7 +2797,6 @@ input:checked+.slider:before {
 .list ul {
    list-style-type: none;
    padding: 0;
-   overflow-y : auto;
 }
 
 .list li {

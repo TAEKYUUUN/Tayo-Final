@@ -126,7 +126,7 @@ public class MemberService {
     	Optional<Member> _member = memberRepository.findByEmail(email);
     	if(_member.isPresent()) {
     		Member member = _member.get();
-    		member.setPassword(passwordEncoder.encode("123456789"));
+    		member.setPassword(passwordEncoder.encode("12345678"));
     		memberRepository.save(member);
     	}else {
     		throw new NoSuchElementException("No member found with userId: " + email);
