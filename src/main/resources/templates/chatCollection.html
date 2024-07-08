@@ -60,27 +60,23 @@
 				</i>
 				<input id="collectionSearchInput" type="text" placeholder="검색" autocomplete="off" maxlength="20" />
 			</div>
-			<ul 	th:each="chat : ${chatList}" 
-					th:if="${chat.chatIdx == 1}"
-					class="all-view img-all scroll-mask">
-									<!-- 공지 -->
-					<li 	th:each="chatContents : ${chat.chatContentsList}" 
-							th:if="${chatContents.notice != null}" 
-							class="js-collection-item collection-notice-item">
-						<i class="icon-notice-chat">
-							<img src="https://flow.team/flow-renewal/assets/images/icon-notice-chat.svg" alt="" />
-						</i>
-						<ul class="info">
-							<li class="name">
-								<div th:text="${chatContents.text}"></div>
-							</li>
-							<li>이태호</li>
-							<li>2024-06-21 11:44</li>
-						</ul>
-					</li>
+			<ul th:each="chat : ${chatList}" th:if="${chat.chatIdx == 1}" class="all-view img-all scroll-mask">
+				<!-- 공지 -->
+				<li th:each="chatContents : ${chat.chatContentsList}" th:if="${chatContents.notice != null}"
+					class="js-collection-item collection-notice-item">
+					<i class="icon-notice-chat">
+						<img src="https://flow.team/flow-renewal/assets/images/icon-notice-chat.svg" alt="" />
+					</i>
+					<ul class="info">
+						<li class="name">
+							<div th:text="${chatContents.text}"></div>
+						</li>
+						<li>이태호</li>
+						<li>2024-06-21 11:44</li>
+					</ul>
+				</li>
 				<!-- 링크 -->
-				<li	th:each="chatContents : ${chat.chatContentsList}" 
-					th:if="${chatContents.link != false}"
+				<li th:each="chatContents : ${chat.chatContentsList}" th:if="${chatContents.link != false}"
 					class="js-collection-item collection-link-item">
 					<i class="icon-view">
 						<img src="https://flow.team/flow-renewal/assets/images/icons/icon-link.png?width=40&height=40"
@@ -92,15 +88,14 @@
 					</ul>
 				</li>
 				<!-- 파일 -->
-				<li th:each="chatContents : ${chat.chatContentsList}" 
-					th:if="${chatContents.hasFile != null
-								and chatContents.hasFile.fileType != 'img'}"					
+				<li th:each="chatContents : ${chat.chatContentsList}" th:if="${chatContents.hasFile != null
+								and !(chatContents.hasFile.fileType == 'image/png' or chatContents.hasFile.fileType == 'image/jpeg')}"
 					class="js-collection-item collection-file-item">
 					<div class="check-menu-item"></div>
 					<i th:text="${chatContents.hasFile.fileType}" class="icon-file"></i>
 					<ul class="info">
 						<li th:text="${chatContents.hasFile.fileName}" class="name"></li>
-						<li th:text="${chatContents.hasFile.fileSize}"></li>
+						<li th:text="${chatContents.hasFile.data.length/1024 + 'KB'}"></li>
 						<li th:text="${chatContents.member.name}"></li>
 						<li th:text="${chatContents.time}"></li>
 					</ul>
@@ -111,9 +106,9 @@
 					</ul>
 				</li>
 				<!-- 이미지 -->
-				<li th:each="chatContents : ${chat.chatContentsList}"
-					th:if="${ chatContents.hasFile != null
-						and chatContents.hasFile.fileType == 'img'}" class="js-collection-item collection-img-item">
+				<li th:each="chatContents : ${chat.chatContentsList}" th:if="${ chatContents.hasFile != null
+						and (chatContents.hasFile.fileType == 'image/png' or chatContents.hasFile.fileType == 'image/jpeg')}"
+					class="js-collection-item collection-img-item">
 					<div class="check-menu-item"></div>
 					<i class="icon-view" style="
                 background-image: url(https://flow.team/flowImg/FLOW_2024070227817_d98ec06e-a8b3-42fb-b695-88e539d282a0_thumb.png?width=40&height=40);
