@@ -20,7 +20,7 @@ import lombok.Setter;
 public class UncheckCommentsReact {
 	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "uncheck_comments_react_seq")
-    @SequenceGenerator(name = "uncheck_comments_seq", sequenceName = "UNCHECK_COMMENTS_REACT_SEQ", allocationSize = 1)
+    @SequenceGenerator(name = "uncheck_comments_react_seq", sequenceName = "UNCHECK_COMMENTS_REACT_SEQ", allocationSize = 1)
     @Column(name = "uncheck_comments_react_idx")
     private Long uncheckCommentsReactIdx;
 	

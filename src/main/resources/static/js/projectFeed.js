@@ -476,7 +476,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	const inviteButton = document.querySelector('#div_invite_prjmem img');
 	const inviteModal = document.getElementById("invite-participants-modal");
 	const closeInviteButton = document.querySelector('.invite-modal-header .close');
-	const inviteModalBtn = document.querySelector('.invite-modal-footer .btn');
+	const inviteModalBtn = document.querySelector('.invite-modal-footer .invite_submit_btn');
 
 	inviteButton.addEventListener('click', openInviteModal);
 	closeInviteButton.addEventListener('click', closeInviteModal);
@@ -496,29 +496,34 @@ document.addEventListener('DOMContentLoaded', function() {
 		item.addEventListener('click', event => {
 			const id = item.getAttribute('data-id');
 			const name = item.getAttribute('data-name');
-			addToSelectedList(id, name);
+			toggleSelectedList(id, name);
 		});
 	});
 
-	function addToSelectedList(id, name) {
+	function toggleSelectedList(id, name) {
 		const selectedList = document.getElementById('selectedList');
 		const existingItem = document.querySelector(`#selectedList li[data-id="${id}"]`);
 		const itemToUpdate = document.querySelector(`#employeeList li[data-id="${id}"] .check_invite img`);
 
-		if (!existingItem) {
+		if (existingItem) {
+			// 항목이 이미 선택된 경우 리스트에서 제거
+			existingItem.remove();
+			itemToUpdate.src = 'https://flow.team/flow-renewal/assets/images/icons/icon_check.png?v=7f39425e224a53bff0043caff9f6446b14c0f667';
+		} else {
+			// 항목이 선택되지 않은 경우 리스트에 추가
 			const li = document.createElement('li');
 			li.setAttribute('data-id', id);
 			li.classList.add('selected_member');
-			li.innerHTML = `<img src="https://flow.team/flow-renewal/assets/images/profile-default.png"/><span>${name}</span><button class="remove-btn" data-id="${id}" style="position:absolute; right:10px; color:#000;">X</button>`;
+			li.innerHTML = `<img src="https://flow.team/flow-renewal/assets/images/profile-default.png"/>
+                            <strong style="margin-left:2px;">${name}</strong>
+                            <button class="remove-btn" data-id="${id}" style="position:absolute; right:10px; color:#000;">X</button>`;
 
 			selectedList.appendChild(li);
 
 			li.querySelector('.remove-btn').addEventListener('click', event => {
 				removeFromSelectedList(id);
 			});
-		}
 
-		if (itemToUpdate) {
 			itemToUpdate.src = 'https://flow.team/flow-renewal/assets/images/icons/icon_check_on.png?v=8a10086b9d33ff65ead56b67a69de154fcbe2c4a';
 		}
 	}
@@ -554,16 +559,42 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	});
 
-	function inviteParticipants() {
+	function inviteParticipants(event) {
+		 event.preventDefault();
+		const url = window.location.href;
+		const currentProjectIdx = url.split('/projectFeed/')[1];
+
+
 		const selectedList = document.getElementById('selectedList');
-		const selectedParticipants = [];
+		if (!selectedList) {
+			console.error('selectedList 요소를 찾을 수 없습니다.');
+			return;
+		}
+
+		const members = [];
 		selectedList.querySelectorAll('li').forEach(item => {
-			selectedParticipants.push({
-				id: item.getAttribute('data-id'),
-				name: item.querySelector('span').innerText
+			members.push({
+				memberIdx: item.getAttribute('data-id'),
 			});
 		});
-		console.log('Invited participants:', selectedParticipants);
-		closeInviteModal();
+		
+
+		fetch(`/inviteParticipants/${currentProjectIdx}`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(members)
+		})
+			.then(response => response.json())
+			.then(data => {
+				closeInviteModal();
+				location.reload();
+			})
+			.catch((error) => {
+				console.error('오류:', error);
+			});
 	}
+
+	document.querySelector('.invite_submit_btn').addEventListener('click', inviteParticipants);
 });

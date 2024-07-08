@@ -98,7 +98,7 @@
                               </button>
                            </div>
                         </form>
-                         <div class="project_title" th:text="${project.project.projectName}"></div>
+                         <div class="project_title" th:text="${project.project.projectName}" th:attr="data-href=@{/projectFeed2/{projectIdx}(projectIdx=${project.project.projectIdx})}"></div>
                          <div class="project_member_cnt">
                             <img src="img/prj_member_icon.png"/>
                             <span class="mebmber_cnt" th:text="${countMember[index.index]}"></span>
