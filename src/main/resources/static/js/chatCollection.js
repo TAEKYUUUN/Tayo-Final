@@ -15,22 +15,19 @@ document.addEventListener('DOMContentLoaded', function() {
 	iconFile.forEach(icon => {
 		const fileType = icon.innerText;
 
-		if (fileType === 'hwp') {
+		if (fileType === 'application/haansofthwp') {
 			icon.classList.add('icon-hwp');
-		} else if (fileType === 'ppt') {
+		} else if (fileType === 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
 			icon.classList.add('icon-ppt');
-		} else if (fileType === 'etc') {
+		} else if (fileType === 'application/msword') {
 			icon.classList.add('icon-etc');
-		} else if (fileType === 'excel') {
+		} else if (fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
 			icon.classList.add('icon-excel');
-		} else if (fileType === 'pdf') {
+		} else if (fileType === 'application/pdf') {
 			icon.classList.add('icon-pdf');
-		} else if (fileType === 'zip') {
+		} else if (fileType === 'application/x-zip-compressed') {
 			icon.classList.add('icon-zip');
 		}
-
-
-
 	});
 
 	function updateSelectAlert() {

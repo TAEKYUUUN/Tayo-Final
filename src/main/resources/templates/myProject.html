@@ -11,7 +11,7 @@
        <div id="div_organization_logo">
           <div id="div_logo_box"><img src="https://flow.team/flow-renewal/assets/images/logo/logo-flow.svg"/></div>
        </div>
-       <div id="div_new_project" th:data-href="@{/createNewProject}">
+       <div id="div_new_project" th:data-href="@{/createNewProject}" style="cursor:pointer;">
           <div id="div_newprj_button"><img src="img/newprj_btn_dark.png"/></div>
        </div>
        <div id="div_left_menu1">
@@ -98,7 +98,7 @@
                               </button>
                            </div>
                         </form>
-                         <div class="project_title" th:text="${project.project.projectName}" th:attr="data-href=@{/projectFeed2/{projectIdx}(projectIdx=${project.project.projectIdx})}"></div>
+                         <div class="project_title" th:text="${project.project.projectName}" th:attr="data-href=@{/projectFeed/{projectIdx}(projectIdx=${project.project.projectIdx})}"></div>
                          <div class="project_member_cnt">
                             <img src="img/prj_member_icon.png"/>
                             <span class="mebmber_cnt" th:text="${countMember[index.index]}"></span>

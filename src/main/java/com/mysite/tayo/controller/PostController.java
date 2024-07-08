@@ -9,18 +9,24 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.mysite.tayo.entity.Comments;
 import com.mysite.tayo.entity.Member;
+import com.mysite.tayo.entity.Post;
 import com.mysite.tayo.entity.Project;
 import com.mysite.tayo.repository.MemberRepository;
 import com.mysite.tayo.repository.PostRepository;
 import com.mysite.tayo.repository.ProjectMemberRepository;
 import com.mysite.tayo.repository.ProjectRepository;
+import com.mysite.tayo.service.CommentService;
 import com.mysite.tayo.service.MemberService;
 import com.mysite.tayo.service.PostService;
 
@@ -42,6 +48,8 @@ public class PostController {
     private PostRepository postRepository;
     @Autowired
     private PostService postService;
+    @Autowired
+    private CommentService commentService;
 
 
 	
@@ -80,14 +88,14 @@ public class PostController {
 	    System.out.println("Received content: " + content);
 	    
 	    Project project = projectOpt.get();
-	    
+	    System.out.println(tabType);
 	    switch (tabType) {
 	        case 1: // paragraph
 	            postService.createParagraph(member, project, title, content, openRange);
 	            break;
 	        case 2: // task
 	        	// test
-	        	managerIdx = 8l;
+	        	managerIdx = 1l;
 	        	SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
 	        	try {
 	                endDate = formatter.parse("2024/07/08");
@@ -129,5 +137,22 @@ public class PostController {
 	    return "redirect:/projectFeed/" + projectIdx;
 	}
 
+	@PostMapping("/comments")
+	public ResponseEntity<?> addComment(@RequestBody Comments comment, Authentication authentication) {
+		try {
+			Member member = memberService.infoFromLogin(authentication);
+			Optional<Post> postOptional = postService.getPostByComment(comment);
+			
+			if (!postOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
+            }
+			Post post = postOptional.get();
+			commentService.createComment(member, post, comment.getContents());
+			
+			return ResponseEntity.ok("댓글이 등록되었습니다.");
+		} catch(Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("댓글 등록에 실패했습니다.");
+		}
+	}
 }
 

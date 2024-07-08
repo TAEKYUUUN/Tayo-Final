@@ -587,11 +587,6 @@ ms wh #div_setwidget_btn>img {
 	height: 56px;
 	border-radius: 24px;
 }
-#alarmProfile>img {
-	width: 36px;
-	height: 36px;
-	border-radius: 24px;
-}
 
 .member_info {
 	width: 194.39px;
@@ -895,7 +890,7 @@ ms wh #div_setwidget_btn>img {
 	float: left;
 }
 
-.div_alarmtext {
+#div_alarmtext {
 	width: calc(100% - 46px);
 	margin-left: 10px;
 	line-height: 19px;

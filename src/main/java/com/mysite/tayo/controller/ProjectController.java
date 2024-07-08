@@ -19,11 +19,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.mysite.tayo.entity.Comments;
 import com.mysite.tayo.entity.Company;
 import com.mysite.tayo.entity.Member;
 import com.mysite.tayo.entity.Post;
 import com.mysite.tayo.entity.Project;
 import com.mysite.tayo.entity.ProjectMember;
+import com.mysite.tayo.repository.CommentsRepository;
 import com.mysite.tayo.repository.ParagraphRepository;
 import com.mysite.tayo.repository.PostRepository;
 import com.mysite.tayo.repository.ProjectMemberRepository;
@@ -32,6 +34,7 @@ import com.mysite.tayo.repository.ScheduleRepository;
 import com.mysite.tayo.repository.TaskRepository;
 import com.mysite.tayo.repository.TodoRepository;
 import com.mysite.tayo.repository.VoteRepository;
+import com.mysite.tayo.service.CommentService;
 import com.mysite.tayo.service.MemberService;
 import com.mysite.tayo.service.PostService;
 import com.mysite.tayo.service.ProjectService;
@@ -50,6 +53,9 @@ public class ProjectController {
 
 	@Autowired
 	private PostService postService;
+	
+	@Autowired
+	private CommentService commentService;
 
 	@Autowired
 	private ProjectRepository projectRepository;
@@ -74,6 +80,9 @@ public class ProjectController {
 
 	@Autowired
 	private VoteRepository voteRepository;
+	
+	@Autowired
+	private CommentsRepository commentsRepository;
 
 	@GetMapping("/projectFeed/{projectIdx}")
 	public String feed(Model model, Authentication authentication, @PathVariable("projectIdx") Long projectIdx) {
@@ -91,7 +100,10 @@ public class ProjectController {
 			Map<String, Object> postData = new HashMap<>();
 			postData.put("post", post);
 			postData.put("member", post.getMember()); // 포스트 작성자 member 객체
-
+			
+			List<Comments> comments = commentService.findByPost(post);
+	        postData.put("comments", comments);
+			
 			switch (post.getFileType()) {
 			case 1:
 				Map<String, String> paragraphData = postService.getParagraph(post.getPostIdx());
@@ -214,4 +226,6 @@ public class ProjectController {
 
 		return "redirect:/projectFeed";
 	}
+	
+	
 }

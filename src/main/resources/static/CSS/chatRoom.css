@@ -1072,3 +1072,61 @@
       	cursor: pointer;
       	border: solid 1px #ddd;
       }
+
+      .tooltiptext {
+      	visibility: hidden;
+      	width: 120px;
+      	background-color: #555;
+      	color: #fff;
+      	text-align: center;
+      	border-radius: 5px;
+      	padding: 5px 0;
+      	position: absolute;
+      	z-index: 10000;
+      	bottom: 125%;
+      	/* 아이콘 위에 툴팁이 나타나도록 조정 */
+      	left: 11%;
+      	margin-left: -60px;
+      	/* 툴팁 중앙 정렬 */
+      	opacity: 0;
+      	transition: opacity 0.3s;
+      }
+
+      .tooltiptext::after {
+      	content: "";
+      	position: absolute;
+      	top: 100%;
+      	left: 50%;
+      	margin-left: -5px;
+      	border-width: 5px;
+      	border-style: solid;
+      	border-color: #555 transparent transparent transparent;
+      }
+
+      .tooltiptext::after {
+      	content: "";
+      	position: absolute;
+      	top: 100%;
+      	left: 50%;
+      	margin-left: -5px;
+      	border-width: 5px;
+      	border-style: solid;
+      	border-color: #555 transparent transparent transparent;
+      }
+
+      .tooltiptext.emote::after {
+      	content: "";
+      	position: absolute;
+      	position: absolute;
+      	top: 97%;
+      	left: 20%;
+      	margin-left: -5px;
+      	border-width: 5px;
+      	border-style: solid;
+      	border-color: #555 transparent transparent transparent;
+      }
+
+      button:hover .tooltiptext {
+      	visibility: visible;
+      	opacity: 1;
+      }

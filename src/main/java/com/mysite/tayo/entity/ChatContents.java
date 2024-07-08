@@ -38,8 +38,8 @@ public class ChatContents {
     @Column(name = "link")
     private boolean link = false;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "has_file", referencedColumnName = "has_file_idx")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "has_file_idx", referencedColumnName = "has_file_idx")
     private ChatContentsHasFile hasFile;
 
     @Column(name = "emote", length = 100)
