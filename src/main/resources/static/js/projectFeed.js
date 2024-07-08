@@ -598,42 +598,67 @@ document.addEventListener('DOMContentLoaded', function() {
    }
 
    document.querySelector('.invite_submit_btn').addEventListener('click', inviteParticipants);
-   
-   const commentInput = document.getElementById('commentInput');
 
-    commentInput.addEventListener('keydown', function (event) {
-        if (event.key === 'Enter' && !event.shiftKey) {
+   document.querySelectorAll('#commentInput').forEach(commentInput => {
+      const submitComment = document.getElementById('submitComment');
+
+      function submitCommentFunction() {
+         const postId = commentInput.getAttribute('data-post-id');
+         const commentContent = commentInput.value.trim();
+         if (commentContent) {
+            fetch('/comments', {
+               method: 'POST',
+               headers: {
+                  'Content-Type': 'application/json',
+               },
+               body: JSON.stringify({
+                  post: {
+                     postIdx: postId,
+                  },
+                  contents: commentContent
+               })
+            })
+               .then(response => response.json())
+               .then(data => {
+                  if (data.success) {
+                     // 댓글 추가 후 처리 로직 (예: 댓글 리스트 갱신)
+                     location.reload(); // 페이지를 새로고침하여 댓글 리스트 갱신
+                  } else {
+                     console.log(data);
+                     alert('댓글 등록에 실패했습니다.');
+                  }
+               })
+               .catch(error => {
+                  console.error('Error:', error);
+                  alert('댓글 등록 중 오류가 발생했습니다.');
+               });
+         }
+      }
+
+      commentInput.addEventListener('keydown', function(event) {
+         if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault();
-            
-            const postId = commentInput.getAttribute('data-post-id');
-            const commentContent = commentInput.value.trim();
+            submitCommentFunction();
+         }
+      });
 
-            if (commentContent) {
-                fetch('/comments', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({
-                        postId: postId,
-                        content: commentContent
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // 댓글 추가 후 처리 로직 (예: 댓글 리스트 갱신)
-                        location.reload(); // 페이지를 새로고침하여 댓글 리스트 갱신
-                    } else {
-                        alert('댓글 등록에 실패했습니다.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('댓글 등록 중 오류가 발생했습니다.');
-                });
-            }
-        }
+      submitComment.addEventListener('click', function() {
+         submitCommentFunction();
+      });
+   });
+   
+   document.querySelectorAll('.post-option-toggle').forEach(function (toggle) {
+        toggle.addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            const optionUl = document.getElementById('postOptionUl' + id);
+
+            // 모든 .post_option_ul 요소를 숨깁니다.
+            document.querySelectorAll('.post_option_ul').forEach(function (ul) {
+                ul.style.display = 'none';
+            });
+
+            // 클릭한 요소의 .post_option_ul을 표시합니다.
+            optionUl.style.display = 'block';
+        });
     });
 });

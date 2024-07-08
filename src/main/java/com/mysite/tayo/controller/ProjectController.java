@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -101,7 +102,10 @@ public class ProjectController {
 			postData.put("post", post);
 			postData.put("member", post.getMember()); // 포스트 작성자 member 객체
 			
-			List<Comments> comments = commentService.findByPost(post);
+			// 댓글을 작성 시간 기준으로 정렬
+	        List<Comments> comments = commentService.findByPost(post).stream()
+	                .sorted(Comparator.comparing(Comments::getWriteTime))
+	                .collect(Collectors.toList());
 	        postData.put("comments", comments);
 			
 			switch (post.getFileType()) {

@@ -197,7 +197,7 @@
 						</div>
 						<!-- 포스트 있는 경우 -->
 						<div th:if="${#lists.size(postsData) > 0}">
-							<div th:each="postData : ${postsData}">
+							<div th:each="postData, iterStat  : ${postsData}">
 								<a th:id="|postIdx_${postData.post.postIdx}|"></a>
 								<div th:switch="${postData.post.fileType}">
 									<!-- fileType=1 , Paragraph -->
@@ -213,7 +213,21 @@
 										        </div>
 										        <div class="post_option">
 										            <div><img th:src="@{/img/post_fix_icon.png}" /></div>
-										            <div><img th:src="@{/img/post_option_icon.png}" /></div>
+										            <div><img th:src="@{/img/post_option_icon.png}" class="post-option-toggle" th:data-id="${iterStat.index}"/></div>
+													<ul class="post_option_ul" th:id="'postOptionUl' + ${iterStat.index}">
+														<li class="post_option_li">
+															<div class="post_option_icon">
+																<img src="https://flow.team/flow-renewal/assets/images/post-edit.svg?v=c06cb6e58429b61cca539fee4a6e6f982aa1c660" />
+																게시글 수정
+															</div>
+														</li>
+														<li class="post_option_li">
+															<div class="post_option_icon">
+																<img src="https://cdn-icons-png.flaticon.com/512/11081/11081117.png" />
+																게시글 삭제
+															</div>
+														</li>
+													</ul>
 										        </div>
 										    </div>
 											<div class="post_title_area">
@@ -243,7 +257,7 @@
 													<div class="cmt_read_area">
 														<div class="comment_count_area">
 															<span>댓글</span>
-															<span>0</span>
+															<span th:text="${#lists.size(postData.comments)}"></span>
 										                </div>
 										                <div class="read_count_area">
 										                    <span>읽음</span>
@@ -253,18 +267,18 @@
 												</div>
 												<div class="post_comment_area">
 													<ul class="post_comment_list">
-														<li class="post_comment_item">
+														<li class="post_comment_item" th:each="comment : ${postData.comments}">
 															<div class="comment_profile">
 																<img src="https://flow.team/flow-renewal/assets/images/profile-default.png" />
 															</div>
 															<div class="comment_container">
 																<div class="comment_user_area">
-																	<span class="user_name">우태균</span>
-																	<span class="record_date">2024-06-05 10:15</span>
+																	<span class="user_name" th:text="${comment.member.name}"></span>
+																	<span class="record_date" th:text="${#dates.format(comment.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
 																	<span class="comment_react">☺좋아요</span>
-																	<button class="delete_comment_btn">삭제</button>
+																	<button class="delete_comment_btn" th:if="${member == comment.member}">삭제</button>
 																</div>
-																<div>확인했습니다!</div>
+																<div th:text="${comment.contents}"></div>
 															</div>
 														</li>
 													</ul>
@@ -274,9 +288,9 @@
 										                <img th:src="@{https://flow.team/flow-renewal/assets/images/profile-default.png}" />
 										            </div>
 										            <div class="comment_input">
-										                <input class="cmt_input" type="text" id="commentInput" data-post-id="${postData.idx}" placeholder="줄바꿈 Shift + Enter / 입력 Enter 입니다.">
+										                <input class="cmt_input" type="text" id="commentInput" th:data-post-id="${postData.post.postIdx}" placeholder="줄바꿈 Shift + Enter / 입력 Enter 입니다.">
 										                <div class="file_upload_box">
-										                    <img th:src="@{/img/file_upload.png}" />
+										                    <img id="submitComment" th:src="@{https://cdn-icons-png.flaticon.com/512/14562/14562390.png}" />
 										                </div>
 										            </div>
 										        </div>
@@ -296,8 +310,22 @@
 									            </div>
 									            <div class="post_option">
 									                <div><img th:src="@{/img/post_fix_icon.png}" /></div>
-									                <div><img th:src="@{/img/post_option_icon.png}" /></div>
-									            </div>
+													<div><img th:src="@{/img/post_option_icon.png}" class="post-option-toggle" th:data-id="${iterStat.index}" /></div>
+													<ul class="post_option_ul" th:id="'postOptionUl' + ${iterStat.index}">
+														<li class="post_option_li">
+															<div class="post_option_icon">
+																<img src="https://flow.team/flow-renewal/assets/images/post-edit.svg?v=c06cb6e58429b61cca539fee4a6e6f982aa1c660" />
+																게시글 수정
+															</div>
+															</li>
+														<li class="post_option_li">
+															<div class="post_option_icon">
+																<img src="https://cdn-icons-png.flaticon.com/512/11081/11081117.png" />
+																게시글 삭제
+															</div>
+														</li>
+													</ul>
+													</div>
 									        </div>
 									        <div class="post_title_area">
 									            <h4 th:text="${postData != null && postData['data'] != null ? postData['data'].taskName : ''}"></h4>
@@ -383,7 +411,7 @@
 									                <div class="cmt_read_area">
 									                    <div class="comment_count_area">
 									                        <span>댓글</span>
-									                        <span>0</span>
+									                        <span th:text="${#lists.size(postData.comments)}"></span>
 									                    </div>
 									                    <div class="read_count_area">
 									                        <span>읽음</span>
@@ -391,19 +419,32 @@
 									                    </div>
 									                </div>
 									            </div>
-									            <div class="post_comment_area">
-									                <ul class="post_comment_list">
-									                    
-									                </ul>
-									            </div>
-									            <div class="post_comment_input_area">
+												<div class="post_comment_area">
+													<ul class="post_comment_list">
+														<li class="post_comment_item" th:each="comment : ${postData.comments}">
+															<div class="comment_profile">
+																<img src="https://flow.team/flow-renewal/assets/images/profile-default.png" />
+															</div>
+															<div class="comment_container">
+																<div class="comment_user_area">
+																	<span class="user_name" th:text="${comment.member.name}"></span>
+																	<span class="record_date" th:text="${#dates.format(comment.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
+																	<span class="comment_react">☺좋아요</span>
+																	<button class="delete_comment_btn" th:if="${member == comment.member}">삭제</button>
+																</div>
+																<div th:text="${comment.contents}"></div>
+															</div>
+														</li>
+													</ul>
+												</div>
+												<div class="post_comment_input_area">
 									                <div class="comment_profile">
 									                    <img th:src="@{https://flow.team/flow-renewal/assets/images/profile-default.png}" />
 									                </div>
 									                <div class="comment_input">
-									                    <input class="cmt_input" type="text" placeholder="줄바꿈 Shift + Enter / 입력 Enter 입니다.">
+									                    <input class="cmt_input" type="text" id="commentInput" th:data-post-id="${postData.post.postIdx}" placeholder="줄바꿈 Shift + Enter / 입력 Enter 입니다.">
 									                    <div class="file_upload_box">
-									                        <img th:src="@{/img/file_upload.png}" />
+									                        <img id="submitComment" th:src="@{https://cdn-icons-png.flaticon.com/512/14562/14562390.png}" />
 									                    </div>
 									                </div>
 									            </div>
@@ -421,10 +462,24 @@
 									                <strong th:text="${postData.member.name}"></strong>
 									                <span th:text="${#dates.format(postData.post.uploadDate, 'yyyy-MM-dd HH:mm')}"></span>
 									            </div>
-									            <div class="post_option">
-									                <div><img th:src="@{/img/post_fix_icon.png}" /></div>
-									                <div><img th:src="@{/img/post_option_icon.png}" /></div>
-									            </div>
+												<div class="post_option">
+													<div><img th:src="@{/img/post_fix_icon.png}" /></div>
+													<div><img th:src="@{/img/post_option_icon.png}" class="post-option-toggle" th:data-id="${iterStat.index}" /></div>
+													<ul class="post_option_ul" th:id="'postOptionUl' + ${iterStat.index}">
+														<li class="post_option_li">
+															<div class="post_option_icon">
+																<img src="https://flow.team/flow-renewal/assets/images/post-edit.svg?v=c06cb6e58429b61cca539fee4a6e6f982aa1c660" />
+																게시글 수정
+															</div>
+														</li>
+														<li class="post_option_li">
+															<div class="post_option_icon">
+																<img src="https://cdn-icons-png.flaticon.com/512/11081/11081117.png" />
+																게시글 삭제
+															</div>
+														</li>
+													</ul>
+												</div>
 									        </div>
 									        <div class="post_title_area">
 									            <div class="schedule_date">
@@ -505,7 +560,7 @@
 									                <div class="cmt_read_area">
 									                    <div class="comment_count_area">
 									                        <span>댓글</span>
-									                        <span>0</span>
+									                        <span th:text="${#lists.size(postData.comments)}"></span>
 									                    </div>
 									                    <div class="read_count_area">
 									                        <span>읽음</span>
@@ -513,14 +568,32 @@
 									                    </div>
 									                </div>
 									            </div>
-									            <div class="post_comment_input_area">
+												<div class="post_comment_area">
+													<ul class="post_comment_list">
+														<li class="post_comment_item" th:each="comment : ${postData.comments}">
+															<div class="comment_profile">
+																<img src="https://flow.team/flow-renewal/assets/images/profile-default.png" />
+															</div>
+															<div class="comment_container">
+																<div class="comment_user_area">
+																	<span class="user_name" th:text="${comment.member.name}"></span>
+																	<span class="record_date" th:text="${#dates.format(comment.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
+																	<span class="comment_react">☺좋아요</span>
+																	<button class="delete_comment_btn" th:if="${member == comment.member}">삭제</button>
+																</div>
+																<div th:text="${comment.contents}"></div>
+															</div>
+														</li>
+													</ul>
+												</div>
+												<div class="post_comment_input_area">
 									                <div class="comment_profile">
 									                    <img th:src="@{https://flow.team/flow-renewal/assets/images/profile-default.png}" />
 									                </div>
 									                <div class="comment_input">
-									                    <input class="cmt_input" type="text" placeholder="줄바꿈 Shift + Enter / 입력 Enter 입니다.">
+									                    <input class="cmt_input" type="text" id="commentInput" th:data-post-id="${postData.post.postIdx}" placeholder="줄바꿈 Shift + Enter / 입력 Enter 입니다.">
 									                    <div class="file_upload_box">
-									                        <img th:src="@{/img/file_upload.png}" />
+									                        <img id="submitComment" th:src="@{https://cdn-icons-png.flaticon.com/512/14562/14562390.png}" />
 									                    </div>
 									                </div>
 									            </div>
@@ -538,10 +611,24 @@
 									                <strong th:text="${postData.member.name}"></strong>
 									                <span th:text="${#dates.format(postData.post.uploadDate, 'yyyy-MM-dd HH:mm')}"></span>
 									            </div>
-									            <div class="post_option">
-									                <div><img th:src="@{/img/post_fix_icon.png}" /></div>
-									                <div><img th:src="@{/img/post_option_icon.png}" /></div>
-									            </div>
+												<div class="post_option">
+													<div><img th:src="@{/img/post_fix_icon.png}" /></div>
+													<div><img th:src="@{/img/post_option_icon.png}" class="post-option-toggle" th:data-id="${iterStat.index}" /></div>
+													<ul class="post_option_ul" th:id="'postOptionUl' + ${iterStat.index}">
+														<li class="post_option_li">
+															<div class="post_option_icon">
+																<img src="https://flow.team/flow-renewal/assets/images/post-edit.svg?v=c06cb6e58429b61cca539fee4a6e6f982aa1c660" />
+																게시글 수정
+															</div>
+														</li>
+														<li class="post_option_li">
+															<div class="post_option_icon">
+																<img src="https://cdn-icons-png.flaticon.com/512/11081/11081117.png" />
+																게시글 삭제
+															</div>
+														</li>
+													</ul>
+												</div>
 									        </div>
 									        <div class="post_title_area">
 									            <h4 th:text="${postData != null && postData['data'] != null ? postData['data'].title : ''}"></h4>
@@ -598,7 +685,7 @@
 									                <div class="cmt_read_area">
 									                    <div class="comment_count_area">
 									                        <span>댓글</span>
-									                        <span>0</span>
+									                        <span th:text="${#lists.size(postData.comments)}"></span>
 									                    </div>
 									                    <div class="read_count_area">
 									                        <span>읽음</span>
@@ -606,14 +693,32 @@
 									                    </div>
 									                </div>
 									            </div>
-									            <div class="post_comment_input_area">
-									                <div class="comment_profile">
-									                    <img th:src="@{https://flow.team/flow-renewal/assets/images/profile-default.png}" />
-									                </div>
-									                <div class="comment_input">
-									                    <input class="cmt_input" type="text" placeholder="줄바꿈 Shift + Enter / 입력 Enter 입니다.">
+												<div class="post_comment_area">
+													<ul class="post_comment_list">
+														<li class="post_comment_item" th:each="comment : ${postData.comments}">
+															<div class="comment_profile">
+																<img src="https://flow.team/flow-renewal/assets/images/profile-default.png" />
+															</div>
+															<div class="comment_container">
+																<div class="comment_user_area">
+																	<span class="user_name" th:text="${comment.member.name}"></span>
+																	<span class="record_date" th:text="${#dates.format(comment.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
+																	<span class="comment_react">☺좋아요</span>
+																	<button class="delete_comment_btn" th:if="${member == comment.member}">삭제</button>
+																</div>
+																<div th:text="${comment.contents}"></div>
+															</div>
+														</li>
+													</ul>
+												</div>
+												<div class="post_comment_input_area">
+													<div class="comment_profile">
+														<img th:src="@{https://flow.team/flow-renewal/assets/images/profile-default.png}" />
+													</div>
+													<div class="comment_input">
+									                    <input class="cmt_input" type="text" id="commentInput" th:data-post-id="${postData.post.postIdx}" placeholder="줄바꿈 Shift + Enter / 입력 Enter 입니다.">
 									                    <div class="file_upload_box">
-									                        <img th:src="@{/img/file_upload.png}" />
+									                        <img id="submitComment" th:src="@{https://cdn-icons-png.flaticon.com/512/14562/14562390.png}" />
 									                    </div>
 									                </div>
 									            </div>
@@ -631,10 +736,24 @@
 									                <strong th:text="${postData.member.name}"></strong>
 									                <span th:text="${#dates.format(postData.post.uploadDate, 'yyyy-MM-dd HH:mm')}"></span>
 									            </div>
-									            <div class="post_option">
-									                <div><img th:src="@{/img/post_fix_icon.png}" /></div>
-									                <div><img th:src="@{/img/post_option_icon.png}" /></div>
-									            </div>
+												<div class="post_option">
+													<div><img th:src="@{/img/post_fix_icon.png}" /></div>
+													<div><img th:src="@{/img/post_option_icon.png}" class="post-option-toggle" th:data-id="${iterStat.index}" /></div>
+													<ul class="post_option_ul" th:id="'postOptionUl' + ${iterStat.index}">
+														<li class="post_option_li">
+															<div class="post_option_icon">
+																<img src="https://flow.team/flow-renewal/assets/images/post-edit.svg?v=c06cb6e58429b61cca539fee4a6e6f982aa1c660" />
+																게시글 수정
+															</div>
+														</li>
+														<li class="post_option_li">
+															<div class="post_option_icon">
+																<img src="https://cdn-icons-png.flaticon.com/512/11081/11081117.png" />
+																게시글 삭제
+															</div>
+														</li>
+													</ul>
+												</div>
 									        </div>
 									        <div class="post_title_area" style="flex-direction: column;">
 									            <h4>
@@ -711,7 +830,7 @@
 									                <div class="cmt_read_area">
 									                    <div class="comment_count_area">
 									                        <span>댓글</span>
-									                        <span>0</span>
+									                        <span th:text="${#lists.size(postData.comments)}"></span>
 									                    </div>
 									                    <div class="read_count_area">
 									                        <span>읽음</span>
@@ -719,14 +838,32 @@
 									                    </div>
 									                </div>
 									            </div>
-									            <div class="post_comment_input_area">
+												<div class="post_comment_area">
+													<ul class="post_comment_list">
+														<li class="post_comment_item" th:each="comment : ${postData.comments}">
+															<div class="comment_profile">
+																<img src="https://flow.team/flow-renewal/assets/images/profile-default.png" />
+															</div>
+															<div class="comment_container">
+																<div class="comment_user_area">
+																	<span class="user_name" th:text="${comment.member.name}"></span>
+																	<span class="record_date" th:text="${#dates.format(comment.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
+																	<span class="comment_react">☺좋아요</span>
+																	<button class="delete_comment_btn" th:if="${member == comment.member}">삭제</button>
+																</div>
+																<div th:text="${comment.contents}"></div>
+															</div>
+														</li>
+													</ul>
+												</div>
+												<div class="post_comment_input_area">
 									                <div class="comment_profile">
 									                    <img th:src="${postData.member.profileImage != null ? postData.member.profileImage : 'https://flow.team/flow-renewal/assets/images/profile-default.png'}" />
 									                </div>
 									                <div class="comment_input">
-									                    <input class="cmt_input" type="text" placeholder="줄바꿈 Shift + Enter / 입력 Enter 입니다.">
+									                    <input class="cmt_input" type="text" id="commentInput" th:data-post-id="${postData.post.postIdx}" placeholder="줄바꿈 Shift + Enter / 입력 Enter 입니다.">
 									                    <div class="file_upload_box">
-									                        <img th:src="@{/img/file_upload.png}" />
+									                        <img id="submitComment" th:src="@{https://cdn-icons-png.flaticon.com/512/14562/14562390.png}" />
 									                    </div>
 									                </div>
 									            </div>
