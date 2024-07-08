@@ -197,12 +197,8 @@
 						</div>
 						<!-- 포스트 있는 경우 -->
 						<div th:if="${#lists.size(postsData) > 0}">
-<<<<<<< HEAD
 							<div th:each="postData, iterStat  : ${postsData}">
-=======
-							<div th:each="postData : ${postsData}">
 								<a th:id="|postIdx_${postData.post.postIdx}|"></a>
->>>>>>> branch 'main' of https://github.com/TAEKYUUUN/Tayo-Final.git
 								<div th:switch="${postData.post.fileType}">
 									<!-- fileType=1 , Paragraph -->
 									<div th:case="'1'">
