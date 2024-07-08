@@ -53,8 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	});
 
-	const taskTab = document.querySelector('.tab-task');
-	taskTab.addEventListener('click', function() {
+	function addTaskContent() {
 		const modalContent = document.querySelector('.modal-content');
 		modalContent.style.minHeight = '592px';
 		modalContent.style.overflowY = 'auto';
@@ -197,11 +196,9 @@ document.addEventListener('DOMContentLoaded', function() {
 				newInput.focus();
 			}
 		}
+	}
 
-	});
-
-	const paragraphTab = document.querySelector('.tab-paragraph');
-	paragraphTab.addEventListener('click', function() {
+	function addParagraphContent() {
 		const modalContent = document.querySelector('.modal-content');
 		modalContent.style.minHeight = '';
 		modalContent.style.overflowY = '';
@@ -216,10 +213,9 @@ document.addEventListener('DOMContentLoaded', function() {
 			</div>
 		`;
 		modalContent.innerHTML = paragraphContent;
-	});
+	}
 
-	const scheduleTab = document.querySelector('.tab-schedule');
-	scheduleTab.addEventListener('click', function() {
+	function addScheduleContent() {
 		const modalContent = document.querySelector('.modal-content');
 		modalContent.style.minHeight = '592px';
 		modalContent.style.overflowY = 'auto';
@@ -267,10 +263,9 @@ document.addEventListener('DOMContentLoaded', function() {
 				endInput.name = 'endDatetime';
 			}
 		});
-	});
+	}
 
-	const todoTab = document.querySelector('.tab-todo');
-	todoTab.addEventListener('click', function() {
+	function addTodoContent() {
 		const modalContent = document.querySelector('.modal-content');
 		modalContent.style.minHeight = '592px';
 		modalContent.style.overflowY = 'auto';
@@ -350,10 +345,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		const initialInput = document.querySelector('.todo_input');
 		initialInput.addEventListener('keydown', handleKeyDown);
-	});
+	}
 
-	const voteTab = document.querySelector('.tab-vote');
-	voteTab.addEventListener('click', function() {
+	function addVoteContent() {
 		const modalContent = document.querySelector('.modal-content');
 		modalContent.style.minHeight = '592px';
 		modalContent.style.overflowY = 'auto';
@@ -437,7 +431,23 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 
 		addVoteitemBtn.addEventListener('click', createNewVoteItemEdit);
-	});
+	}
+
+	// Tab event listeners
+	const taskTab = document.querySelector('.tab-task');
+	taskTab.addEventListener('click', addTaskContent);
+
+	const paragraphTab = document.querySelector('.tab-paragraph');
+	paragraphTab.addEventListener('click', addParagraphContent);
+
+	const scheduleTab = document.querySelector('.tab-schedule');
+	scheduleTab.addEventListener('click', addScheduleContent);
+
+	const todoTab = document.querySelector('.tab-todo');
+	todoTab.addEventListener('click', addTodoContent);
+
+	const voteTab = document.querySelector('.tab-vote');
+	voteTab.addEventListener('click', addVoteContent);
 
 	const form = document.querySelector('form');
 	form.addEventListener('submit', function() {
@@ -458,86 +468,170 @@ document.addEventListener('DOMContentLoaded', function() {
 	document.getElementById('div_new_project').addEventListener('click', function() {
 		var href = this.getAttribute('data-href');
 		location.href = href;
-	});
-
-	// 왼쪽 사이드 바 '대시보드' 클릭 시 dashboard로 이동
-	document.getElementById('div_toDashboard').addEventListener('click', function() {
-		var href = this.getAttribute('data-href');
-		location.href = href;
-	});
-
-	// 왼쪽 사이드 바 '내 프로젝트' 클릭 시 projectlist로 이동
-	document.getElementById('div_toProjectlist').addEventListener('click', function() {
-		var href = this.getAttribute('data-href');
-		location.href = href;
-	});
-
-	// 왼쪽 사이드 바 '회사 공개 프로젝트' 클릭 시 companyOpenProject로 이동
-	document.getElementById('div_toCompanyOpenProject').addEventListener('click', function() {
-		var href = this.getAttribute('data-href');
-		location.href = href;
-	});
-});
-
-// Modal functions for inviting participants
-document.addEventListener('DOMContentLoaded', (event) => {
-	// modal 열기 및 닫기 기능
-	const inviteButton = document.querySelector('#div_invite_prjmem img');
-	const modal = document.getElementById("invite-participants-modal");
-	const closeButton = document.querySelector('.invite-modal-header .close');
-	const inviteModalButton = document.querySelector('.invite-modal-footer .btn');
-
-	inviteButton.addEventListener('click', openInviteModal);
-	closeButton.addEventListener('click', closeInviteModal);
-	inviteModalButton.addEventListener('click', inviteParticipants);
-
-	function openInviteModal() {
-		modal.style.display = "block";
-		document.getElementById("div_backgroundfull").style.display = "block";
-	}
-
-	function closeInviteModal() {
-		modal.style.display = "none";
-		document.getElementById("div_backgroundfull").style.display = "none";
-	}
-
-	// 참여자 선택 기능
-	document.querySelectorAll('#employeeList li').forEach(item => {
-		item.addEventListener('click', event => {
-			const id = item.getAttribute('data-id');
-			const name = item.getAttribute('data-name');
-			addToSelectedList(id, name);
-		});
-	});
-
-	function addToSelectedList(id, name) {
-		const selectedList = document.getElementById('selectedList');
-		const existingItem = document.querySelector(`#selectedList li[data-id="${id}"]`);
-		if (!existingItem) {
-			const li = document.createElement('li');
-			li.setAttribute('data-id', id);
-			li.innerHTML = `<span>${name}</span> <button onclick="removeFromSelectedList(${id})">X</button>`;
-			selectedList.appendChild(li);
-		}
-	}
-
-	function removeFromSelectedList(id) {
-		const item = document.querySelector(`#selectedList li[data-id="${id}"]`);
-		if (item) {
-			item.remove();
-		}
-	}
-
-	function inviteParticipants() {
-		const selectedList = document.getElementById('selectedList');
-		const selectedParticipants = [];
-		selectedList.querySelectorAll('li').forEach(item => {
-			selectedParticipants.push({
-				id: item.getAttribute('data-id'),
-				name: item.querySelector('span').innerText
+		// 왼쪽 사이드 바 클릭 이벤트
+		document.querySelectorAll('#div_new_project, #div_toDashboard, #div_toProjectlist, #div_toCompanyOpenProject').forEach(item => {
+			item.addEventListener('click', function() {
+				var href = this.getAttribute('data-href');
+				location.href = href;
 			});
 		});
-		console.log('Invited participants:', selectedParticipants);
-		closeInviteModal();
-	}
+
+		// Modal functions for inviting participants
+		const inviteButton = document.querySelector('#div_invite_prjmem img');
+		const inviteModal = document.getElementById("invite-participants-modal");
+		const closeInviteButton = document.querySelector('.invite-modal-header .close');
+		const inviteModalBtn = document.querySelector('.invite-modal-footer .btn');
+
+		inviteButton.addEventListener('click', openInviteModal);
+		closeInviteButton.addEventListener('click', closeInviteModal);
+		inviteModalBtn.addEventListener('click', inviteParticipants);
+
+		function openInviteModal() {
+			inviteModal.style.display = "block";
+			backgroundFull.style.display = "block";
+		}
+
+		function closeInviteModal() {
+			inviteModal.style.display = "none";
+			backgroundFull.style.display = "none";
+		}
+
+		document.querySelectorAll('#employeeList li').forEach(item => {
+			item.addEventListener('click', event => {
+				const id = item.getAttribute('data-id');
+				const name = item.getAttribute('data-name');
+				addToSelectedList(id, name);
+			});
+		});
+
+		function addToSelectedList(id, name) {
+			const selectedList = document.getElementById('selectedList');
+			const existingItem = document.querySelector(`#selectedList li[data-id="${id}"]`);
+			const itemToUpdate = document.querySelector(`#employeeList li[data-id="${id}"] .check_invite img`);
+
+			if (!existingItem) {
+				const li = document.createElement('li');
+				li.setAttribute('data-id', id);
+				li.classList.add('selected_member');
+				li.innerHTML = `<img src="https://flow.team/flow-renewal/assets/images/profile-default.png"/><span>${name}</span><button class="remove-btn" data-id="${id}" style="position:absolute; right:10px; color:#000;">X</button>`;
+
+				selectedList.appendChild(li);
+
+				li.querySelector('.remove-btn').addEventListener('click', event => {
+					removeFromSelectedList(id);
+				});
+			}
+
+			if (itemToUpdate) {
+				itemToUpdate.src = 'https://flow.team/flow-renewal/assets/images/icons/icon_check_on.png?v=8a10086b9d33ff65ead56b67a69de154fcbe2c4a';
+			}
+		}
+
+		function removeFromSelectedList(id) {
+			const item = document.querySelector(`#selectedList li[data-id="${id}"]`);
+			if (item) {
+				item.remove();
+			}
+
+			const itemToUpdate = document.querySelector(`#employeeList li[data-id="${id}"] .check_invite img`);
+			if (itemToUpdate) {
+				itemToUpdate.src = 'https://flow.team/flow-renewal/assets/images/icons/icon_check.png?v=7f39425e224a53bff0043caff9f6446b14c0f667';
+			}
+		}
+
+		document.querySelectorAll('#employeeList li').forEach(item => {
+			item.addEventListener('mouseover', event => {
+				const img = item.querySelector('.check_invite img');
+				const id = item.getAttribute('data-id');
+				const selectedItem = document.querySelector(`#selectedList li[data-id="${id}"]`);
+				if (img && !selectedItem) {
+					img.src = 'https://flow.team/flow-renewal/assets/images/icons/icon_check_hover.png?v=5244c8bcd5a25963296eb4e51fc2a65bcc3dc376';
+				}
+			});
+			item.addEventListener('mouseout', event => {
+				const img = item.querySelector('.check_invite img');
+				const id = item.getAttribute('data-id');
+				const selectedItem = document.querySelector(`#selectedList li[data-id="${id}"]`);
+				if (img && !selectedItem) {
+					img.src = 'https://flow.team/flow-renewal/assets/images/icons/icon_check.png?v=7f39425e224a53bff0043caff9f6446b14c0f667';
+				}
+			});
+		});
+
+		function inviteParticipants() {
+			const selectedList = document.getElementById('selectedList');
+			const selectedParticipants = [];
+			selectedList.querySelectorAll('li').forEach(item => {
+				selectedParticipants.push({
+					id: item.getAttribute('data-id'),
+					name: item.querySelector('span').innerText
+				});
+			});
+			console.log('Invited participants:', selectedParticipants);
+			closeInviteModal();
+		}
+	});
+
+	// Modal functions for inviting participants
+	document.addEventListener('DOMContentLoaded', (event) => {
+		// modal 열기 및 닫기 기능
+		const inviteButton = document.querySelector('#div_invite_prjmem img');
+		const modal = document.getElementById("invite-participants-modal");
+		const closeButton = document.querySelector('.invite-modal-header .close');
+		const inviteModalButton = document.querySelector('.invite-modal-footer .btn');
+
+		inviteButton.addEventListener('click', openInviteModal);
+		closeButton.addEventListener('click', closeInviteModal);
+		inviteModalButton.addEventListener('click', inviteParticipants);
+
+		function openInviteModal() {
+			modal.style.display = "block";
+			document.getElementById("div_backgroundfull").style.display = "block";
+		}
+
+		function closeInviteModal() {
+			modal.style.display = "none";
+			document.getElementById("div_backgroundfull").style.display = "none";
+		}
+
+		// 참여자 선택 기능
+		document.querySelectorAll('#employeeList li').forEach(item => {
+			item.addEventListener('click', event => {
+				const id = item.getAttribute('data-id');
+				const name = item.getAttribute('data-name');
+				addToSelectedList(id, name);
+			});
+		});
+
+		function addToSelectedList(id, name) {
+			const selectedList = document.getElementById('selectedList');
+			const existingItem = document.querySelector(`#selectedList li[data-id="${id}"]`);
+			if (!existingItem) {
+				const li = document.createElement('li');
+				li.setAttribute('data-id', id);
+				li.innerHTML = `<span>${name}</span> <button onclick="removeFromSelectedList(${id})">X</button>`;
+				selectedList.appendChild(li);
+			}
+		}
+
+		function removeFromSelectedList(id) {
+			const item = document.querySelector(`#selectedList li[data-id="${id}"]`);
+			if (item) {
+				item.remove();
+			}
+		}
+
+		function inviteParticipants() {
+			const selectedList = document.getElementById('selectedList');
+			const selectedParticipants = [];
+			selectedList.querySelectorAll('li').forEach(item => {
+				selectedParticipants.push({
+					id: item.getAttribute('data-id'),
+					name: item.querySelector('span').innerText
+				});
+			});
+			console.log('Invited participants:', selectedParticipants);
+			closeInviteModal();
+		}
+	});
 });

@@ -22,7 +22,9 @@ import com.mysite.tayo.entity.Company;
 import com.mysite.tayo.entity.Member;
 import com.mysite.tayo.entity.Organization;
 import com.mysite.tayo.entity.Project;
+import com.mysite.tayo.entity.ProjectMember;
 import com.mysite.tayo.entity.UserSession;
+import com.mysite.tayo.repository.ProjectMemberRepository;
 import com.mysite.tayo.repository.ProjectRepository;
 import com.mysite.tayo.service.AdminService;
 import com.mysite.tayo.service.MemberService;
@@ -40,6 +42,7 @@ public class AdminController {
 	private final OrganizationService organizationService;
 	private final UserSessionService userSessionService;
 	private final ProjectRepository projectRepository;
+	private final ProjectMemberRepository projectMemberRepository;
 	
 	@GetMapping("/adminProjectControl")
 	public String projectInfo(Model model, Authentication authentication) {
@@ -59,9 +62,29 @@ public class AdminController {
 		        Hibernate.initialize(member.getMember());
 		        Hibernate.initialize(member.getMember().getOrganization());
 		    });
-
 	    return newProject;
 	}
+	
+	@PutMapping("/adminProjectControl")
+	public @ResponseBody List<ProjectMember> projectUpdate(@RequestBody List<ProjectMember> projectMember) {
+		Long projectIdx = projectMember.get(0).getProject().getProjectIdx();
+		Optional<Project> project = projectRepository.findById(projectIdx);
+		Project targetProject = project.get();
+		targetProject.setProjectName(projectMember.get(0).getProject().getProjectName());
+		for(int i = 0; i<targetProject.getProjectMemberList().size(); i++) {
+			targetProject.getProjectMemberList().get(i).setIsManager(null);
+		}
+		projectRepository.save(targetProject);
+		for(int i = 0; i<projectMember.size(); i++) {
+			Optional<ProjectMember> _updateProjectMember = projectMemberRepository.findByProjectProjectIdxAndMemberMemberIdx(projectIdx, projectMember.get(i).getMember().getMemberIdx());
+			ProjectMember updateProjectMember = _updateProjectMember.get();
+			updateProjectMember.setIsManager(1);
+			projectMemberRepository.save(updateProjectMember);
+		}
+		return projectMember;
+	}
+	
+	
 	
 	@GetMapping("/AdminCompanyInfo")
 	public String companyInfo(Model model, Authentication authentication) {
