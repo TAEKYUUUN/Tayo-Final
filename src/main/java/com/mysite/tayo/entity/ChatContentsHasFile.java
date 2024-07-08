@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -22,13 +23,13 @@ public class ChatContentsHasFile {
     @Column(name = "has_file_idx")
     private Long hasFileIdx;
 
-    @Column(name = "file_name", length = 200)
+    @Column(name = "file_name", length = 300)
     private String fileName;
 
     @Column(name = "file_type", length = 100)
     private String fileType;
 
-    @Column(name = "file_size", length = 100)
-    private String fileSize;
-
+    @Lob
+    @Column(name = "data", columnDefinition = "CLOB")
+    private byte[] data;
 }

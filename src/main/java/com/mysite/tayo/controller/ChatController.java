@@ -1,6 +1,6 @@
 package com.mysite.tayo.controller;
 
-import java.util.Date;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,12 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.mysite.tayo.entity.Chat;
-import com.mysite.tayo.entity.ChatContents;
 import com.mysite.tayo.entity.Member;
-import com.mysite.tayo.repository.ChatContentsRepository;
-import com.mysite.tayo.repository.ChatRepository;
 import com.mysite.tayo.service.ChatService;
 import com.mysite.tayo.service.MemberService;
 
@@ -41,12 +39,13 @@ public class ChatController {
 	public String chatAdd(@RequestParam(value = "chatContents", required = false) String chatContents,
 	                      @RequestParam(value = "replyIdx", required = false) Long replyIdx,
 	                      @RequestParam(value = "chatContentsIdx", required = false) Long chatContentsIdx,
+	                      @RequestParam(value = "file", required = false) MultipartFile file,
 	                      @PathVariable("chatIdx") Long chatIdx,
-	                      Authentication authentication) {
+	                      Authentication authentication) throws IOException {
 	    Member member = memberService.infoFromLogin(authentication);
 	   
 	    if (chatContentsIdx == null) {
-	    	chatService.addChatContent(chatIdx, chatContents, member, replyIdx);
+	    	chatService.addChatContent(chatIdx, chatContents, member, replyIdx, file);
 	    } else {
 	    	chatService.addNotice(chatContentsIdx, member);
 	    }
