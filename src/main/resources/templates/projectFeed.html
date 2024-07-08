@@ -249,13 +249,31 @@
 										                    <span>0</span>
 										                </div>
 										            </div>
-										        </div>
-										        <div class="post_comment_input_area">
+												</div>
+												<div class="post_comment_area">
+													<ul class="post_comment_list">
+														<li class="post_comment_item">
+															<div class="comment_profile">
+																<img src="https://flow.team/flow-renewal/assets/images/profile-default.png" />
+															</div>
+															<div class="comment_container">
+																<div class="comment_user_area">
+																	<span class="user_name">우태균</span>
+																	<span class="record_date">2024-06-05 10:15</span>
+																	<span class="comment_react">☺좋아요</span>
+																	<button class="delete_comment_btn">삭제</button>
+																</div>
+																<div>확인했습니다!</div>
+															</div>
+														</li>
+													</ul>
+												</div>
+												<div class="post_comment_input_area">
 										            <div class="comment_profile">
 										                <img th:src="@{https://flow.team/flow-renewal/assets/images/profile-default.png}" />
 										            </div>
 										            <div class="comment_input">
-										                <input class="cmt_input" type="text" placeholder="줄바꿈 Shift + Enter / 입력 Enter 입니다.">
+										                <input class="cmt_input" type="text" id="commentInput" data-post-id="${postData.idx}" placeholder="줄바꿈 Shift + Enter / 입력 Enter 입니다.">
 										                <div class="file_upload_box">
 										                    <img th:src="@{/img/file_upload.png}" />
 										                </div>
@@ -825,7 +843,7 @@
 		<div id="div_backgroundfull"></div>
 		<!-- Post 작성 Modal -->
 		<div class="modal" style="display: none;">
-			<form th:action="@{/projectFeed2/{projectIdx}(projectIdx=${projectIdx})}" method="post" enctype="application/x-www-form-urlencoded">
+			<form th:action="@{/projectFeed/{projectIdx}(projectIdx=${projectIdx})}" method="post" enctype="application/x-www-form-urlencoded">
 				<input type="hidden" id="tabType" name="tabType"/>
 				<div class="modal-header">
 					<div class="modal-title">게시물 작성</div>

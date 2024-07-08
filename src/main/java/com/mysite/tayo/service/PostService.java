@@ -14,6 +14,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.mysite.tayo.entity.Alarm;
+import com.mysite.tayo.entity.Comments;
 import com.mysite.tayo.entity.LowerTask;
 import com.mysite.tayo.entity.Member;
 import com.mysite.tayo.entity.Paragraph;
@@ -74,6 +75,11 @@ public class PostService {
 	private final AlarmRepository alarmRepository;
 	private final UnreadRepository unreadRepository;
 
+	// 댓글 받아서 해당 포스트 idx의 포스트 가져오기
+	public Optional<Post> getPostByComment(Comments comment) {
+		return postRepository.findById(comment.getPost().getPostIdx());
+	}
+	
 	// 글(Paragraph) 생성
 	public void createParagraph(Member member, Project project, String title, String contents, int openRange) {
 		Date date = new Date();
@@ -461,6 +467,10 @@ public class PostService {
 	            Date startDate = schedule.getStartDate();
 	            Date endDate = schedule.getEndDate();
 	            
+	            if (startDate == null || endDate == null) {
+	                throw new IllegalArgumentException("Start date and end date must not be null");
+	            }
+
 	            String startDateStr = dateTimeFormat.format(startDate);
 	            String endDateStr;
 	            if (dateFormat.format(startDate).equals(dateFormat.format(endDate))) {
@@ -505,6 +515,7 @@ public class PostService {
 
 	    return Collections.emptyMap();
 	}
+
 	// postIdx를 받아서 할 일(Todo)의 데이터 가져오기
 	public Map<String, Object> getTodo(Long postIdx) {
 	    Optional<Post> postOptional = postRepository.findById(postIdx);

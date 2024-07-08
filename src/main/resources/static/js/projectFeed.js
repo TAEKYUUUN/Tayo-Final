@@ -23,8 +23,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	createPostArea.addEventListener('click', function() {
 		modal.style.display = 'block';
 		backgroundFull.style.display = 'block';
-		tabTypeInput.value = 1;
 		resetModalFields();
+		tabTypeInput.value = 1; // 기본값 설정
+		updateModalContent(1);
 	});
 
 	closeBtn.addEventListener('click', function() {
@@ -38,20 +39,36 @@ document.addEventListener('DOMContentLoaded', function() {
 			this.style.color = 'black';
 			this.style.borderBottom = '2px solid #666';
 			resetModalFields(); // Reset fields when switching tabs
-			const tabType = document.getElementById('tabType');
+			let tabType = 1;
 			if (this.classList.contains('tab-paragraph')) {
-				tabType.value = 1;
+				tabType = 1;
 			} else if (this.classList.contains('tab-task')) {
-				tabType.value = 2;
+				tabType = 2;
 			} else if (this.classList.contains('tab-schedule')) {
-				tabType.value = 3;
+				tabType = 3;
 			} else if (this.classList.contains('tab-todo')) {
-				tabType.value = 4;
+				tabType = 4;
 			} else if (this.classList.contains('tab-vote')) {
-				tabType.value = 5;
+				tabType = 5;
 			}
+			tabTypeInput.value = tabType;
+			updateModalContent(tabType);
 		});
 	});
+
+	function updateModalContent(tabType) {
+		if (tabType === 1) {
+			addParagraphContent();
+		} else if (tabType === 2) {
+			addTaskContent();
+		} else if (tabType === 3) {
+			addScheduleContent();
+		} else if (tabType === 4) {
+			addTodoContent();
+		} else if (tabType === 5) {
+			addVoteContent();
+		}
+	}
 
 	function addTaskContent() {
 		const modalContent = document.querySelector('.modal-content');
@@ -433,22 +450,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		addVoteitemBtn.addEventListener('click', createNewVoteItemEdit);
 	}
 
-	// Tab event listeners
-	const taskTab = document.querySelector('.tab-task');
-	taskTab.addEventListener('click', addTaskContent);
-
-	const paragraphTab = document.querySelector('.tab-paragraph');
-	paragraphTab.addEventListener('click', addParagraphContent);
-
-	const scheduleTab = document.querySelector('.tab-schedule');
-	scheduleTab.addEventListener('click', addScheduleContent);
-
-	const todoTab = document.querySelector('.tab-todo');
-	todoTab.addEventListener('click', addTodoContent);
-
-	const voteTab = document.querySelector('.tab-vote');
-	voteTab.addEventListener('click', addVoteContent);
-
 	const form = document.querySelector('form');
 	form.addEventListener('submit', function() {
 		// 복수 투표 체크박스와 hidden input
@@ -560,7 +561,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 	function inviteParticipants(event) {
-		 event.preventDefault();
+		event.preventDefault();
 		const url = window.location.href;
 		const currentProjectIdx = url.split('/projectFeed/')[1];
 
@@ -577,7 +578,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				memberIdx: item.getAttribute('data-id'),
 			});
 		});
-		
+
 
 		fetch(`/inviteParticipants/${currentProjectIdx}`, {
 			method: 'POST',
@@ -597,4 +598,42 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	document.querySelector('.invite_submit_btn').addEventListener('click', inviteParticipants);
+	
+	const commentInput = document.getElementById('commentInput');
+
+    commentInput.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            
+            const postId = commentInput.getAttribute('data-post-id');
+            const commentContent = commentInput.value.trim();
+
+            if (commentContent) {
+                fetch('/comments', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        postId: postId,
+                        content: commentContent
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // 댓글 추가 후 처리 로직 (예: 댓글 리스트 갱신)
+                        location.reload(); // 페이지를 새로고침하여 댓글 리스트 갱신
+                    } else {
+                        alert('댓글 등록에 실패했습니다.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('댓글 등록 중 오류가 발생했습니다.');
+                });
+            }
+        }
+    });
 });
