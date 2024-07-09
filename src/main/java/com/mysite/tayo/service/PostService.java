@@ -59,7 +59,7 @@ public class PostService {
 
 	private final ProjectMemberRepository projectMemberRepository;
 	private final PostRepository postRepository;
-	private final ParagraphRepository paragraphRepositroy;
+	private final ParagraphRepository paragraphRepository;
 	private final TaskRepository taskRepository;
 	private final PostMemberRepository postMemberRepository;
 	private final ScheduleRepository scheduleRepository;
@@ -96,7 +96,7 @@ public class PostService {
 		paragraph.setTitle(title);
 		paragraph.setContents(contents);
 		paragraph.setOpenRange(openRange);
-		this.paragraphRepositroy.save(paragraph);
+		this.paragraphRepository.save(paragraph);
 
 		// post_member 에 프로젝트 참여중인 모든 멤버 추가 (작성자 포함)
 		List<ProjectMember> projectMemberAll = projectMemberRepository.findByProjectProjectIdx(project.getProjectIdx());
@@ -581,4 +581,52 @@ public class PostService {
 		}
 		 return Collections.emptyMap();
 	}
+	
+	// Post Delete : 프로젝트 관리자 or 글 작성자만 가능
+	public void deletePostById(Long postIdx) {
+		if(postRepository.existsById(postIdx)) {
+			postRepository.deleteById(postIdx);
+		} else {
+			throw new IllegalArgumentException("Post with id" + postIdx + "does not exist.");
+		}
+	}
+	
+	// Post Update : 글 작성자만 가능 (Paragraph, Task, Schedule, Todo, Vote)
+	public void updateParagraph(Long postIdx, String newTitle, String newContents) {
+		Optional<Post> postOptional = postRepository.findById(postIdx);
+		Post post = postOptional.get();
+		post.setIsRevised(1);
+		this.postRepository.save(post);
+		
+		Optional<Paragraph> paragraphOptional = paragraphRepository.findByPostPostIdx(postIdx);
+		Paragraph paragraph = paragraphOptional.get();
+		paragraph.setTitle(newTitle);
+		paragraph.setContents(newContents);
+		this.paragraphRepository.save(paragraph);
+	}
+	
+	public void updateTask(Long postIdx, String newTaskName, int newCondition, Member newManager,
+			Date newEndDate, String newContents, List<String> newLowerTaskNameList, List<Integer> newLowertTaskConditionList) {
+		Optional<Post> postOptional = postRepository.findById(postIdx);
+		Post post = postOptional.get();
+		post.setIsRevised(1);
+		this.postRepository.save(post);
+		
+		Optional<Task> taskOptional = taskRepository.findByPostPostIdx(postIdx);
+		Task task = taskOptional.get();
+	}
+	
+	public void updateSchedule() {
+		
+	}
+	
+	public void updateTodo() {
+		
+	}
+	
+	public void updateVote() {
+		
+	}
+	
+	
 }
