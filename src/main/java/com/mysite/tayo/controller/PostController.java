@@ -27,8 +27,6 @@ import com.mysite.tayo.entity.Member;
 import com.mysite.tayo.entity.Post;
 import com.mysite.tayo.entity.Project;
 import com.mysite.tayo.repository.MemberRepository;
-import com.mysite.tayo.repository.PostRepository;
-import com.mysite.tayo.repository.ProjectMemberRepository;
 import com.mysite.tayo.repository.ProjectRepository;
 import com.mysite.tayo.service.CommentService;
 import com.mysite.tayo.service.MemberService;
@@ -42,16 +40,16 @@ public class PostController {
 
 	@Autowired
 	private MemberService memberService;
+	
 	@Autowired
 	private MemberRepository memberRepository;
+	
 	@Autowired
 	private ProjectRepository projectRepository;
-	@Autowired
-	private ProjectMemberRepository projectMemberRepository;
-	@Autowired
-	private PostRepository postRepository;
+	
 	@Autowired
 	private PostService postService;
+	
 	@Autowired
 	private CommentService commentService;
 
@@ -61,6 +59,7 @@ public class PostController {
 			@RequestParam("openRange") int openRange, @RequestParam(value = "content", required = false) String content,
 			@RequestParam(value = "condition", required = false) Integer condition,
 			@RequestParam(value = "managerIdx", required = false) Long managerIdx,
+			@RequestParam(value = "selectedDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date taskEndDate,
 			@RequestParam(value = "startDatetime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date startDatetime,
 			@RequestParam(value = "endDatetime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") Date endDatetime,
 			@RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
@@ -70,6 +69,9 @@ public class PostController {
 			@RequestParam(value = "lowerTaskNames", required = false) List<String> lowerTaskNameList,
 			@RequestParam(value = "lowerTaskConditions", required = false) List<Integer> lowerTaskConditionList,
 			@RequestParam(value = "scheduleAttenders", required = false) List<Member> scheduleAttenderList,
+			@RequestParam(value = "place_id", required = false) String placeId,
+			@RequestParam(value = "place_lat", required = false) Double placeLat,
+			@RequestParam(value = "place_lng", required = false) Double placeLng,
 			@RequestParam(value = "todoNames", required = false) List<String> todoNameList,
 			@RequestParam(value = "todoManagers", required = false) List<Member> todoManagerList,
 			@RequestParam(value = "todoDeadlines", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") List<Date> todoDeadlineList,
@@ -108,7 +110,7 @@ public class PostController {
 				return "redirect:/error";
 			}
 			Member manager = memberRepository.findById(managerIdx).get();
-			postService.createTask(member, project, title, condition, manager, endDate, content, lowerTaskNameList,
+			postService.createTask(member, project, title, condition, manager, taskEndDate, content, lowerTaskNameList,
 					lowerTaskConditionList);
 			break;
 		case 3: // schedule
@@ -116,8 +118,8 @@ public class PostController {
 			Date finalEndDate = endDatetime != null ? endDatetime : endDate;
 			// 회사멤버가 아닌 프로젝트 멤버로 수정할것!!!!! - 우태균 정신 차려
 			scheduleAttenderList = memberRepository.findByCompanyCompanyIdx(member.getCompany().getCompanyIdx());
-			postService.createSchedule(member, project, title, finalStartDate, finalEndDate, place, content,
-					scheduleAttenderList);
+			postService.createSchedule(member, project, title, finalStartDate, finalEndDate,
+					place, placeId, placeLat, placeLng, content, scheduleAttenderList);
 			break;
 		case 4: // todo
 			postService.createTodo(member, project, title, todoNameList, todoManagerList, todoDeadlineList);

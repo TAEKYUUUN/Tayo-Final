@@ -200,7 +200,7 @@ public class PostService {
 
 	// 일정(Schedule) 생성
 	public void createSchedule(Member member, Project project, String title, Date startDate, Date endDate,
-			String place, String contents, List<Member> scheduleAttenderList) {
+			String place, String placeId, Double placeLat, Double placeLng, String contents, List<Member> scheduleAttenderList) {
 		Date date = new Date();
 
 		Post post = new Post();
@@ -216,6 +216,9 @@ public class PostService {
 		schedule.setPost(post);
 		schedule.setEndDate(endDate);
 		schedule.setPlace(place);
+		schedule.setPlaceId(placeId);
+		schedule.setPlaceLat(placeLat);
+		schedule.setPlaceLng(placeLng);
 		schedule.setContents(contents);
 		this.scheduleRepository.save(schedule);
 
@@ -484,6 +487,9 @@ public class PostService {
 	            scheduleData.put("endDate", endDateStr);
 	            scheduleData.put("place", schedule.getPlace());
 	            scheduleData.put("contents", schedule.getContents());
+	            scheduleData.put("placeId", schedule.getPlaceId());
+	            scheduleData.put("placeLat", schedule.getPlaceLat());
+	            scheduleData.put("placeLng", schedule.getPlaceLng());
 
 	            // startDate의 month와 day를 별도로 추출하여 추가
 	            String startMonth = monthFormat.format(startDate);
@@ -591,42 +597,121 @@ public class PostService {
 		}
 	}
 	
-	// Post Update : 글 작성자만 가능 (Paragraph, Task, Schedule, Todo, Vote)
-	public void updateParagraph(Long postIdx, String newTitle, String newContents) {
-		Optional<Post> postOptional = postRepository.findById(postIdx);
-		Post post = postOptional.get();
-		post.setIsRevised(1);
-		this.postRepository.save(post);
-		
-		Optional<Paragraph> paragraphOptional = paragraphRepository.findByPostPostIdx(postIdx);
-		Paragraph paragraph = paragraphOptional.get();
-		paragraph.setTitle(newTitle);
-		paragraph.setContents(newContents);
-		this.paragraphRepository.save(paragraph);
-	}
-	
-	public void updateTask(Long postIdx, String newTaskName, int newCondition, Member newManager,
-			Date newEndDate, String newContents, List<String> newLowerTaskNameList, List<Integer> newLowertTaskConditionList) {
-		Optional<Post> postOptional = postRepository.findById(postIdx);
-		Post post = postOptional.get();
-		post.setIsRevised(1);
-		this.postRepository.save(post);
-		
-		Optional<Task> taskOptional = taskRepository.findByPostPostIdx(postIdx);
-		Task task = taskOptional.get();
-	}
-	
-	public void updateSchedule() {
-		
-	}
-	
-	public void updateTodo() {
-		
-	}
-	
-	public void updateVote() {
-		
-	}
+//	// Post Update : 글 작성자만 가능 (Paragraph, Task, Schedule, Todo, Vote)
+//	public void updatePost(Long postIdx, Map<String, Object> params) {
+//		Optional<Post> postOptional = postRepository.findById(postIdx);
+//		Post post = postOptional.get();
+//		int type = post.getFileType();
+//		post.setIsRevised(1);
+//		this.postRepository.save(post);
+//		
+//		switch(type) {
+//		case 1: // Paragraph
+//			updateParagraph(postIdx, params);
+//			break;
+//		case 2: // Task
+//			updateTask(postIdx, params);
+//			break;
+//		case 3: // Schedule
+//			updateSchedule(postIdx, params);
+//			break;
+//		case 4: // Todo
+//			updateTodo(postIdx, params);
+//			break;
+//		case 5: // Vote
+//			updateVote(postIdx, params);
+//			break;
+//			
+//		}
+//	}
+//	
+//	public void updateParagraph(Long postIdx, Map<String, Object> params) {
+//		Optional<Paragraph> paragraphOptional = paragraphRepository.findByPostPostIdx(postIdx);
+//	    Paragraph paragraph = paragraphOptional.get();
+//	    paragraph.setTitle((String) params.get("title"));
+//	    paragraph.setContents((String) params.get("contents"));
+//	    this.paragraphRepository.save(paragraph);
+//	}
+//	
+//	@SuppressWarnings("unchecked")
+//	public void updateTask(Long postIdx, Map<String, Object> params) {
+//		Optional<Task> taskOptional = taskRepository.findByPostPostIdx(postIdx);
+//		Task task = taskOptional.get();
+//	    task.setTaskName((String) params.get("taskName"));
+//	    task.setCondition((Integer) params.get("condition"));
+//	    task.setManager((Member) params.get("manager"));
+//	    task.setEndDate((Date) params.get("endDate"));
+//	    task.setContents((String) params.get("contents"));
+//	    this.taskRepository.save(task);
+//
+//	    List<String> newLowerTaskNameList = (List<String>) params.get("lowerTaskNameList");
+//	    List<Integer> newLowertTaskConditionList = (List<Integer>) params.get("lowerTaskConditionList");
+//	    if (newLowerTaskNameList != null) {
+//	        for (int i = 0; i < newLowerTaskNameList.size(); i++) {
+//	            LowerTask lowerTask = new LowerTask();
+//	            lowerTask.setTask(task);
+//	            lowerTask.setTaskName(newLowerTaskNameList.get(i));
+//	            lowerTask.setCondition(newLowertTaskConditionList.get(i));
+//	            lowerTask.setEndDate(task.getEndDate());
+//	            this.lowerTaskRepository.save(lowerTask);
+//	        }
+//	    }
+//	}
+//	
+//	@SuppressWarnings("unchecked")
+//	public void updateSchedule(Long postIdx, Map<String, Object> params) {
+//		Optional<Post> postOptional = postRepository.findById(postIdx);
+//		Post post = postOptional.get();
+//		post.setIsRevised(1);
+//		this.postRepository.save(post);
+//		
+//		Optional<Schedule> scheduleOptional = scheduleRepository.findByPostPostIdx(postIdx);
+//		Schedule schedule = scheduleOptional.get();
+//		schedule.setTitle((String) params.get("title"));
+//	    schedule.setStartDate((Date) params.get("startDate"));
+//	    schedule.setEndDate((Date) params.get("endDate"));
+//	    schedule.setPlace((String) params.get("place"));
+//	    schedule.setContents((String) params.get("contents"));
+//	    this.scheduleRepository.save(schedule);
+//		
+//	    List<Member> scheduleAttenderList = (List<Member>) params.get("scheduleAttenderList");
+//	    if (scheduleAttenderList != null) {
+//	        // update schedule attenders logic
+//	    	// 참석자 추가 기능 이후에 고려 할 것.
+//	    }
+//	}
+//	
+//	@SuppressWarnings("unchecked")
+//	public void updateTodo(Long postIdx, Map<String, Object> params) {
+//		Optional<Todo> todoOptional = todoRepository.findByPostPostIdx(postIdx);
+//		Todo todo = todoOptional.get();
+//		todo.setTitle((String) params.get("title"));
+//	    this.todoRepository.save(todo);
+//	    
+//	    List<String> todoNameList = (List<String>) params.get("todoNameList");
+//	    List<Member> todoManagerList = (List<Member>) params.get("todoManagerList");
+//	    List<Date> todoDeadlineList = (List<Date>) params.get("todoDeadlineList");
+//	    if (todoNameList != null && todoManagerList != null && todoDeadlineList != null) {
+//	        // update todo items logic
+//	    }
+//	}
+//	
+//	@SuppressWarnings("unchecked")
+//	public void updateVote(Long postIdx, Map<String, Object> params) {
+//		Optional<Vote> voteOptional = voteRepository.findByPostPostIdx(postIdx);
+//	    Vote vote = voteOptional.get();
+//	    vote.setTitle((String) params.get("title"));
+//	    vote.setVoteDetail((String) params.get("voteDetail"));
+//	    vote.setVoteEndDate((Date) params.get("voteEnddate"));
+//	    vote.setIsPlural((Integer) params.get("isPlural"));
+//	    vote.setIsAnonymous((Integer) params.get("isAnonymous"));
+//	    this.voteRepository.save(vote);
+//	    
+//	    List<String> voteItemList = (List<String>) params.get("voteItemList");
+//	    if (voteItemList != null) {
+//	        // update vote items logic
+//	    }
+//	}
 	
 	
 }

@@ -5,9 +5,11 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.mysite.tayo.entity.Alarm;
 import com.mysite.tayo.entity.Comments;
 import com.mysite.tayo.entity.Member;
 import com.mysite.tayo.entity.Post;
+import com.mysite.tayo.repository.AlarmRepository;
 import com.mysite.tayo.repository.CommentsRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -18,11 +20,14 @@ public class CommentService {
 	
 	private final CommentsRepository commentsRepository;
 	
+	private final AlarmRepository alarmRepository;
+	
 	// 해당 포스트의 댓글들을 리스트로 Get
 	public List<Comments> findByPost(Post post) {
 		return commentsRepository.findByPost(post);
 	}
 	
+	// 댓글 등록 - 댓글, 알림
 	public void createComment(Member member, Post post, String content) {
 		Date date = new Date();
 		
@@ -32,5 +37,13 @@ public class CommentService {
 		comment.setContents(content);
 		comment.setWriteTime(date);
 		this.commentsRepository.save(comment);
+		
+		Alarm alarm = new Alarm();
+		alarm.setMember(post.getMember());
+		alarm.setAlarmType(2);
+		alarm.setComments(comment);
+		alarm.setAlarmTime(date);
+		this.alarmRepository.save(alarm);
+		
 	}
 }
