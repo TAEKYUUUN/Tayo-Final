@@ -171,7 +171,7 @@
 					               </th>              
 					           </tr>
 			       </thead>
-			       <tbody>
+			       <tbody id="NotBannedTbody">
 			           <tr th:each="member : ${memberList}" th:if="${member.isBanned == null}">
 							<input type="hidden" th:value="${member.memberIdx}">
 			               <td><input type="checkbox" style="margin:0; cursor:pointer;"></td>
@@ -204,6 +204,7 @@
 							  </div>
 							</td>
 			               <td th:if="${member.isBanned == null}">정상 <span id = "BannedFromCompany">[이용중지]</span></td>
+						   <td th:if="${member.isBanned == null}" style="display: none;">이용중지 <span id = "NotBannedFromCompany">[해제]</span></td>
 						   <td>
 				               <span th:if="${member.memberIdx == member.company.manager.memberIdx}">Y</span>
 				               <span th:if="${member.memberIdx != member.company.manager.memberIdx}">N</span>
@@ -243,6 +244,9 @@
 						<div><span>모바일 접속</span><a></a></div>
 					</th>
 					<th scope="col">
+						<div><span>아이피</span><a></a></div>
+					</th>
+					<th scope="col">
 						<div><span>접속 장치</span><a></a></div>
 					</th>
 					<th scope="col">
@@ -257,6 +261,7 @@
 				</tr>
 			</thead>
 			<tbody id="bannedTbody"><tr th:each="member : ${memberList}" th:if="${member.isBanned == 1}">
+				<input type="hidden" th:value="${member.memberIdx}">
 				<td th:text="${#strings.defaultString(member.company?.companyName, '')}"></td>
 				<td th:text="${member.name}" class="trName"></td>
 				<td th:text="${#strings.defaultString(member.organization?.organizationName, '')}" class="trOrganizationName"></td>
@@ -295,7 +300,8 @@
 							th:if="${userSession.SessionIdx == maxUserSession.SessionIdx}" th:text="${userSession.deviceName}"></p>
 					</div>
 				</td>
-				<td th:if="${member.isBanned == null}">정상 <span>이용중지</span></td>
+				<td th:if="${member.isBanned != null}" style="display:none;">정상 <span id = "BannedFromCompany">[이용중지]</span></td>
+				<td th:if="${member.isBanned != null}">이용중지 <span id = "NotBannedFromCompany">[해제]</span></td>
 				<td>
 					<span th:if="${member.memberIdx == member.company.manager.memberIdx}">Y</span>
 					<span th:if="${member.memberIdx != member.company.manager.memberIdx}">N</span>

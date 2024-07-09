@@ -638,3 +638,6 @@ ul {
 #BannedFromCompany:hover{
 	text-decoration: underline;
 }
+#NotBannedFromCompany:hover{
+	text-decoration: underline;
+}

@@ -51,7 +51,24 @@ const popupappear = function(){
 			const resetPassword = document.querySelector('#resetPassword');
 			
 			const banmembers = document.querySelectorAll('#BannedFromCompany');
+			const notBanmembers = document.querySelectorAll('#NotBannedFromCompany');
 			
+			notBanmembers.forEach(span =>{
+				span.addEventListener('click', (event) => {
+					event.stopPropagation();
+					const memberIdx = event.currentTarget.parentElement.parentElement.firstElementChild.value;
+					banMember(memberIdx);
+					const NotBannedTbody = document.querySelector('#NotBannedTbody');
+					event.currentTarget.parentElement.parentElement.querySelectorAll('td')[15].remove();
+					const checkboxTd = document.createElement('td');
+					checkboxTd.innerHTML='<input type="checkbox" style="margin:0; cursor:pointer;">';
+					event.currentTarget.parentElement.parentElement.insertBefore(checkboxTd,event.currentTarget.parentElement.parentElement.querySelectorAll('td')[0]);
+					NotBannedTbody.appendChild(event.currentTarget.parentElement.parentElement);
+					event.currentTarget.parentElement.style.display='none';
+					event.currentTarget.parentElement.parentElement.querySelector('#BannedFromCompany').parentElement.style.removeProperty('display');
+
+				})
+			})
 			banmembers.forEach(span=>{
 				span.addEventListener('click', (event)=>{
 					event.stopPropagation(); 
@@ -59,6 +76,11 @@ const popupappear = function(){
 					banMember(memberIdx);
 					const bannedTbody = document.querySelector('#bannedTbody');
 					event.currentTarget.parentElement.parentElement.querySelectorAll('td')[0].remove();
+					const deleteTd = document.createElement('td');
+					deleteTd.innerHTML = '<span style="color:red">삭제</span>';
+					event.currentTarget.parentElement.parentElement.appendChild(deleteTd);
+					event.currentTarget.parentElement.style.display='none';
+					event.currentTarget.parentElement.parentElement.querySelector('#NotBannedFromCompany').parentElement.style.removeProperty('display');
 					bannedTbody.appendChild(event.currentTarget.parentElement.parentElement);
 					if(document.querySelector('#noBannedMember')){
 						document.querySelector('#noBannedMember').remove();
