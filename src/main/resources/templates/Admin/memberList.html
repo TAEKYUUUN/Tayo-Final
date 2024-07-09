@@ -77,9 +77,9 @@
 			<a class="help-view-btn">도움말</a>
 		</div>
 		<div id = "div_headtab">
-			<a class="selectedheadtab">정상 (11)</a>
-			<a>이용중지 (0)</a>
-			<a>가입대기 (0)</a>
+			<a class="selectedheadtab">정상 (<span th:text="${memberCount[0]}"></span>)</a>
+			<a>이용중지 (<span th:text="${memberCount[2]}"></span>)</a>
+			<a>가입대기 (<span th:text="${memberCount[1]}"></span>)</a>
 		</div>
 		<div id = "div_searchwrap">
 			<div id = "div_searcharea" >
@@ -172,7 +172,8 @@
 					           </tr>
 			       </thead>
 			       <tbody>
-			           <tr th:each="member : ${memberList}">
+			           <tr th:each="member : ${memberList}" th:if="${member.isBanned == null}">
+							<input type="hidden" th:value="${member.memberIdx}">
 			               <td><input type="checkbox" style="margin:0; cursor:pointer;"></td>
 			               <td th:text="${#strings.defaultString(member.company?.companyName, '')}"></td>
 			               <td th:text="${member.name}" class="trName"></td>
@@ -202,7 +203,7 @@
 							  	<p th:each="userSession : ${member.userSessionList}" th:if="${userSession.SessionIdx == maxUserSession.SessionIdx}" th:text="${userSession.deviceName}"></p>
 							  </div>
 							</td>
-			               <td th:if="${member.isBanned == null}">정상 <span>이용중지</span></td>
+			               <td th:if="${member.isBanned == null}">정상 <span id = "BannedFromCompany">[이용중지]</span></td>
 						   <td>
 				               <span th:if="${member.memberIdx == member.company.manager.memberIdx}">Y</span>
 				               <span th:if="${member.memberIdx != member.company.manager.memberIdx}">N</span>
@@ -214,9 +215,6 @@
 		<table style="display:none;">
 			<thead>
 				<tr>
-					<th scope= "col" style="width:30px; display:none;">
-						<div><input id="checkAllUser" type="checkbox"></div>
-					</th>
 					<th scope="col" style="cursor:pointer;">
 						<div><span>회사</span><a style ="-webkit-transform: rotateX(180deg)"></a></div>
 					</th>
@@ -244,9 +242,6 @@
 					<th scope="col" style="cursor:pointer;">
 						<div><span>모바일 접속</span><a></a></div>
 					</th>
-					<th scope="col" style="cursor:pointer;">
-						<div><span>데스크탑앱 접속</span><a></a></div>
-					</th>
 					<th scope="col">
 						<div><span>접속 장치</span><a></a></div>
 					</th>
@@ -261,9 +256,55 @@
 					</th>				
 				</tr>
 			</thead>
-			<tbody>
-				<tr>
-					<td colspan="14">결과값이 존재하지 않습니다</td>
+			<tbody><tr th:each="member : ${memberList}" th:if="${member.isBanned == 1}">
+				<td th:text="${#strings.defaultString(member.company?.companyName, '')}"></td>
+				<td th:text="${member.name}" class="trName"></td>
+				<td th:text="${#strings.defaultString(member.organization?.organizationName, '')}" class="trOrganizationName"></td>
+				<td th:text="${#strings.defaultString(member.rankName, '')}" class="trRankName"></td>
+				<td th:text="${member.email}" class="trId"></td>
+				<td th:text="${#strings.defaultString(member.phone, '')}" class="trPhone"></td>
+				<td th:text="${member.registDate}"></td>
+			
+				<td>
+					<div th:each="maxComputerUserSession : ${userComputerSessionList}"
+						th:if="${(maxComputerUserSession.member.memberIdx == member.memberIdx)}">
+						<p th:each="userSession : ${member.userSessionList}"
+							th:if="${userSession.SessionIdx == maxComputerUserSession.SessionIdx}"
+							th:text="${userSession.loginTime}"></p>
+					</div>
+				</td>
+				<td>
+					<div th:each="maxMobileUserSession : ${userMobileSessionList}"
+						th:if="${(maxMobileUserSession.member.memberIdx == member.memberIdx)}">
+						<p th:each="userSession : ${member.userSessionList}"
+							th:if="${userSession.SessionIdx == maxMobileUserSession.SessionIdx}" th:text="${userSession.loginTime}">
+						</p>
+					</div>
+				</td>
+				<td>
+					<div th:each="maxUserSession:${userSessionList}"
+						th:if="${(maxUserSession.member.memberIdx == member.memberIdx)}">
+						<p th:each="userSession : ${member.userSessionList}"
+							th:if="${userSession.SessionIdx == maxUserSession.SessionIdx}" th:text="${userSession.accessIp}"></p>
+					</div>
+				</td>
+				<td>
+					<div th:each="maxUserSession:${userSessionList}"
+						th:if="${(maxUserSession.member.memberIdx == member.memberIdx)}">
+						<p th:each="userSession : ${member.userSessionList}"
+							th:if="${userSession.SessionIdx == maxUserSession.SessionIdx}" th:text="${userSession.deviceName}"></p>
+					</div>
+				</td>
+				<td th:if="${member.isBanned == null}">정상 <span>이용중지</span></td>
+				<td>
+					<span th:if="${member.memberIdx == member.company.manager.memberIdx}">Y</span>
+					<span th:if="${member.memberIdx != member.company.manager.memberIdx}">N</span>
+				</td>
+				<td><span style="color:red">삭제</span></td>
+				<td th:text="${member.password}" class="trPw" style="display:none"></td>
+			</tr>
+			<tr th:if="${memberCount[2] == 0}">
+				<td colspan="14">결과값이 존재하지 않습니다</td>
 				</tr>
 			</tbody>
 			</table>

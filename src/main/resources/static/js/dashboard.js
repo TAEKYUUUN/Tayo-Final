@@ -9,6 +9,23 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+	
+	const projectAlarm = document.querySelectorAll(`[id*="${'projectAlarm'}"]`);
+	const postAlarm = document.querySelectorAll(`[id*="${'postAlarm'}"]`);
+	
+	postAlarm.forEach(div =>{
+		div.parentElement.addEventListener('click', ()=>{
+			const anchor = div.firstElementChild.value;
+			const moveAfter = div.querySelectorAll('input')[1].value;
+			window.location.href = '/projectFeed/' + moveAfter +'#postIdx_' + anchor;
+		})
+	})
+	projectAlarm.forEach(div =>{
+		div.parentElement.addEventListener('click', ()=>{
+			const afterMove = div.firstElementChild.value;
+			window.location.href = '/projectFeed/' + afterMove;
+		})
+	})
 
     // 페이지 이동 관련 기능
     function setupNavigation() {

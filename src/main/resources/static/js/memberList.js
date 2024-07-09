@@ -50,6 +50,17 @@ const popupappear = function(){
 			
 			const resetPassword = document.querySelector('#resetPassword');
 			
+			const banmembers = document.querySelectorAll('#BannedFromCompany');
+			
+			banmembers.forEach(span=>{
+				span.addEventListener('click', (event)=>{
+					event.stopPropagation(); 
+					const memberIdx = event.currentTarget.parentElement.parentElement.firstElementChild.value;
+					banMember(memberIdx);
+				})
+			})
+			
+			
 			resetPassword.addEventListener('click', (event)=>{
 				let theEmail = event.currentTarget.parentElement.previousElementSibling.querySelector('input').value;
 				passwordReset(theEmail);
@@ -253,7 +264,24 @@ const popupappear = function(){
 		        }
 		    });
 		}
-		
+
+const banMember = function(memberIdx) {
+	
+	$.ajax({
+		url: "/Admin/AdminMemberBan",
+		type: 'POST',
+		contentType: 'application/json',
+		data: JSON.stringify(memberIdx),
+		success: function(response) {
+			console.log(response);
+		},
+		error: function(error) {
+			alert(error.responseText);
+			console.log(error.responseText);
+		}
+	});
+}
+
 const passwordReset = function(theEmail) {
 
 	$.ajax({

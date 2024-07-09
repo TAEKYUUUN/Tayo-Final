@@ -24,6 +24,7 @@ import com.mysite.tayo.entity.Organization;
 import com.mysite.tayo.entity.Project;
 import com.mysite.tayo.entity.ProjectMember;
 import com.mysite.tayo.entity.UserSession;
+import com.mysite.tayo.repository.MemberRepository;
 import com.mysite.tayo.repository.ProjectMemberRepository;
 import com.mysite.tayo.repository.ProjectRepository;
 import com.mysite.tayo.service.AdminService;
@@ -43,6 +44,7 @@ public class AdminController {
 	private final UserSessionService userSessionService;
 	private final ProjectRepository projectRepository;
 	private final ProjectMemberRepository projectMemberRepository;
+	private final MemberRepository memberRepository;
 	
 	@GetMapping("/adminProjectControl")
 	public String projectInfo(Model model, Authentication authentication) {
@@ -110,6 +112,8 @@ public class AdminController {
 		List<UserSession> userSessionList = new ArrayList<UserSession>();
 		List<UserSession> userMobileSessionList = new ArrayList<UserSession>();
 		List<UserSession> userComputerSessionList = new ArrayList<UserSession>();
+		Integer[] memberCount = {0, 0, 0};
+		
 		
 		
 		for(int i = 0; i<companyMember.size(); i++) {
@@ -125,8 +129,16 @@ public class AdminController {
 					userComputerSessionList.add(_userComputerSession.get());
 				}
 			}
+			if(companyMember.get(i).getIsBanned() == null && companyMember.get(i).getIsConfirmed() == null) {
+				memberCount[0] ++;
+			}else if(companyMember.get(i).getIsBanned() == null && companyMember.get(i).getIsConfirmed() != null) {
+				memberCount[1] ++;
+			}else {
+				memberCount[2] ++;
+			}
 		}
 		List<Organization> organizationList = organizationService.findByCompanyIdx(companyIdx);
+		model.addAttribute("memberCount", memberCount);
 		model.addAttribute("organizationList", organizationList);
 		model.addAttribute("userComputerSessionList", userComputerSessionList);
 		model.addAttribute("userMobileSessionList", userMobileSessionList);
@@ -134,6 +146,19 @@ public class AdminController {
 		model.addAttribute("memberList", memberList);
 		return "/Admin/memberList";
 	}
+	
+	@PostMapping("/AdminMemberBan")
+	public @ResponseBody Member banMember(@RequestBody Long memberIdx) {
+		Member member = memberRepository.findById(memberIdx).get();
+		if(member.getIsBanned() == null) {
+			member.setIsBanned(1);
+		}else {
+			member.setIsBanned(null);
+		}
+		memberRepository.save(member);
+		return member;
+	}
+	
 	
 	@GetMapping("/memberAddAll")
 	public String memberAddAll() {
@@ -151,7 +176,6 @@ public class AdminController {
 		theEmail = theEmail.replace("\"", ""); // 큰따옴표 제거
         memberService.resetPw(theEmail);
         return theEmail;
-		
 	}
 	
 	@PostMapping("/memberList")
