@@ -155,13 +155,12 @@ public class PostService {
 		
 		// 하위업무의 존재 여부 확인 -> 아닐 경우에 하위업무 db에 추가하는 작업 진행
 		if(lowerTaskNameList != null) {
-			// 이후 하위업무 별 마감일, 담당자, condition 세팅
+			// 이후 하위업무 name, condition 세팅
 			for(int i=0; i<lowerTaskNameList.size(); i++) {
 				LowerTask lowerTask = new LowerTask();
 				lowerTask.setTask(task);
 				lowerTask.setTaskName(lowerTaskNameList.get(i));
 				lowerTask.setCondition(lowertTaskConditionList.get(i));
-				lowerTask.setEndDate(endDate);
 				this.lowerTaskRepository.save(lowerTask);
 			}
 		}
@@ -263,8 +262,8 @@ public class PostService {
 	}
 
 	// 할일(Todo) 생성
-	public void createTodo(Member member, Project project, String title, List<String> todoNameList,
-			List<Member> todoManagerList, List<Date> todoDeadlineList) {
+	public void createTodo(Member member, Project project, String title, 
+			Member manager, Date deadLine, List<String> todoNameList) {
 		Date date = new Date();
 
 		Post post = new Post();
@@ -277,6 +276,8 @@ public class PostService {
 		Todo todo = new Todo();
 		todo.setTitle(title);
 		todo.setPost(post);
+		todo.setTodoManager(manager);
+		todo.setDeadline(deadLine);
 		this.todoRepository.save(todo);
 
 		List<ProjectMember> projectMemberAll = projectMemberRepository.findByProjectProjectIdx(project.getProjectIdx());
@@ -285,8 +286,6 @@ public class PostService {
 			TodoName todoName = new TodoName();
 			todoName.setTodo(todo);
 			todoName.setTodoName(todoNameList.get(i));
-//			todoName.setTodoManager(todoManagerList.get(i));
-//			todoName.setDeadline(todoDeadlineList.get(i));
 			this.todoNameRepository.save(todoName);
 
 			for (ProjectMember projectMember : projectMemberAll) {
@@ -298,7 +297,6 @@ public class PostService {
 		}
 
 		// post_member 에 프로젝트 참여중인 모든 멤버 추가 (작성자 포함)
-
 		for (ProjectMember projectMember : projectMemberAll) {
 			PostMember postMember = new PostMember();
 			postMember.setPost(post);
@@ -438,8 +436,6 @@ public class PostService {
 	                    lowerTaskData.put("LowerTaskIdx", Long.toString(lowerTask.getLowerTaskIdx()));
 	                    lowerTaskData.put("taskName", lowerTask.getTaskName());
 	                    lowerTaskData.put("condition", Integer.toString(lowerTask.getCondition()));
-	                    lowerTaskData.put("managerIdx", lowerTask.getManager() != null ? lowerTask.getManager().getMemberIdx().toString() : "No manager");
-	                    lowerTaskData.put("endDate", lowerTask.getEndDate() != null ? dateFormat.format(lowerTask.getEndDate()) : "No end date");
 	                    lowerTasksData.add(lowerTaskData);
 	                }
 	                taskData.put("lowerTasks", lowerTasksData);
@@ -530,19 +526,19 @@ public class PostService {
 	        Todo todo = post.getTodo();
 	        if (todo != null) {
 	            Map<String, Object> todoData = new HashMap<>();
+	            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd (E)");
 	            todoData.put("title", todo.getTitle());
+	            todoData.put("todoManagerIdx", (todo.getTodoManager() != null) ? todo.getTodoManager().getMemberIdx().toString() : "null");
+	            todoData.put("todoManagerName", (todo.getTodoManager() != null) ? todo.getTodoManager().getName() : "null");
+	            todoData.put("todoManagerProfileImg", (todo.getTodoManager() != null) ? todo.getTodoManager().getProfileImage() : "null");
+	            todoData.put("deadLine", todo.getDeadline() != null ? dateFormat.format(todo.getDeadline()) : "No deadLine");
 	            // 할일 항목 리스트 추가
 	            List<TodoName> todoNames = todo.getTodoNames();
 	            if(todoNames != null && !todoNames.isEmpty()) {
 	            	List<Map<String, String>> todoNamesData = new ArrayList<>();
 	            	for(TodoName todoName : todoNames) {
 	            		Map<String, String> todoNameData = new HashMap<>();
-	            		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd (E)");
 	            		todoNameData.put("todoName", todoName.getTodoName());
-//	            		todoNameData.put("managerIdx", todoName.getTodoManager().getMemberIdx().toString());
-//	            		todoNameData.put("managerName", todoName.getTodoManager().getName());
-//	                    todoNameData.put("managerProfileImg", todoName.getTodoManager().getProfileImage());
-	            		todoNameData.put("deadLine", todoName.getDeadline() != null ? dateFormat.format(todoName.getDeadline()) : "No end date");
 	            		todoNamesData.add(todoNameData);
 	            	}
 	            	todoData.put("todoNames", todoNamesData);

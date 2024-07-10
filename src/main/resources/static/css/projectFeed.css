@@ -1329,8 +1329,8 @@ li {
 .manager_item {
 	width: 93.48px;
 	height: 30.2px;
+	margin-left: 12px;
 	background: #eeeeee;
-	margin: 0px 6px 8px 0px;
 	color: #555555;
 	border: 1px solid transparent;
 	border-radius: 6px;
@@ -1691,7 +1691,7 @@ li {
 
 .schedule_place_area {
 	width: 100%;
-	height: 50.19px;
+	height: fit-content;
 	padding: 18px 30px 0px;
 	display: flex;
 	flex-direction: column;
@@ -2267,6 +2267,18 @@ li {
 }
 
 .task_icon_box2 {
+	margin-bottom: 20px;
+	position:relative;
+}
+
+.todo_icon_box1,
+.todo_icon_box2 {
+	display: flex;
+	align-items: center;
+	margin-top: 20px;
+}
+
+.todo_icon_box2 {
 	margin-bottom: 20px;
 	position:relative;
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -51,6 +52,6 @@ public class Vote {
 	@Column(name = "is_anonymous")
 	private Integer isAnonymous;
 	
-	@OneToMany(mappedBy = "vote", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "vote", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<VoteItem> voteItems = new ArrayList<>();
 }

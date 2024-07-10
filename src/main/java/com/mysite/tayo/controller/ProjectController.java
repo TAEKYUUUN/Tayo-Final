@@ -97,7 +97,6 @@ public class ProjectController {
 				Map<String, Object> taskData = postService.getTask(post.getPostIdx());
 				if (taskData != null) {
 					postData.put("data", taskData);
-					postData.put("manager", taskData.get("manager"));
 				} else {
 					postData.put("data", Collections.emptyMap());
 				}

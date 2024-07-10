@@ -1,7 +1,5 @@
 package com.mysite.tayo.entity;
 
-import java.util.Date;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -35,12 +33,5 @@ public class LowerTask {
 	
 	@Column(name = "condition")
 	private Integer condition;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "manager_idx", referencedColumnName = "member_idx")
-	private Member manager;
-	
-	@Column(name = "end_date")
-	private Date endDate;
 
 }

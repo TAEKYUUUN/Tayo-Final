@@ -221,7 +221,7 @@
 																게시글 수정
 															</div>
 														</li>
-														<li class="post_option_li">
+														<li class="post_option_li" th:onclick="'deletePost(' + ${postData.post.postIdx} + ')'">
 															<div class="post_option_icon">
 																<img src="https://cdn-icons-png.flaticon.com/512/11081/11081117.png" />
 																게시글 삭제
@@ -318,7 +318,7 @@
 																게시글 수정
 															</div>
 															</li>
-														<li class="post_option_li">
+														<li class="post_option_li" th:onclick="'deletePost(' + ${postData.post.postIdx} + ')'">
 															<div class="post_option_icon">
 																<img src="https://cdn-icons-png.flaticon.com/512/11081/11081117.png" />
 																게시글 삭제
@@ -349,21 +349,20 @@
 									                                <img th:src="@{https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d}" style="margin-right: 16px;"/>
 									                            </div>
 									                            <div class="task_manager_box">
-									                                <span class="manager_item">
+									                                <span class="manager_item" style="margin:0;">
 									                                    <span class="worker_profile">
 																			<img th:src="@{https://flow.team/flow-renewal/assets/images/profile-default.png}" />
 									                                    </span>
-									                                    <span class="manager_name" th:text="${postData['manager'].name}">김민성</span>
+									                                    <span class="manager_name" th:text="${postData['data'].manager.name}"></span>
 									                                </span>
-									                                <button type="button" class="update_manager_btn">담당자 변경</button>
 									                            </div>
 									                        </li>
 									                        <li>
 									                            <div class="task_icon_box1">
 									                                <img th:src="@{https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=cfae9e268527a6f7007fe81fd49cab2c9659eea3}"
 									                                    style="margin-right:16px;" />
-									                                <p th:text="${postData != null && postData['data'] != null ? postData['data'].endDate : ''}"></p>
-									                                <button type="button" class="update_btn" name="endDate">마감일 변경</button>
+									                                <p th:text="${postData != null && postData['data'] != null ? postData['data'].endDate : ''}" style="margin-left:3px;">
+																	</p>
 									                            </div>
 									                        </li>
 									                    </ul>
@@ -472,7 +471,7 @@
 																게시글 수정
 															</div>
 														</li>
-														<li class="post_option_li">
+														<li class="post_option_li" th:onclick="'deletePost(' + ${postData.post.postIdx} + ')'">
 															<div class="post_option_icon">
 																<img src="https://cdn-icons-png.flaticon.com/512/11081/11081117.png" />
 																게시글 삭제
@@ -490,7 +489,8 @@
 									                <h4 th:text="${postData != null && postData['data'] != null ? postData['data'].title : ''}"></h4>
 									                <div class="schedule_period_area">
 									                    <span class="schedule_start_date" th:text="${postData != null && postData['data'] != null ? postData['data'].startDate : ''}"></span>
-									                    <span class="schedule_end_date" th:text="${postData != null && postData['data'] != null ? postData['data'].endDate : ''}"></span>
+									                    <span> &ensp;~&ensp;</span>
+														<span class="schedule_end_date" th:text="${postData != null && postData['data'] != null ? postData['data'].endDate : ''}"></span>
 									                </div>
 									            </div>
 									        </div>
@@ -533,7 +533,7 @@
 										                    <span th:text="${postData != null && postData['data'] != null ? postData['data'].place : ''}"></span>
 										                </div>
 													</div>
-													<div th:attr="id=${'map-' + postData['data'].placeId}, data-lat=${postData['data'].placeLat}, data-lng=${postData['data'].placeLng}" class="place_map"></div>
+													<div th:attr="id=${postData['data'].placeId}, data-lat=${postData['data'].placeLat}, data-lng=${postData['data'].placeLng}" class="place_map"></div>
 									            </div>
 									            <div class="post_card_content" style="white-space: pre-line; height:fit-content; max-height: 250px; overflow-y: auto;">
 									                <p th:text="${postData != null && postData['data'] != null ? postData['data'].contents : ''}"></p>
@@ -624,7 +624,7 @@
 																게시글 수정
 															</div>
 														</li>
-														<li class="post_option_li">
+														<li class="post_option_li" th:onclick="'deletePost(' + ${postData.post.postIdx} + ')'">
 															<div class="post_option_icon">
 																<img src="https://cdn-icons-png.flaticon.com/512/11081/11081117.png" />
 																게시글 삭제
@@ -652,7 +652,30 @@
 									                        <span style="width:0%;"></span>
 									                    </div>
 									                    <ul class="todo_ul">
-									                        <li class="todo_item" th:each="todoName : ${postData.data.todoNames}">
+															<li class="task_manager_area">
+																<div class="task_icon_box2">
+																	<img th:src="@{https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d}"
+																		style="margin-right: 16px;" />
+																</div>
+																<div class="task_manager_box">
+																	<span class="manager_item">
+																		<span class="worker_profile">
+																			<img th:src="@{https://flow.team/flow-renewal/assets/images/profile-default.png}" />
+																		</span>
+																		<span class="manager_name" th:text="${postData['data'].manager.name}"></span>
+																	</span>
+																	<button type="button" class="update_manager_btn">담당자 변경</button>
+																</div>
+															</li>
+															<li>
+																<div class="task_icon_box1">
+																	<img th:src="@{https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=cfae9e268527a6f7007fe81fd49cab2c9659eea3}"
+																		style="margin-right:16px;" />
+																	<p th:text="${postData != null && postData['data'] != null ? postData['data'].endDate : ''}"></p>
+																	<button type="button" class="update_btn" name="endDate">마감일 변경</button>
+																</div>
+															</li>
+															<li class="todo_item" th:each="todoName : ${postData.data.todoNames}">
 									                            <div class="todo_list_area">
 									                                <div class="todo_text">
 									                                    <div class="icon_checkbox"></div>
@@ -749,7 +772,7 @@
 																게시글 수정
 															</div>
 														</li>
-														<li class="post_option_li">
+														<li class="post_option_li" th:onclick="'deletePost(' + ${postData.post.postIdx} + ')'">
 															<div class="post_option_icon">
 																<img src="https://cdn-icons-png.flaticon.com/512/11081/11081117.png" />
 																게시글 삭제

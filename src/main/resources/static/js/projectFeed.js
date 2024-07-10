@@ -19,6 +19,182 @@ document.addEventListener('DOMContentLoaded', function() {
             hiddenField.value = '0';
         });
     }
+    
+    function initializeFlatpickr() {
+		// Initialize flatpickr
+		var datePicker = flatpickr("#datepicker", {
+			enableTime: false,
+			dateFormat: "Y-m-d",
+		});
+
+		// Get the modal
+		var calendarmodal = document.getElementById("div_calendar_modal");
+
+		// Get the button that opens the modal
+		var btn = document.getElementById("endDate");
+
+		// Get the span to show selected date
+		var selectedDateText = document.getElementById("selectedDateText");
+
+		// Get the hidden input to store selected date
+		var hiddenSelectedDate = document.getElementById("hiddenSelectedDate");
+
+		// Get the <span> element that closes the modal
+		var span = document.getElementsByClassName("close1")[0];
+
+		// When the user clicks the button, open the modal and show datepicker
+		btn.onclick = function() {
+			calendarmodal.style.display = "block";
+			datePicker.open(); // Open the date picker
+		}
+
+		// When the user clicks on <span> (x), close the modal
+		span.onclick = function() {
+			calendarmodal.style.display = "none";
+		}
+
+		// When the user clicks anywhere outside of the modal, close it
+		window.onclick = function(event) {
+			if (event.target == calendarmodal) {
+				calendarmodal.style.display = "none";
+			}
+		}
+
+		// Handle the date selection
+		document.getElementById("selectDate").onclick = function(event) {
+			event.preventDefault(); // form 제출 막음
+
+			var selectedDate = document.getElementById("datepicker").value;
+			var dayOfWeek = new Date(selectedDate).toLocaleDateString('ko-KR', { weekday: 'short' });
+			selectedDateText.textContent = `${selectedDate} (${dayOfWeek}) 까지`;
+			selectedDateText.style.display = "inline"; // Show the selected date text
+			selectedDateText.style.marginLeft = '15px';
+			btn.style.display = "none"; // Hide the button
+			hiddenSelectedDate.value = selectedDate; // Set the hidden input value
+			calendarmodal.style.display = "none";
+		}
+	}
+
+	function initializeTaskStateButtons() {
+		const taskStateButtons = document.querySelectorAll('.task_state_btn');
+		taskStateButtons.forEach(button => {
+			button.addEventListener('click', function() {
+				taskStateButtons.forEach(btn => btn.classList.remove('active'));
+				this.classList.add('active');
+				document.getElementById('hiddenCondition').value = this.value;
+			});
+		});
+	}
+
+	function initializeLowerTaskHandlers() {
+		document.getElementById('addLowerTask').addEventListener('click', function() {
+			addLowerTask();
+		});
+
+		function addLowerTask() {
+			const taskContainer = document.getElementById('taskContainer');
+			const lowerTasks = taskContainer.querySelectorAll('.input_lowertask');
+
+			if (lowerTasks.length >= 5) {
+				alert('하위 업무는 최대 5개까지만 추가할 수 있습니다.');
+				return;
+			}
+
+			const newTaskDiv = document.createElement('div');
+			newTaskDiv.className = 'input_lowertask';
+
+			const requestButton = document.createElement('button');
+			requestButton.type = 'button';
+			requestButton.className = 'lowertask_state_btn request active';
+			requestButton.name = 'lowerTaskConditions';
+			requestButton.value = '1';
+			requestButton.textContent = '요청';
+			newTaskDiv.appendChild(requestButton);
+
+			const inputField = document.createElement('input');
+			inputField.type = 'text';
+			inputField.className = 'lowertask_name';
+			inputField.name = 'lowerTaskNames';
+			inputField.placeholder = '업무명 입력(Enter로 업무 연속 등록 가능)';
+			newTaskDiv.appendChild(inputField);
+
+			inputField.addEventListener('keypress', function(event) {
+				if (event.key === 'Enter') {
+					event.preventDefault();
+					addLowerTaskAndFocus();
+				}
+			});
+
+			const hiddenInput = document.createElement('input');
+			hiddenInput.type = 'hidden';
+			hiddenInput.className = 'lowertask_state_value';
+			hiddenInput.name = 'lowerTaskConditions';
+			hiddenInput.value = requestButton.value; // 초기 값 설정
+			newTaskDiv.appendChild(hiddenInput);
+
+			const removeButton = document.createElement('button');
+			removeButton.textContent = 'x';
+			removeButton.className = 'remove-btn';
+			removeButton.style.position = 'relative'; // 스타일 설정을 명확히
+			removeButton.style.right = '-116px'; // 기존 스타일 유지
+
+			removeButton.addEventListener('click', function() {
+				newTaskDiv.remove();
+			});
+
+			newTaskDiv.appendChild(removeButton);
+			taskContainer.insertBefore(newTaskDiv, document.getElementById('addLowerTask'));
+
+			return inputField;
+		}
+
+		function addLowerTaskAndFocus() {
+			const newInput = addLowerTask();
+			if (newInput) {
+				newInput.focus();
+			}
+		}
+	}
+	
+	function initializeTodoInputHandlers() {
+		function createNewTodoEdit() {
+			const newDiv = document.createElement('div');
+			newDiv.className = 'div_todo_edit';
+
+			const newInput = document.createElement('input');
+			newInput.type = 'text';
+			newInput.placeholder = '할 일 추가 (Enter 또는 Tab) / 최대 60자';
+			newInput.className = 'todo_input';
+			newInput.name = 'todoNames';
+			newInput.id = 'todoNames';
+
+			const removeButton = document.createElement('button');
+			removeButton.textContent = 'x';
+			removeButton.className = 'remove-btn';
+			removeButton.addEventListener('click', () => {
+				newDiv.remove();
+			});
+
+			newDiv.appendChild(newInput);
+			newDiv.appendChild(removeButton);
+
+			document.querySelector('.input-group2').appendChild(newDiv);
+
+			newInput.addEventListener('keydown', handleKeyDown);
+
+			newInput.focus();
+		}
+
+		function handleKeyDown(event) {
+			if (event.key === 'Enter' || event.key === 'Tab') {
+				event.preventDefault();
+				createNewTodoEdit();
+			}
+		}
+
+		const initialInput = document.querySelector('.todo_input');
+		initialInput.addEventListener('keydown', handleKeyDown);
+	}
 
     createPostArea.addEventListener('click', function() {
         modal.style.display = 'block';
@@ -69,235 +245,24 @@ document.addEventListener('DOMContentLoaded', function() {
             addParagraphContent();
         } else if (tabType === 2) {
             addTaskContent();
+            resetManagerSelection();
         } else if (tabType === 3) {
             addScheduleContent();
         } else if (tabType === 4) {
             addTodoContent();
+            resetManagerSelection();
         } else if (tabType === 5) {
             addVoteContent();
         }
     }
 
-    function addTaskContent() {
-        const modalContent = document.querySelector('.modal-content');
-        modalContent.style.minHeight = '592px';
-        modalContent.style.overflowY = 'auto';
-        modal.style.height = '780px';
+	function addParagraphContent() {
+		const modalContent = document.querySelector('.modal-content');
+		modalContent.style.minHeight = '';
+		modalContent.style.overflowY = '';
+		modal.style.height = '780px';
 
-        const taskContent = `
-            <div class="input-group1">
-                <input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
-            </div>
-            <div class="input-group2" style="max-height: 400px;">
-                <input type="hidden" id="hiddenCondition" name="condition" value="1">
-                <div class="task_icon_box1">
-                    <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-status.svg?v=b3a5b7f86f05f658d1ce954c34f8c33a61ea8873" style="margin-right: 10px;"/>
-                    <button type="button" class="task_state_btn request active" name="condition" value="1">요청</button>
-                    <button type="button" class="task_state_btn progress" name="condition" value="2">진행</button>
-                    <button type="button" class="task_state_btn feedback" name="condition" value="3">피드백</button>
-                    <button type="button" class="task_state_btn completion" name="condition" value="4">완료</button>
-                    <button type="button" class="task_state_btn hold" name="condition" value="5">보류</button>
-                </div>
-                <div class="task_icon_box2">
-                    <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d" style="margin-right: 16px;"/>
-                    <button type="button" class="update_btn" name="addmanager" id="addmanager">담당자 추가</button>
-                </div>
-                <div class="task_icon_box1">
-                    <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=cfae9e268527a6f7007fe81fd49cab2c9659eea3" style="margin-right:16px;"/>
-                    <span id="selectedDateText" style="display:none; font-size:14px;"></span>
-                    <input type="hidden" id="hiddenSelectedDate" name="selectedDate">
-                    <button type="button" class="update_btn" id="endDate" name="endDate">마감일 추가</button>
-                    <div id="div_calendar_modal" class="calendar-modal">
-                        <div class="calendar-modal-content">
-                            <span class="close1">&times;</span>
-                            <input type="text" id="datepicker" placeholder="날짜를 선택하세요">
-                            <button id="selectDate">선택</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="div_textarea" style="height:270px;">
-                    <textarea id="content" name="content" placeholder="내용을 입력하세요." style="height:270px;"></textarea>
-                </div>
-                <div class="subtask_header">
-                    <span class="subtask_title" style="font-size:14px;">
-                        <img src="/img/subtask_icon.png"/>
-                        하위업무
-                    </span>
-                </div>
-                <div id="taskContainer">              
-                    <button type="button" class="add_lowertask" id="addLowerTask">추가</button>
-                </div>
-            </div>
-        `;
-        
-        modalContent.innerHTML = taskContent;
-        
-        document.getElementById("addmanager").addEventListener("click", function(event) {
-            event.stopPropagation();
-            var modal = document.getElementById("div_add_manager_modal");
-            modal.style.display = "block";
-        });
-
-        // Initialize flatpickr
-        var datePicker = flatpickr("#datepicker", {
-            enableTime: false,
-            dateFormat: "Y-m-d",
-        });
-
-        // Get the modal
-        var calendarmodal = document.getElementById("div_calendar_modal");
-
-        // Get the button that opens the modal
-        var btn = document.getElementById("endDate");
-
-        // Get the span to show selected date
-        var selectedDateText = document.getElementById("selectedDateText");
-        
-        // Get the hidden input to store selected date
-        var hiddenSelectedDate = document.getElementById("hiddenSelectedDate");
-
-        // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("close1")[0];
-
-        // When the user clicks the button, open the modal and show datepicker
-        btn.onclick = function() {
-            calendarmodal.style.display = "block";
-            datePicker.open(); // Open the date picker
-        }
-
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function() {
-            calendarmodal.style.display = "none";
-        }
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == calendarmodal) {
-                calendarmodal.style.display = "none";
-            }
-        }
-
-        // Handle the date selection
-        document.getElementById("selectDate").onclick = function(event) {
-            event.preventDefault(); // form 제출 막음
-            
-            var selectedDate = document.getElementById("datepicker").value;
-            var dayOfWeek = new Date(selectedDate).toLocaleDateString('ko-KR', { weekday: 'short' });
-            selectedDateText.textContent = `${selectedDate} (${dayOfWeek}) 까지`;
-            selectedDateText.style.display = "inline"; // Show the selected date text
-            btn.style.display = "none"; // Hide the button
-            hiddenSelectedDate.value = selectedDate; // Set the hidden input value
-            calendarmodal.style.display = "none";
-        }
-        
-        const taskStateButtons = document.querySelectorAll('.task_state_btn');
-        taskStateButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                taskStateButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-                document.getElementById('hiddenCondition').value = this.value;
-            });
-        });
-
-        document.getElementById('addLowerTask').addEventListener('click', function() {
-            addLowerTask();
-        });
-
-        function addLowerTask() {
-            const taskContainer = document.getElementById('taskContainer');
-            const lowerTasks = taskContainer.querySelectorAll('.input_lowertask');
-
-            if (lowerTasks.length >= 5) {
-                alert('하위 업무는 최대 5개까지만 추가할 수 있습니다.');
-                return;
-            }
-
-            const newTaskDiv = document.createElement('div');
-            newTaskDiv.className = 'input_lowertask';
-
-            const requestButton = document.createElement('button');
-            requestButton.type = 'button';
-            requestButton.className = 'lowertask_state_btn request active';
-            requestButton.name = 'lowerTaskConditions';
-            requestButton.value = '1';
-            requestButton.textContent = '요청';
-            newTaskDiv.appendChild(requestButton);
-
-            const inputField = document.createElement('input');
-            inputField.type = 'text';
-            inputField.className = 'lowertask_name';
-            inputField.name = 'lowerTaskNames';
-            inputField.placeholder = '업무명 입력(Enter로 업무 연속 등록 가능)';
-            newTaskDiv.appendChild(inputField);
-
-            inputField.addEventListener('keypress', function(event) {
-                if (event.key === 'Enter') {
-                    event.preventDefault();
-                    addLowerTaskAndFocus();
-                }
-            });
-
-            const miniSubworkIcon = document.createElement('div');
-            miniSubworkIcon.className = 'mini_subwork_icon';
-
-            const miniSubworkImgDiv1 = document.createElement('div');
-            miniSubworkImgDiv1.className = 'mini_subwork_img_div';
-            const miniSubworkImg1 = document.createElement('img');
-            miniSubworkImg1.className = 'mini_subwork_img2';
-            miniSubworkImg1.name = 'lowerTaskManagers';
-            miniSubworkImg1.src = 'https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=dab609f4e3114ab334c0216bd41d1a6e27b6503a';
-            miniSubworkImgDiv1.appendChild(miniSubworkImg1);
-
-            const miniSubworkImgDiv2 = document.createElement('div');
-            miniSubworkImgDiv2.className = 'mini_subwork_img_div';
-            const miniSubworkImg2 = document.createElement('img');
-            miniSubworkImg2.className = 'mini_subwork_img2';
-            miniSubworkImg2.name = 'lowerTaskEndDates';
-            miniSubworkImg2.src = 'https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=118ef1e91b7ced5f275a138083d2ddd7cf94773d';
-            miniSubworkImgDiv2.appendChild(miniSubworkImg2);
-
-            miniSubworkIcon.appendChild(miniSubworkImgDiv1);
-            miniSubworkIcon.appendChild(miniSubworkImgDiv2);
-
-            const hiddenInput = document.createElement('input');
-            hiddenInput.type = 'hidden';
-            hiddenInput.className = 'lowertask_state_value';
-            hiddenInput.name = 'lowerTaskConditions';
-            hiddenInput.value = requestButton.value; // 초기 값 설정
-            newTaskDiv.appendChild(hiddenInput);
-
-            const removeButton = document.createElement('button');
-            removeButton.textContent = 'x';
-            removeButton.className = 'remove-btn';
-            removeButton.style.position = 'relative'; // 스타일 설정을 명확히
-            removeButton.style.right = '-37px'; // 기존 스타일 유지
-
-            removeButton.addEventListener('click', function() {
-                newTaskDiv.remove();
-            });
-
-            newTaskDiv.appendChild(miniSubworkIcon);
-            newTaskDiv.appendChild(removeButton);
-            taskContainer.insertBefore(newTaskDiv, document.getElementById('addLowerTask'));
-
-            return inputField;
-        }
-
-        function addLowerTaskAndFocus() {
-            const newInput = addLowerTask();
-            if (newInput) {
-                newInput.focus();
-            }
-        }
-    }
-
-    function addParagraphContent() {
-        const modalContent = document.querySelector('.modal-content');
-        modalContent.style.minHeight = '';
-        modalContent.style.overflowY = '';
-        modal.style.height = '780px';
-
-        const paragraphContent = `
+		const paragraphContent = `
             <div class="input-group1">
                 <input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
             </div>
@@ -305,16 +270,112 @@ document.addEventListener('DOMContentLoaded', function() {
                 <textarea id="content" name="content" placeholder="내용을 입력하세요."></textarea>
             </div>
         `;
-        modalContent.innerHTML = paragraphContent;
-    }
+		modalContent.innerHTML = paragraphContent;
+	}
 
-    function addScheduleContent() {
-        const modalContent = document.querySelector('.modal-content');
-        modalContent.style.minHeight = '592px';
-        modalContent.style.overflowY = 'auto';
-        modal.style.height = '780px';
+	function addTaskContent() {
+		const modalContent = document.querySelector('.modal-content');
+		modalContent.style.minHeight = '592px';
+		modalContent.style.overflowY = 'auto';
 
-        const scheduleContent = `
+		const taskContent = `
+        <div class="input-group1">
+            <input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
+        </div>
+        <div class="input-group2" style="max-height: 400px;">
+            <input type="hidden" id="hiddenCondition" name="condition" value="1">
+            <div class="task_icon_box1">
+                <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-status.svg?v=b3a5b7f86f05f658d1ce954c34f8c33a61ea8873" style="margin-right: 10px;"/>
+                <button type="button" class="task_state_btn request active" name="condition" value="1">요청</button>
+                <button type="button" class="task_state_btn progress" name="condition" value="2">진행</button>
+                <button type="button" class="task_state_btn feedback" name="condition" value="3">피드백</button>
+                <button type="button" class="task_state_btn completion" name="condition" value="4">완료</button>
+                <button type="button" class="task_state_btn hold" name="condition" value="5">보류</button>
+            </div>
+            <div class="task_icon_box2">
+                <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d" style="margin-right: 16px;"/>
+                <button type="button" class="update_btn" name="addmanager" id="addmanager">담당자 추가</button>
+            </div>
+            <div class="task_icon_box1">
+                <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=cfae9e268527a6f7007fe81fd49cab2c9659eea3" style="margin-right:16px;"/>
+                <span id="selectedDateText" style="display:none; font-size:14px;"></span>
+                <input type="hidden" id="hiddenSelectedDate" name="selectedDate">
+                <button type="button" class="update_btn" id="endDate" name="endDate">마감일 추가</button>
+                <div id="div_calendar_modal" class="calendar-modal">
+                    <div class="calendar-modal-content">
+                        <span class="close1">&times;</span>
+                        <input type="text" id="datepicker" placeholder="날짜를 선택하세요">
+                        <button id="selectDate">선택</button>
+                    </div>
+                </div>
+            </div>
+            <div class="div_textarea" style="height:270px;">
+                <textarea id="content" name="content" placeholder="내용을 입력하세요." style="height:270px;"></textarea>
+            </div>
+            <div class="subtask_header">
+                <span class="subtask_title" style="font-size:14px;">
+                    <img src="/img/subtask_icon.png"/>
+                    하위업무
+                </span>
+            </div>
+            <div id="taskContainer">              
+                <button type="button" class="add_lowertask" id="addLowerTask">추가</button>
+            </div>
+        </div>
+    `;
+
+		modalContent.innerHTML = taskContent;
+
+		document.getElementById("addmanager").addEventListener("click", function(event) {
+			event.stopPropagation();
+			var modal = document.getElementById("div_add_manager_modal");
+			modal.style.display = "block";
+		});
+
+		document.getElementById('managerForm').addEventListener('submit', function(event) {
+			event.preventDefault();
+			var modal = document.getElementById("div_add_manager_modal");
+			const selectedManager = document.querySelector('.manager_item[data-id]');
+
+			if (selectedManager) {
+				const id = selectedManager.getAttribute('data-id');
+				const name = selectedManager.querySelector('.manager_name').innerText;
+
+				// 담당자 추가 버튼을 숨기고 선택된 담당자를 표시하는 HTML 추가
+				const managerSelection = document.querySelector('.task_icon_box2');
+				console.log('Manager Selection:', managerSelection); // 요소가 올바르게 선택되었는지 확인
+				managerSelection.innerHTML = `
+                <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d" style="margin-right: 16px;"/>
+                <span class="manager_item">
+                    <span class="selected_profile">
+                        <img src="https://flow.team/flow-renewal/assets/images/profile-default.png" />
+                    </span>
+                    <span class="manager_name">${name}</span>
+                </span>
+                <input type="hidden" name="managerIdx" value="${id}">
+            `;
+				console.log('InnerHTML 설정 완료'); // innerHTML이 정상적으로 설정되었는지 확인
+				
+				// 강제로 재렌더링 유도
+		        managerSelection.style.display = 'none';
+		        managerSelection.offsetHeight; // 강제로 리플로우(reflow) 발생
+		        managerSelection.style.display = 'flex';
+			}
+			modal.style.display = "none";
+		});
+
+		initializeFlatpickr();
+		initializeTaskStateButtons();
+		initializeLowerTaskHandlers();
+	}
+
+	function addScheduleContent() {
+		const modalContent = document.querySelector('.modal-content');
+		modalContent.style.minHeight = '592px';
+		modalContent.style.overflowY = 'auto';
+		modal.style.height = '780px';
+
+		const scheduleContent = `
             <div class="input-group1">
                 <input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
             </div>
@@ -328,7 +389,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="task_icon_box2">
                     <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d" style="margin-right: 16px;"/>
-                    <button type="button" class="update_btn">참석자 추가</button>
+                    <button type="button" class="update_btn" style="margin:0; padding:0; color:#555;">프로젝트 모든 구성원</button>
                 </div>
                 <div class="task_icon_box1" style="display:flex; flex-direction:column; align-items:flex-start;">
                 	<div style="display:flex; width:100%;">
@@ -346,108 +407,95 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
         `;
-        modalContent.innerHTML = scheduleContent;
+		modalContent.innerHTML = scheduleContent;
 
-        document.getElementById('allDay').addEventListener('change', function() {
-            const startInput = document.getElementById('start');
-            const endInput = document.getElementById('end');
-            if (this.checked) {
-                startInput.type = 'date';
-                startInput.name = 'startDate';
-                endInput.type = 'date';
-                endInput.name = 'endDate';
-            } else {
-                startInput.type = 'datetime-local';
-                startInput.name = 'startDatetime';
-                endInput.type = 'datetime-local';
-                endInput.name = 'endDatetime';
-            }
-        });
-    }
+		document.getElementById('allDay').addEventListener('change', function() {
+			const startInput = document.getElementById('start');
+			const endInput = document.getElementById('end');
+			if (this.checked) {
+				startInput.type = 'date';
+				startInput.name = 'startDate';
+				endInput.type = 'date';
+				endInput.name = 'endDate';
+			} else {
+				startInput.type = 'datetime-local';
+				startInput.name = 'startDatetime';
+				endInput.type = 'datetime-local';
+				endInput.name = 'endDatetime';
+			}
+		});
+	}
 
-    function addTodoContent() {
-        const modalContent = document.querySelector('.modal-content');
-        modalContent.style.minHeight = '592px';
-        modalContent.style.overflowY = 'auto';
-        modal.style.height = '780px';
+	function addTodoContent() {
+		const modalContent = document.querySelector('.modal-content');
+		modalContent.style.minHeight = '592px';
+		modalContent.style.overflowY = 'auto';
 
-        const todoContent = `
-            <div class="input-group1">
-                <input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
+		const todoContent = `
+        <div class="input-group1">
+            <input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
+        </div>
+        <div class="input-group2" style="max-height: 400px;">
+            <div class="todo_icon_box2">
+                <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d" style="margin-right: 16px;"/>
+                <button type="button" class="update_btn" name="addmanager" id="addmanager">담당자 추가</button>
             </div>
-            <div class="input-group2" style="max-height: 400px;">
-                <div class="div_todo_edit">
-                    <input type="text" placeholder="할 일 추가 (Enter 또는 Tab) / 최대 60자" class="todo_input" id="todoNames" name="todoNames"/>
-                    <div class="mini_subwork_icon">
-                        <div class="mini_subwork_img_div"><img class="mini_subwork_img2" src="https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=dab609f4e3114ab334c0216bd41d1a6e27b6503a"></div>
-                        <div class="mini_subwork_img_div"><img class="mini_subwork_img2" src="https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=118ef1e91b7ced5f275a138083d2ddd7cf94773d"></div>
+            <div class="todo_icon_box1" style="margin-bottom:30px;">
+                <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=cfae9e268527a6f7007fe81fd49cab2c9659eea3" style="margin-right:16px;"/>
+                <span id="selectedDateText" style="display:none; font-size:14px;"></span>
+                <input type="hidden" id="hiddenSelectedDate" name="selectedDate">
+                <button type="button" class="update_btn" id="endDate" name="endDate">마감일 추가</button>
+                <div id="div_calendar_modal" class="calendar-modal">
+                    <div class="calendar-modal-content">
+                        <span class="close1">&times;</span>
+                        <input type="text" id="datepicker" placeholder="날짜를 선택하세요">
+                        <button id="selectDate">선택</button>
                     </div>
                 </div>
             </div>
-        `;
-        modalContent.innerHTML = todoContent;
+            <div class="div_todo_edit">
+                <input type="text" placeholder="할 일 추가 (Enter 또는 Tab) / 최대 60자" class="todo_input" id="todoNames" name="todoNames"/>
+            </div>
+        </div>
+    `;
+		modalContent.innerHTML = todoContent;
 
-        function createNewTodoEdit() {
-            const newDiv = document.createElement('div');
-            newDiv.className = 'div_todo_edit';
+		document.getElementById("addmanager").addEventListener("click", function(event) {
+			event.stopPropagation();
+			var modal = document.getElementById("div_add_manager_modal");
+			modal.style.display = "block";
+			modal.style.top = '237px';
+		});
+		
+		document.getElementById('managerForm').addEventListener('submit', function(event) {
+			event.preventDefault();
+			var modal = document.getElementById("div_add_manager_modal");
+			const selectedManager = document.querySelector('.manager_item[data-id]');
+			if (selectedManager) {
+				const id = selectedManager.getAttribute('data-id');
+				const name = selectedManager.querySelector('.manager_name').innerText;
 
-            const newInput = document.createElement('input');
-            newInput.type = 'text';
-            newInput.placeholder = '할 일 추가 (Enter 또는 Tab) / 최대 60자';
-            newInput.className = 'todo_input';
-            newInput.name = 'todoNames';
-            newInput.id = 'todoNames';
+				// 담당자 추가 버튼을 숨기고 선택된 담당자를 표시하는 HTML 추가
+				const managerSelection = document.querySelector('.todo_icon_box2');
+				managerSelection.innerHTML = `
+                <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d" style="margin-right: 16px;"/>
+                <span class="manager_item">
+                    <span class="selected_profile">
+                        <img src="https://flow.team/flow-renewal/assets/images/profile-default.png" />
+                    </span>
+                    <span class="manager_name">${name}</span>
+                </span>
+                <input type="hidden" name="managerIdx" value="${id}">
+            `;
+			}
+			modal.style.display = "none";
+		});
 
-            const miniSubworkIcon = document.createElement('div');
-            miniSubworkIcon.className = 'mini_subwork_icon';
+		initializeFlatpickr();
+		initializeTodoInputHandlers();
+	}
 
-            const miniSubworkImgDiv1 = document.createElement('div');
-            miniSubworkImgDiv1.className = 'mini_subwork_img_div';
-            const miniSubworkImg1 = document.createElement('img');
-            miniSubworkImg1.className = 'mini_subwork_img2';
-            miniSubworkImg1.src = 'https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=dab609f4e3114ab334c0216bd41d1a6e27b6503a';
-            miniSubworkImgDiv1.appendChild(miniSubworkImg1);
-
-            const miniSubworkImgDiv2 = document.createElement('div');
-            miniSubworkImgDiv2.className = 'mini_subwork_img_div';
-            const miniSubworkImg2 = document.createElement('img');
-            miniSubworkImg2.className = 'mini_subwork_img2';
-            miniSubworkImg2.src = 'https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=118ef1e91b7ced5f275a138083d2ddd7cf94773d';
-            miniSubworkImgDiv2.appendChild(miniSubworkImg2);
-
-            miniSubworkIcon.appendChild(miniSubworkImgDiv1);
-            miniSubworkIcon.appendChild(miniSubworkImgDiv2);
-
-            const removeButton = document.createElement('button');
-            removeButton.textContent = 'x';
-            removeButton.className = 'remove-btn';
-            removeButton.addEventListener('click', () => {
-                newDiv.remove();
-            });
-
-            newDiv.appendChild(newInput);
-            newDiv.appendChild(miniSubworkIcon);
-            newDiv.appendChild(removeButton);
-
-            document.querySelector('.input-group2').appendChild(newDiv);
-
-            newInput.addEventListener('keydown', handleKeyDown);
-
-            newInput.focus();
-        }
-
-        function handleKeyDown(event) {
-            if (event.key === 'Enter' || event.key === 'Tab') {
-                event.preventDefault();
-                createNewTodoEdit();
-            }
-        }
-
-        const initialInput = document.querySelector('.todo_input');
-        initialInput.addEventListener('keydown', handleKeyDown);
-    }
-
-    function addVoteContent() {
+	function addVoteContent() {
         const modalContent = document.querySelector('.modal-content');
         modalContent.style.minHeight = '592px';
         modalContent.style.overflowY = 'auto';
@@ -559,29 +607,30 @@ document.addEventListener('DOMContentLoaded', function() {
     // 프로젝트 멤버 추가(초대)
     // Modal functions for inviting participants
     const inviteButton = document.querySelector('#div_invite_prjmem img');
+    const nothingMemberButton = document.querySelector('.nothing_btn');
     const inviteModal = document.getElementById("invite-participants-modal");
     const closeInviteButton = document.querySelector('.invite-modal-header .close');
     const inviteModalBtn = document.querySelector('.invite-modal-footer .invite_submit_btn');
-
+	
+	if(nothingMemberButton != null){
+		nothingMemberButton.addEventListener('click', openInviteModal);
+	}
     inviteButton.addEventListener('click', openInviteModal);
     closeInviteButton.addEventListener('click', closeInviteModal);
     inviteModalBtn.addEventListener('click', inviteParticipants);
 
     function openInviteModal() {
-        console.log("openInviteModal 호출됨");
         inviteModal.style.display = "block";
         backgroundFull.style.display = "block";
     }
 
     function closeInviteModal() {
-        console.log("closeInviteModal 호출됨");
         inviteModal.style.display = "none";
         backgroundFull.style.display = "none";
     }
 
     document.querySelectorAll('#employeeList li').forEach(item => {
         item.addEventListener('click', event => {
-            console.log("리스트 아이템 클릭됨:", item); // 디버깅용 로그
             const id = item.getAttribute('data-id');
             const name = item.getAttribute('data-name');
             toggleInviteSelectedList(id, name);
@@ -590,7 +639,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function toggleInviteSelectedList(id, name) {
         try {
-            console.log("toggleSelectedList 호출됨:", id, name); // 디버깅용 로그
             const selectedList = document.getElementById('selectedList');
             const existingItem = document.querySelector(`#selectedList li[data-id="${id}"]`);
             const itemToUpdate = document.querySelector(`#employeeList li[data-id="${id}"] .check_invite img`);
@@ -603,16 +651,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error(`itemToUpdate 요소를 찾을 수 없습니다. data-id=${id}`);
             }
 
-            console.log('selectedList:', selectedList); // 디버깅용 로그
-            console.log('existingItem:', existingItem); // 디버깅용 로그
-            console.log('itemToUpdate:', itemToUpdate); // 디버깅용 로그
-
             if (existingItem) {
-                console.log("기존 항목 제거:", id); // 디버깅용 로그
                 existingItem.remove();
                 itemToUpdate.src = 'https://flow.team/flow-renewal/assets/images/icons/icon_check.png?v=7f39425e224a53bff0043caff9f6446b14c0f667';
             } else {
-                console.log("새 항목 추가:", id, name); // 디버깅용 로그
                 const li = document.createElement('li');
                 li.setAttribute('data-id', id);
                 li.classList.add('selected_member');
@@ -634,7 +676,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function removeFromSelectedList(id) {
-        console.log("removeFromSelectedList 호출됨:", id); // 디버깅용 로그
         const item = document.querySelector(`#selectedList li[data-id="${id}"]`);
         if (item) {
             item.remove();
@@ -667,7 +708,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function inviteParticipants(event) {
         event.preventDefault();
-        console.log("inviteParticipants 호출됨");
         const url = window.location.href;
         const currentProjectIdx = url.split('/projectFeed/')[1];
 
@@ -703,6 +743,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.querySelector('.invite_submit_btn').addEventListener('click', inviteParticipants);
 
+
+	///////////////////////// 댓글 관련 //////////////////////////////////////
     // 댓글 등록
     document.querySelectorAll('#commentInput').forEach(commentInput => {
         const submitComment = document.getElementById('submitComment');
@@ -752,23 +794,26 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // 포스트 옵션 (게시글 삭제, 게시글 수정)
-    document.querySelectorAll('.post-option-toggle').forEach(function (toggle) {
-        toggle.addEventListener('click', function () {
-            const id = this.getAttribute('data-id');
-            const optionUl = document.getElementById('postOptionUl' + id);
+    ////////////////////////  포스트 옵션 ///////////////////////////////
+	// 포스트 옵션 (게시글 삭제, 게시글 수정)
+	document.querySelectorAll('.post-option-toggle').forEach(function(toggle) {
+		toggle.addEventListener('click', function() {
+			const id = this.getAttribute('data-id');
+			const optionUl = document.getElementById('postOptionUl' + id);
 
-            // 모든 .post_option_ul 요소를 숨깁니다.
-            document.querySelectorAll('.post_option_ul').forEach(function (ul) {
-                ul.style.display = 'none';
-            });
+			// 모든 .post_option_ul 요소를 숨깁니다.
+			document.querySelectorAll('.post_option_ul').forEach(function(ul) {
+				ul.style.display = 'none';
+			});
 
-            // 클릭한 요소의 .post_option_ul을 표시합니다.
-            optionUl.style.display = 'block';
-        });
-    });
+			// 클릭한 요소의 .post_option_ul을 표시합니다.
+			optionUl.style.display = 'block';
+		});
+	});
     
-    // 담당자 지정 js
+    
+    ////////////////////////  담당자 지정  ///////////////////////////////
+
     // 모달 외부를 클릭하면 닫히도록 설정
 
 	document.querySelector('#div_backgroundfull').addEventListener('click', (event)=>{
@@ -828,32 +873,54 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.querySelectorAll('.can_manager_li').forEach(item => {
         item.addEventListener('click', event => {
-            console.log("리스트 아이템 클릭됨:", item); // 디버깅용 로그
             const id = item.getAttribute('data-id');
             const name = item.getAttribute('data-name');
             toggleAddManagerSelectedList(id, name);
         });
     });
-
-    document.getElementById('managerForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        var modal = document.getElementById("div_add_manager_modal");
-        const selectedManager = document.querySelector('.manager_item[data-id]');
-        if (selectedManager) {
-            const id = selectedManager.getAttribute('data-id');
-            const name = selectedManager.querySelector('.manager_name').innerText;
-            console.log("Selected Manager ID:", id);
-            console.log("Selected Manager Name:", name);
-            // 이 부분에 추가 로직 구현 (예: 서버에 선택된 담당자 전송)
+    
+    // 선택된 담당자 초기화 
+    function resetManagerSelection() {
+            // 초기화 작업 수행
+            const managerList = document.querySelector('.selectManager');
+            while (managerList.firstChild) {
+                managerList.removeChild(managerList.firstChild);
+            }
+            const checkedIcons = document.querySelectorAll('.can_manager_li .check_add_manager img');
+            checkedIcons.forEach(icon => {
+                icon.src = 'https://flow.team/flow-renewal/assets/images/icons/icon_check.png?v=7f39425e224a53bff0043caff9f6446b14c0f667';
+            });
         }
-        modal.style.display = "none";
-	});
+	
+	function observeTaskIconBox2() {
+        const targetNode = document.body;
+        const config = { childList: true, subtree: true };
+
+        const callback = function(mutationsList, observer) {
+            for (let mutation of mutationsList) {
+                if (mutation.type === 'childList') {
+                    const managerSelection = document.querySelector('.task_icon_box2');
+                    if (managerSelection) {
+                        console.log('task_icon_box2 element found');
+                        observer.disconnect(); // 요소가 발견되면 observer를 중지합니다.
+                        initializeFormSubmit();
+                    }
+                }
+            }
+        };
+
+        const observer = new MutationObserver(callback);
+        observer.observe(targetNode, config);
+    }
+	
 	
 	////////////////////// 구글 api ////////////////////////////
+	let map;
+	let marker;
+	let autocomplete;
 	let googleMapsScriptLoaded = false;
 
 	function loadScript(src, callback) {
-		console.log(`Loading script: ${src}`);
 		if (document.querySelector(`script[src="${src}"]`)) {
 			callback();
 			return;
@@ -869,6 +936,47 @@ document.addEventListener('DOMContentLoaded', function() {
 	window.initialize = function() {
 		console.log("Google Maps API initialized");
 		initPostMaps();
+		initAutocomplete();
+	}
+
+	function initAutocomplete() {
+		const placeInput = document.getElementById('place');
+		if (!placeInput) return;
+
+		autocomplete = new google.maps.places.Autocomplete(placeInput);
+		autocomplete.addListener('place_changed', handlePlaceSelect);
+	}
+
+	function handlePlaceSelect() {
+		const place = autocomplete.getPlace();
+		if (!place.geometry || !place.geometry.location) {
+			alert("No details available for input: '" + place.name + "'");
+			return;
+		}
+
+		document.getElementById('map').style.display = 'block';
+
+		if (!map) {
+			map = new google.maps.Map(document.getElementById('map'), {
+				center: place.geometry.location,
+				zoom: 17
+			});
+		} else {
+			map.setCenter(place.geometry.location);
+		}
+
+		if (marker) {
+			marker.setMap(null);
+		}
+
+		marker = new google.maps.Marker({
+			position: place.geometry.location,
+			map: map
+		});
+
+		document.getElementById('place-id').value = place.place_id || '';
+		document.getElementById('place-lat').value = place.geometry.location.lat() || '';
+		document.getElementById('place-lng').value = place.geometry.location.lng() || '';
 	}
 
 	function initPostMap(mapId, lat, lng) {
@@ -905,12 +1013,48 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	}
 
-		console.log("DOM fully loaded and parsed");
-		if (!googleMapsScriptLoaded) {
-			loadScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyBFrzV9XNxdBu76GcroDg3Fvun36TrvBlA&libraries=places&callback=initialize', () => {
-				googleMapsScriptLoaded = true;
-			});
-		} else {
-			initialize();
-		}
+	document.querySelector('.tab-schedule').addEventListener('click', function() {
+		setTimeout(() => {
+			if (!googleMapsScriptLoaded) {
+				loadScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyBFrzV9XNxdBu76GcroDg3Fvun36TrvBlA&libraries=places&callback=initialize', () => {
+					googleMapsScriptLoaded = true;
+				});
+			} else {
+				initialize();
+			}
+		}, 500);
+	});
+
+	if (!googleMapsScriptLoaded) {
+		loadScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyBFrzV9XNxdBu76GcroDg3Fvun36TrvBlA&libraries=places&callback=initialize', () => {
+			googleMapsScriptLoaded = true;
+		});
+	} else {
+		initialize();
+	}
+	
 });
+
+function deletePost(postIdx) {
+		if (confirm('정말 이 게시글을 삭제하시겠습니까?')) {
+			fetch(`/${postIdx}`, {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			})
+				.then(response => {
+					if (response.ok) {
+						alert('게시글이 삭제되었습니다.');
+						// 삭제 후 페이지 새로고침 또는 게시글 목록 갱신
+						window.location.reload();
+					} else {
+						alert('게시글 삭제에 실패했습니다.');
+					}
+				})
+				.catch(error => {
+					console.error('Error:', error);
+					alert('게시글 삭제 중 오류가 발생했습니다.');
+				});
+		}
+	}

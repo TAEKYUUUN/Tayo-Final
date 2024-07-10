@@ -1,7 +1,5 @@
 package com.mysite.tayo.entity;
 
-import java.util.Date;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -32,13 +30,7 @@ public class TodoName {
 	@Column(name = "todo_name", length = 100)
 	private String todoName;
 	
-	@ManyToOne
-	@JoinColumn(name = "todo_manager_idx", referencedColumnName = "member_idx")
-	private Member todoManager;
-	
 	@Column(name = "is_finished")
 	private Integer isFinished;
-	
-	@Column(name = "deadline")
-	private Date deadline;
+
 }
