@@ -639,8 +639,30 @@
 									        <div class="post_card_container">
 									            <div class="post_card_content">
 									                <div class="todo_status_area">
-									                    <div class="todo_progress_header">
-									                        <div class="progress_header_left">
+														<div class="todo_progress_header">
+															<!-- 여기 -->
+															<div class="todo_wrap_div">
+																<div style="display:flex; align-items:center; font-size:16px; height:fit-content;">
+																	<div class="task_icon_box2">
+																		<img th:src="@{https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d}"
+																			style="margin-right: 16px;" />
+																	</div>
+																	<div class="task_manager_box">
+																		<span class="manager_item" style="margin:0;">
+																			<span class="worker_profile">
+																				<img th:src="@{https://flow.team/flow-renewal/assets/images/profile-default.png}"/>
+																			</span>
+																			<span class="manager_name" th:text="${postData['data'].todoManagerName}"></span>
+																		</span>
+																	</div>
+																</div>
+																<div class="task_icon_box1" style="margin:0;">
+																	<img th:src="@{https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=cfae9e268527a6f7007fe81fd49cab2c9659eea3}"
+																		style="margin-right:16px;" />
+																	<p th:text="${postData != null && postData['data'] != null ? postData['data'].deadLine : ''}" style="font-size:14px; font-weight: 500;"></p>
+																</div>
+															</div>
+															<div class="progress_header_left">
 									                            <span class="progress_count">0</span>
 									                            <span class="progress_total" th:text="'/' + ${#lists.size(postData.data.todoNames)}"></span>
 									                        </div>
@@ -652,29 +674,6 @@
 									                        <span style="width:0%;"></span>
 									                    </div>
 									                    <ul class="todo_ul">
-															<li class="task_manager_area">
-																<div class="task_icon_box2">
-																	<img th:src="@{https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d}"
-																		style="margin-right: 16px;" />
-																</div>
-																<div class="task_manager_box">
-																	<span class="manager_item">
-																		<span class="worker_profile">
-																			<img th:src="@{https://flow.team/flow-renewal/assets/images/profile-default.png}" />
-																		</span>
-																		<span class="manager_name" th:text="${postData['data'].manager.name}"></span>
-																	</span>
-																	<button type="button" class="update_manager_btn">담당자 변경</button>
-																</div>
-															</li>
-															<li>
-																<div class="task_icon_box1">
-																	<img th:src="@{https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=cfae9e268527a6f7007fe81fd49cab2c9659eea3}"
-																		style="margin-right:16px;" />
-																	<p th:text="${postData != null && postData['data'] != null ? postData['data'].endDate : ''}"></p>
-																	<button type="button" class="update_btn" name="endDate">마감일 변경</button>
-																</div>
-															</li>
 															<li class="todo_item" th:each="todoName : ${postData.data.todoNames}">
 									                            <div class="todo_list_area">
 									                                <div class="todo_text">

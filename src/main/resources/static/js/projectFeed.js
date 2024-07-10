@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <button type="button" class="task_state_btn completion" name="condition" value="4">완료</button>
                 <button type="button" class="task_state_btn hold" name="condition" value="5">보류</button>
             </div>
-            <div class="task_icon_box2">
+            <div class="task_icon_box3">
                 <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d" style="margin-right: 16px;"/>
                 <button type="button" class="update_btn" name="addmanager" id="addmanager">담당자 추가</button>
             </div>
@@ -342,7 +342,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				const name = selectedManager.querySelector('.manager_name').innerText;
 
 				// 담당자 추가 버튼을 숨기고 선택된 담당자를 표시하는 HTML 추가
-				const managerSelection = document.querySelector('.task_icon_box2');
+				const managerSelection = document.querySelector('.task_icon_box3');
 				console.log('Manager Selection:', managerSelection); // 요소가 올바르게 선택되었는지 확인
 				managerSelection.innerHTML = `
                 <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d" style="margin-right: 16px;"/>
@@ -477,6 +477,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 				// 담당자 추가 버튼을 숨기고 선택된 담당자를 표시하는 HTML 추가
 				const managerSelection = document.querySelector('.todo_icon_box2');
+				console.log(managerSelection);
 				managerSelection.innerHTML = `
                 <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d" style="margin-right: 16px;"/>
                 <span class="manager_item">

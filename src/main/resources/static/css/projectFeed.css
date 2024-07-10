@@ -1263,6 +1263,11 @@ li {
 	align-items: center;
 }
 
+.todo_wrap_div {
+	width: 100%;
+	height: fit-content;
+}
+
 .task_progress_area {
 	width: 100%;
 	height: 46px;
@@ -1759,7 +1764,7 @@ li {
 }
 
 .todo_status_area {
-	margin: 20px 0px 40px 0px;
+	margin: 5px 0px 40px 0px;
 	height: fit-content;
 	width: 100%;
 	display: flex;
@@ -1775,10 +1780,12 @@ li {
 	float: left;
 	padding-left: 10px;
 	color: #999;
+	margin-top : 20px;
 }
 
 .progress_header_right {
 	float: right;
+	margin-top : 20px;
 }
 
 .progress_count {
@@ -2271,6 +2278,13 @@ li {
 	position:relative;
 }
 
+.task_icon_box3 {
+	display: flex;
+	align-items: center;
+	margin-top : 20px;
+	margin-bottom : 20px;
+	position : relative;
+}
 .todo_icon_box1,
 .todo_icon_box2 {
 	display: flex;
