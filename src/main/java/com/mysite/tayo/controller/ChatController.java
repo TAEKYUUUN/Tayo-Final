@@ -19,14 +19,17 @@ import com.mysite.tayo.service.ChatService;
 import com.mysite.tayo.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 @RequiredArgsConstructor
 @Controller
+@Log4j2
 public class ChatController {
 
 	private final ChatService chatService;
 	private final MemberService memberService;
 
+	
 	@GetMapping("/chatRoom/{chatIdx}")
 	public String chat(Model model, @PathVariable("chatIdx") Long chatIdx) {
 		Optional<Chat> _chatList = this.chatService.getId(chatIdx);
@@ -35,36 +38,29 @@ public class ChatController {
 		return "chatRoom";
 	}
 
-	@PostMapping("/chatRoom/{chatIdx}")
-	public String chatAdd(@RequestParam(value = "chatContents", required = false) String chatContents,
-	                      @RequestParam(value = "replyIdx", required = false) Long replyIdx,
-	                      @RequestParam(value = "chatContentsIdx", required = false) Long chatContentsIdx,
-	                      @RequestParam(value = "file", required = false) MultipartFile file,
-	                      @PathVariable("chatIdx") Long chatIdx,
-	                      Authentication authentication) throws IOException {
-	    Member member = memberService.infoFromLogin(authentication);
-	   
-	    if (chatContentsIdx == null) {
-	    	chatService.addChatContent(chatIdx, chatContents, member, replyIdx, file);
-	    } else {
-	    	chatService.addNotice(chatContentsIdx, member);
-	    }
-	    
-	    
-	    return "redirect:/chatRoom/" + chatIdx;
-	}
+    @PostMapping("/chatRoom/{chatIdx}")
+    public String chatAdd(@RequestParam(value = "chatContents", required = false) String chatContents,
+                          @RequestParam(value = "replyIdx", required = false) Long replyIdx,
+                          @RequestParam(value = "chatContentsIdx", required = false) Long chatContentsIdx,
+                          @RequestParam(value = "file", required = false) MultipartFile file,
+                          @PathVariable("chatIdx") Long chatIdx,
+                          Authentication authentication) throws IOException {
+        Member member = memberService.infoFromLogin(authentication);
 
+        if (chatContentsIdx == null) {
+            chatService.addChatContent(chatIdx, chatContents, member, replyIdx, file);
+        } else {
+            chatService.addNotice(chatContentsIdx, member);
+        }
+
+        return "redirect:/chatRoom/" + chatIdx;
+    }
 	
-	
-	
-	
-	
-	@GetMapping("/chat")
-	public String chatRoom(Model model) {
-		List<Chat> chatList = this.chatService.getList();
-		model.addAttribute("chatList", chatList);
-		return "chat";
-	}
+    @GetMapping("/chat")
+    public String chatGET(){
+        log.info("@ChatController, chat GET()");
+        return "chatRoom";
+    }
 
 	@GetMapping("/chatCollection")
 	public String chatCollection(Model model) {

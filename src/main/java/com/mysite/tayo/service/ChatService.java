@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.mysite.tayo.entity.Chat;
 import com.mysite.tayo.entity.ChatContents;
 import com.mysite.tayo.entity.ChatContentsHasFile;
+import com.mysite.tayo.entity.ChatMessage;
 import com.mysite.tayo.entity.Member;
 import com.mysite.tayo.repository.ChatContentsHasFileRepository;
 import com.mysite.tayo.repository.ChatContentsRepository;
@@ -31,7 +32,7 @@ public class ChatService {
 	private static final String URL_REGEX = "((http|https)://)?(www\\.)?([\\w-]+)\\.+[\\w]{2,}(\\S*)?";
 
 	public List<Chat> getList() {
-		return this.chatRepository.findByChatMemberListMemberMemberIdx(1L);
+		return this.chatRepository.findByChatMemberListMemberMemberIdx(4L);
 	}
 
 	public Optional<Chat> getId(Long chatIdx) {
@@ -68,11 +69,11 @@ public class ChatService {
 	        byte[] a = file.getBytes();
 	        System.out.println(a.length/1024.0);
 	        chatContentsHasFile.setData(file.getBytes());
-
 	        chatContentsHasFileRepository.save(chatContentsHasFile);
 	        chatContent.setHasFile(chatContentsHasFile);
 	    }
-
+	    
+	    
 	    return chatContentsRepository.save(chatContent);
 	}
 
@@ -116,4 +117,7 @@ public class ChatService {
 	    matcher.appendTail(result);
 	    return result.toString();
 	}
+
+	
+	
 }
