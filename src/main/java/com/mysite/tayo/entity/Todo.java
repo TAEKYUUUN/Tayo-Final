@@ -1,6 +1,7 @@
 package com.mysite.tayo.entity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -11,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
@@ -38,6 +40,13 @@ public class Todo {
 	
 	@Column(name = "is_ended")
 	private Integer isEnded;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_idx", referencedColumnName = "member_idx")
+	private Member todoManager;
+	
+	@Column(name = "deadline")
+	private Date deadline;
 	
 	@OneToMany(mappedBy = "todo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<TodoName> todoNames = new ArrayList<>();

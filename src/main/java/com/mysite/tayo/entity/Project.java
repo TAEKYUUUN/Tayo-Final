@@ -65,10 +65,11 @@ public class Project {
 	@Column(name = "color")
 	private String color;
 	
-	@OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Post> postList;
 	
 	@OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
 	@JsonManagedReference
 	private List<ProjectMember> projectMemberList;
+
 }

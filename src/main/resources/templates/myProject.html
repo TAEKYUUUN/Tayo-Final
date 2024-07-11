@@ -82,7 +82,7 @@
              <div id="div_prj_home">
                 <div id="div_prj_board">
                    <div id="prj_board_title">참여중</div>
-                   <div class="project_item" th:each="project, index : ${projectList}"  th:style="'border-left-color:' + ${project.project.color} + ';'">
+                   <div class="project_item" th:each="project, index : ${projectList}" th:style="'border-left-color:' + project.project.color + ';'">
                       <div class="project_content">
                         <form th:action="@{/projectlist}" method="post">
                            <input type="hidden" th:value="${project.hotlist == null ? '' : project.hotlist}" name="isHotlist">

@@ -64,6 +64,7 @@ public class CompanyService {
 		}
 		companyRepository.save(company);
 		member.get().setCompany(company);
+		member.get().setIsAllowed(null);
 		memberRepository.save(member.get());
 	}
 	

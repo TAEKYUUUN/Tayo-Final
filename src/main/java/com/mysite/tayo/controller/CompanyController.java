@@ -43,7 +43,7 @@ public class CompanyController {
         		Company company = _company.get();
         		member.setCompany(company);
         		companyService.saveMember(member);
-        		return "redirect:/dashboard";
+        		return "newJoinMember";
         	}else {
         		return "/JoinCompany?error=true";
         	}
@@ -60,6 +60,6 @@ public class CompanyController {
 	public String createNewCompany(@RequestParam("companyName") String companyName, Authentication authentication) {
         Member member = memberService.infoFromLogin(authentication);
 		companyService.companyCreate(companyName, member.getMemberIdx());
-		return "dashboard";
+		return "redirect:/dashboard";
 	}
 }

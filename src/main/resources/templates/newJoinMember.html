@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Alert and Redirect</title>
+    <script>
+		// alert_redirect.js
+		window.onload = function() {
+		    // 알림창 표시
+		    alert('회사 참가 신청이 완료되었습니다.');
+
+		    setTimeout(function() {
+		        window.location.href = '/notAllowed';
+		    }, 1000);
+		};
+	</script>
+</head>
+<body>
+    <!-- 빈 페이지 -->
+</body>
+</html>

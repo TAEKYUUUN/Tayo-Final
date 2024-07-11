@@ -26,15 +26,9 @@ import com.mysite.tayo.entity.Member;
 import com.mysite.tayo.entity.Post;
 import com.mysite.tayo.entity.Project;
 import com.mysite.tayo.entity.ProjectMember;
-import com.mysite.tayo.repository.CommentsRepository;
-import com.mysite.tayo.repository.ParagraphRepository;
 import com.mysite.tayo.repository.PostRepository;
 import com.mysite.tayo.repository.ProjectMemberRepository;
 import com.mysite.tayo.repository.ProjectRepository;
-import com.mysite.tayo.repository.ScheduleRepository;
-import com.mysite.tayo.repository.TaskRepository;
-import com.mysite.tayo.repository.TodoRepository;
-import com.mysite.tayo.repository.VoteRepository;
 import com.mysite.tayo.service.CommentService;
 import com.mysite.tayo.service.MemberService;
 import com.mysite.tayo.service.PostService;
@@ -66,24 +60,6 @@ public class ProjectController {
 
 	@Autowired
 	private PostRepository postRepository;
-
-	@Autowired
-	private ParagraphRepository paragraphRepository;
-
-	@Autowired
-	private TaskRepository taskRepository;
-
-	@Autowired
-	private ScheduleRepository scheduleRepository;
-
-	@Autowired
-	private TodoRepository todoRepository;
-
-	@Autowired
-	private VoteRepository voteRepository;
-	
-	@Autowired
-	private CommentsRepository commentsRepository;
 
 	@GetMapping("/projectFeed/{projectIdx}")
 	public String feed(Model model, Authentication authentication, @PathVariable("projectIdx") Long projectIdx) {
@@ -121,7 +97,6 @@ public class ProjectController {
 				Map<String, Object> taskData = postService.getTask(post.getPostIdx());
 				if (taskData != null) {
 					postData.put("data", taskData);
-					postData.put("manager", taskData.get("manager"));
 				} else {
 					postData.put("data", Collections.emptyMap());
 				}
@@ -230,6 +205,5 @@ public class ProjectController {
 
 		return "redirect:/projectFeed";
 	}
-	
 	
 }

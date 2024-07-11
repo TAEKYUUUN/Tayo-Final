@@ -47,6 +47,15 @@ public class Schedule {
 	@Column(name = "place", length = 200)
 	private String place;
 	
+	@Column(name = "place_id")
+	private String placeId;
+	
+	@Column(name = "place_lat")
+	private Double placeLat;
+	
+	@Column(name = "place_lng")
+	private Double placeLng;
+	
 	@Lob
 	@Column(name = "contents", columnDefinition = "CLOB")
 	private String contents;

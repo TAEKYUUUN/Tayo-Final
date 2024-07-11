@@ -1,4 +1,23 @@
+
+
+const alarmIsRead = function(alarmIdx) {
+	$.ajax({
+		url: "/AlarmRead",
+		type: 'PUT',
+		contentType: 'application/json',
+		data:JSON.stringify(alarmIdx),
+		success: function() {
+			
+		},
+		error: function(error) {
+			alert(error.responseText);
+			console.log(error.responseText);
+		}
+	});
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+	
     // 프로젝트 알림 클릭 이벤트 리스너
     function setupProjectAlarm() {
         const projectAlarm = document.querySelectorAll(`[id*="${'projectAlarm'}"]`);
@@ -17,6 +36,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		div.parentElement.addEventListener('click', ()=>{
 			const anchor = div.firstElementChild.value;
 			const moveAfter = div.querySelectorAll('input')[1].value;
+			const alarmIdx = div.querySelector('#alarmIdx').value;
+			alarmIsRead(alarmIdx);
+			div.parentElement.classList.remove('unreadAlarm');
 			window.location.href = '/projectFeed/' + moveAfter +'#postIdx_' + anchor;
 		})
 	})
@@ -53,12 +75,16 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('#unread').addEventListener('click', () => {
             document.querySelector('#allalarm').classList.remove('allOrUnread');
             document.querySelector('#unread').classList.add('allOrUnread');
+			document.querySelector('#unreadUl').style.removeProperty('display');
+			document.querySelector('#readUl').style.display = 'none';
         });
 
         document.querySelector('#allalarm').addEventListener('click', () => {
             document.querySelector('#unread').classList.remove('allOrUnread');
-            document.querySelector('#allalarm').classList.add('allOrUnread');
-        });
+			document.querySelector('#allalarm').classList.add('allOrUnread');
+			document.querySelector('#unreadUl').style.display = 'none';
+			document.querySelector('#readUl').style.removeProperty('display');
+		});
 
         document.querySelector('#div_top_alarm').addEventListener('click', () => {
             document.querySelector('#alarmPopup').style.removeProperty('display');
