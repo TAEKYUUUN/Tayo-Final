@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -26,6 +25,7 @@ import com.mysite.tayo.entity.Member;
 import com.mysite.tayo.entity.Post;
 import com.mysite.tayo.entity.Project;
 import com.mysite.tayo.entity.ProjectMember;
+import com.mysite.tayo.entity.ScheduleAttender;
 import com.mysite.tayo.repository.PostRepository;
 import com.mysite.tayo.repository.ProjectMemberRepository;
 import com.mysite.tayo.repository.ProjectRepository;
@@ -78,11 +78,20 @@ public class ProjectController {
 			postData.put("post", post);
 			postData.put("member", post.getMember()); // 포스트 작성자 member 객체
 			
-			// 댓글을 작성 시간 기준으로 정렬
-	        List<Comments> comments = commentService.findByPost(post).stream()
-	                .sorted(Comparator.comparing(Comments::getWriteTime))
-	                .collect(Collectors.toList());
-	        postData.put("comments", comments);
+			// 댓글을 작성 시간 기준으로 정렬 및 좋아요 수 포함
+			Map<Comments, Integer> commentsWithLikeCount = commentService.getCommentsWithLikeCount(post, member);
+	        List<Map.Entry<Comments, Integer>> sortedEntries = new ArrayList<>(commentsWithLikeCount.entrySet());
+	        sortedEntries.sort(Comparator.comparing(entry -> entry.getKey().getWriteTime()));
+
+	        List<Map<String, Object>> commentsData = new ArrayList<>();
+	        for (Map.Entry<Comments, Integer> entry : sortedEntries) {
+	            Map<String, Object> commentData = new HashMap<>();
+	            commentData.put("comment", entry.getKey());
+	            commentData.put("likeCount", entry.getValue());
+	            commentData.put("isLiked", entry.getKey().isLiked());
+	            commentsData.add(commentData);
+	        }
+	        postData.put("comments", commentsData);
 			
 			switch (post.getFileType()) {
 			case 1:
@@ -105,6 +114,40 @@ public class ProjectController {
 				Map<String, Object> scheduleData = postService.getSchedule(post.getPostIdx());
 				if (scheduleData != null) {
 					postData.put("data", scheduleData);
+					
+					// 참석 상태 카운트 계산
+	                List<Map<String, String>> attenders = (List<Map<String, String>>) scheduleData.get("attenders");
+	                if (attenders != null) {
+	                    long participateCount = attenders.stream()
+	                        .filter(a -> "1".equals(a.get("isAttend")))
+	                        .count();
+	                    long absenceCount = attenders.stream()
+	                        .filter(a -> "2".equals(a.get("isAttend")))
+	                        .count();
+	                    long undetermineCount = attenders.stream()
+	                        .filter(a -> "3".equals(a.get("isAttend")))
+	                        .count();
+
+	                    Map<String, Long> attenderCounts = new HashMap<>();
+	                    attenderCounts.put("participate", participateCount);
+	                    attenderCounts.put("absence", absenceCount);
+	                    attenderCounts.put("undetermine", undetermineCount);
+
+	                    postData.put("attenderCounts", attenderCounts);
+
+	                    // 로그인한 사용자의 참석 상태 가져오기
+	                    Optional<Map<String, String>> currentAttenderOpt = attenders.stream()
+	                            .filter(a -> member.getMemberIdx().toString().equals(a.get("memberIdx"))).findFirst();
+	                    if (currentAttenderOpt.isPresent()) {
+	                        Map<String, String> currentAttender = currentAttenderOpt.get();
+	                        postData.put("currentAttenderStatus", Integer.parseInt(currentAttender.get("isAttend")));
+	                    } else {
+	                        postData.put("currentAttenderStatus", 0); // 기본값: 참석 상태 없음
+	                    }
+	                } else {
+	                    postData.put("attenderCounts", Collections.emptyMap());
+	                    postData.put("currentAttenderStatus", 0); // 기본값: 참석 상태 없음
+	                }
 				} else {
 					postData.put("data", Collections.emptyMap());
 				}

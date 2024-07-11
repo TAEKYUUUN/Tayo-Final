@@ -1,9 +1,7 @@
-
 package com.mysite.tayo.entity;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.checkerframework.common.aliasing.qual.Unique;
 
@@ -21,6 +19,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -87,6 +86,12 @@ public class Member {
    @Column(name = "set_auto_logout")
    private Integer setAutoLogout;
 
+   @Column(name="is_allowed")
+   private Integer isAllowed = 1;
+   
+   @Column(name="is_company_manager")
+   private Integer isCompanyManager;
+
    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
    private List<ChatMember> chatMemberList;
 
@@ -110,10 +115,14 @@ public class Member {
    
    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
    private List<Voter> voters;
-   @Column(name="is_allowed")
-   private Integer isAllowed = 1;
-
-   @Column(name="is_company_manager")
-   private Integer isCompanyManager;
+   
+   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+   private List<Comments> comments;
+   
+   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+   private List<CommentsReact> commentsReacts;
+   
+   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+   private List<PostReact> postReacts;
 
 }

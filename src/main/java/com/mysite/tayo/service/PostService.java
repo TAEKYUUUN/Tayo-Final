@@ -74,7 +74,8 @@ public class PostService {
 	private final UncheckPostRepository uncheckPostRepository;
 	private final AlarmRepository alarmRepository;
 	private final UnreadRepository unreadRepository;
-
+	
+	
 	// 댓글 받아서 해당 포스트 idx의 포스트 가져오기
 	public Optional<Post> getPostByComment(Comments comment) {
 		return postRepository.findById(comment.getPost().getPostIdx());

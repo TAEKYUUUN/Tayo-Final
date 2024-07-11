@@ -25,6 +25,11 @@ li {
 	list-style: none;
 }
 
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
 .scrollbar {
 	width: 250px;
 	height: 250px;
@@ -962,11 +967,11 @@ li {
 .post_bottom_area {
 	width: 100%;
 	height: 30.47px;
-	margin: 22px 0px 0px;
+	margin: 22px 0px;
 	padding: 0px 24px;
 	display: flex;
 	justify-content: space-between;
-	border-bottom: 1px solid #eee;
+	position: relative;
 }
 
 .post_comment_input_area {
@@ -1024,6 +1029,10 @@ li {
 	width: 16px;
 	height: 16px;
 	margin-right: 3px;
+}
+
+.add-reaction:hover{
+	color:#6449FC;
 }
 
 .post_bookmark {
@@ -1553,14 +1562,126 @@ li {
 	font-size: 14px;
 }
 
+.bottom_btn_area > div {
+	cursor : pointer;
+}
+
+.bottom_btn_area > div:hover {
+	color : #6449FC;
+}
+	
+.post_react_selection {
+	display : none;
+	position: absolute;
+    top: 34px;
+    width: auto;
+    min-width: 355px;
+    padding: 15px;
+    border: 1px solid #777;
+    background: #fff;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, .15);
+    border-radius: 4px;
+    font-size: 11px;
+    color: #999;
+    text-align: center;
+    z-index: 9;
+}
+
+.post_react_selection ul {
+	display : flex;
+	justify-content: space-between;
+	align-items: flex-start;
+}
+
+.post_react_selection [class^=icon], .icon-emoji {
+	width : 30px;
+	height: 30px;
+	margin-bottom: 6px;
+	display:inline-block;
+    content: "";
+    background-image: url(https://flow.team/flow-renewal/assets/images/sprite-project-detail.png?v=4b3c44df5d0e7419c83a0508f5e4b720a9213d3f);
+    background-size: 844px auto;
+}
+
+.like {
+	background-position: -26px -101px;
+}
+
+.please {
+	background-position: -82px -101px;
+}
+
+.sad {
+	background-position: -138px -101px;
+}
+
+.great {
+	background-position: -194px -101px;
+}
+
+.thank {
+	background-position: -250px -101px;
+}
+
 .comment_react {
 	padding: 4px 2px 4px 0px;
 	color: #777777;
 	font-size: 13px;
 }
 
+.comment_react::before {
+    display: inline-block;
+    content: "";
+    width: 14px;
+    height: 15px;
+    position: relative;
+    top: -1px;
+    margin-right: 4px;
+    background-image: url(https://flow.team/flow-renewal/assets/images/icons/icon_comment_like.svg?v=ffacfac7372f67e2005514187db2c3db152c1cf7);
+    background-repeat: no-repeat;
+    background-position: center;
+    vertical-align: middle;
+}
+
+.comment_react_on::before {
+	display: inline-block;
+    content: "";
+    width: 14px;
+    height: 15px;
+    position: relative;
+    top: -1px;
+    margin-right: 4px;
+	background-image: url(https://flow.team/flow-renewal/assets/images/icons/icon_comment_like_on.svg?v=d9e10a133127033017467cc775ee929c15ef4235);
+	background-repeat: no-repeat;
+    background-position: center;
+    vertical-align: middle;
+}
+
+.comment_react_on:hover::before, 
+.comment_react:hover::before {
+    background-image: url('https://flow.team/flow-renewal/assets/images/icons/icon_comment_like_hover.svg?v=bf8fa46ef2d94ddc2c5cee91a705a3286e2d77ce');
+}
+
+.comment_like {
+	cursor : pointer;
+	font-weight : 500;
+}
+
+.comment_like_cancel {
+	cursor : pointer;
+	font-weight : 500;
+}
+
+.comment_like_cancel.on {
+	color : #6449FC;
+}
+
 .comment_react:hover {
 	color: #6449FC;
+}
+
+.comment_react_on:hover {
+	color : #6449fc;
 }
 
 .delete_comment_btn {
@@ -1654,7 +1775,10 @@ li {
 	margin-right: 12px;
 	vertical-align: middle;
 	cursor: pointer;
+	position: relative;
+	display: inline-block;
 }
+
 
 .attender_item>img {
 	width: 36px;
@@ -1682,16 +1806,37 @@ li {
 .participate {
 	font-weight: 700;
 	color: #00B695;
+	border : 1px solid #00B695;
 }
 
 .absence {
 	font-weight: 700;
 	color: #FB2A2A;
+	border : 1px solid #FB2A2A;
 }
 
 .undetermine {
 	font-weight: 700;
 	color: #999;
+	border : 1px solid #999;
+}
+
+.participate_btn {
+	font-weight: 700;
+	color: #00B695;
+	border : 1px solid #00B695;
+}
+
+.absence_btn {
+	font-weight: 700;
+	color: #FB2A2A;
+	border : 1px solid #FB2A2A;
+}
+
+.undetermine_btn {
+	font-weight: 700;
+	color: #999;
+	border : 1px solid #999;
 }
 
 .schedule_place_area {
@@ -1720,13 +1865,16 @@ li {
 	border-top: 1px solid #eee;
 }
 
+.attend_group {
+	display : flex;
+}
+
 .attend_btn {
 	width: auto;
 	min-width: 74px;
 	height: 34px;
 	padding: 0 5px;
 	text-align: center;
-	border: 1px solid #000;
 	font-weight: 500;
 	font-size: 15px;
 	-webkit-box-sizing: border-box;
@@ -1742,21 +1890,23 @@ li {
 	margin-left: 20px;
 }
 
-.participate_on {
+
+
+.participate_btn:hover, .participate_btn.on {
 	font-weight: 700;
 	background-color: #00B695;
 	border-color: #00B695;
 	color: white;
 }
 
-.absence_on {
+.absence_btn:hover, .absence_btn.on {
 	font-weight: 700;
 	background-color: #FB2A2A;
 	border-color: #FB2A2A;
 	color: white;
 }
 
-.undetermine_on {
+.undetermine_btn:hover, .undetermine_btn.on {
 	font-weight: 700;
 	background-color: #999;
 	border-color: #999;
@@ -3353,4 +3503,54 @@ input:checked+.slider:before {
 	width : 100%;
 	margin-top : 10px;
 	height : 200px;
+}
+
+.tooltip_text {
+    visibility: hidden;
+    background-color: white;
+    width: auto; /* 너비를 자동으로 조정하여 텍스트에 맞춤 */
+    white-space: nowrap; /* 텍스트를 한 줄로 유지 */
+    color: black;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 120%; /* 텍스트 위치 조정 */
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.attender_item:hover .tooltip_text {
+	visibility: visible;
+	opacity: 1;
+}
+
+.attender_item::after {
+	position: absolute;
+    top: -3px;
+    right: -3px;
+    display: block;
+    width: 12px;
+    height: 12px;
+    content: "";
+    border: 1px solid #fff;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+}
+
+.attender_item.participate::after {
+	background : #00B695;
+}
+
+.attender_item.absence::after {
+	background : #FB2A2A;
+}
+
+.attender_item.undetermine::after {
+	background : #999;
 }
