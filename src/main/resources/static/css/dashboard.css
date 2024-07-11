@@ -883,14 +883,14 @@ ms wh #div_setwidget_btn>img {
 	border-bottom: 1.5px solid #000;
 }
 
-#alarmProfile {
+#alarmProfile > img {
 	width: 36px;
 	height: 36px;
 	border-radius: 16px;
 	float: left;
 }
 
-#div_alarmtext {
+.div_alarmtext {
 	width: calc(100% - 46px);
 	margin-left: 10px;
 	line-height: 19px;
