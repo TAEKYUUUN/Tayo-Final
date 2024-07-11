@@ -129,7 +129,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="project : ${projectList}" th:id="'projectList' + ${project.projectIdx}">
+					<tr th:each="project, iterStat : ${projectList}" th:id="'projectList' + ${project.projectIdx}">
 						<td style="display:none;" th:text="${project.projectIdx}"></td>
 						<td th:text="${project.projectName}" style="text-align:left; padding-left:10px;"></td>
 						<td>
@@ -141,7 +141,7 @@
 						<td th:text="${project.projectMemberList.size()}"></td>
 						<td></td>
 						<td th:text="${project.postList.size()}">2</td>
-						<td></td>
+						<td th:if="${iterStat.index < comments.size()}" th:text="${comments[iterStat.index]}"></td>
 						<td></td>
 						<td th:text="${#lists.size(project.postList.?[fileType == 3])}">0</td>
 						<td th:text="${#lists.size(project.postList.?[fileType == 2])}">0</td>

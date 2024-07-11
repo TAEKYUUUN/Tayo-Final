@@ -7,6 +7,7 @@
 	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 	<title>Tayo - 대시보드</title>
 	<link rel="stylesheet" type="text/css" th:href="@{/css/dashboard.css}">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script th:src="@{/js/dashboard.js}"></script>
 </head>
 
@@ -84,8 +85,8 @@
 						<div id="searchOption">옵션</div>
 					</div>
 					<div id="alarms">
-						<ul>
-							<li class="alarmListClass unreadAlarm" th:each="alarm : ${AlarmList}">
+						<ul id="unreadUl">
+							<li class="alarmListClass unreadAlarm" th:each="alarm : ${AlarmList}" th:if="${alarm.isRead == 1}">
 								<div id="alarmProfile">
 									<img th:src="${alarm.member.profileImage != null ? companyMember.profileImage : 'https://flow.team/flow-renewal/assets/images/profile-default.png'}"
 										alt="Profile Image" />
@@ -93,6 +94,7 @@
 								<div th:id="${'projectAlarm' + alarm.project.projectIdx}" class="div_alarmtext"
 									th:if="${alarm.alarmType == 6}">
 									<input type="hidden" th:value="${alarm.project.projectIdx}">
+									<input id = "alarmIdx" type="hidden" th:value="${alarm.alarmIdx}">
 									<div id="div_alarmTitle">
 										<span th:text="${alarm.project.projectName}"></span>
 										<em>7분 전</em>
@@ -104,6 +106,7 @@
 								<div th:id="${'postAlarm' + alarm.post.postIdx}" class="div_alarmtext" th:if="${alarm.alarmType == 1}">
 									<input type="hidden" th:value="${alarm.post.postIdx}">
 									<input type="hidden" th:value="${alarm.post.project.projectIdx}">
+									<input id = "alarmIdx" type="hidden" th:value="${alarm.alarmIdx}">
 									<div id="div_alarmTitle">
 										<span th:text="${alarm.post.project.projectName}"></span>
 										<em>7분 전</em>
@@ -114,11 +117,44 @@
 										<div  th:text="${alarm.post.schedule.title}" th:if="${alarm.post.fileType ==3}">ㅇㅇ</div>
 										<div  th:text="${alarm.post.todo.title}" th:if="${alarm.post.fileType ==4}">ㅇㅇ</div>
 										<div  th:text="${alarm.post.vote.title}" th:if="${alarm.post.fileType ==5}">ㅇㅇ</div>
-								</div>								
-							</li>
-						</ul>
-					</div>
-				</div>
+								</div>	</li>
+								</ul>
+								<ul id="readUl" style="display:none;">
+									<li class="alarmListClass" th:each="alarm : ${AlarmList}">
+										<div id="alarmProfile">
+											<img th:src="${alarm.member.profileImage != null ? companyMember.profileImage : 'https://flow.team/flow-renewal/assets/images/profile-default.png'}"
+												alt="Profile Image" />
+										</div>
+										<div th:id="${'projectAlarm' + alarm.project.projectIdx}" class="div_alarmtext" th:if="${alarm.alarmType == 6}">
+											<input type="hidden" th:value="${alarm.project.projectIdx}">
+											<input id="alarmIdx" type="hidden" th:value="${alarm.alarmIdx}">
+											<div id="div_alarmTitle">
+												<span th:text="${alarm.project.projectName}"></span>
+												<em>7분 전</em>
+											</div>
+								
+								
+											<div id="div_alarmDetails" th:text="${alarm.project.projectName + ' 프로젝트에 초대되었습니다.'}"></div>
+										</div>
+										<div th:id="${'postAlarm' + alarm.post.postIdx}" class="div_alarmtext" th:if="${alarm.alarmType == 1}">
+											<input type="hidden" th:value="${alarm.post.postIdx}">
+											<input type="hidden" th:value="${alarm.post.project.projectIdx}">
+											<input id="alarmIdx" type="hidden" th:value="${alarm.alarmIdx}">
+											<div id="div_alarmTitle">
+												<span th:text="${alarm.post.project.projectName}"></span>
+												<em>7분 전</em>
+											</div>
+											<div id="div_alarmContents" th:text="${alarm.post.member.name + '님의 게시글 등록'}"></div>
+											<div th:text="${alarm.post.paragraph.title}" th:if="${alarm.post.fileType ==1}">ㅇㅇ</div>
+											<div th:text="${alarm.post.task.taskName}" th:if="${alarm.post.fileType ==2}">ㅇㅇ</div>
+											<div th:text="${alarm.post.schedule.title}" th:if="${alarm.post.fileType ==3}">ㅇㅇ</div>
+											<div th:text="${alarm.post.todo.title}" th:if="${alarm.post.fileType ==4}">ㅇㅇ</div>
+											<div th:text="${alarm.post.vote.title}" th:if="${alarm.post.fileType ==5}">ㅇㅇ</div>
+										</div>
+									</li>
+								</ul>
+								</div>
+								</div>
 			</div>
 			<div id="div_introwrap">
 				<div id="div_profile_name">

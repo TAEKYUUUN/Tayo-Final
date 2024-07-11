@@ -28,6 +28,11 @@ public class MainController {
 	private final ChatService chatService; 
 	private final AlarmService alarmService;
 	
+	@GetMapping("/notAllowed")
+	public String notAllowed() {
+		return "notAllowed";
+	}
+	
 	@GetMapping("/tayo")
 	@ResponseBody
 	public String hello() {

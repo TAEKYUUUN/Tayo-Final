@@ -1,3 +1,4 @@
+
 package com.mysite.tayo.entity;
 
 import java.util.Date;
@@ -28,85 +29,91 @@ import lombok.Setter;
 @Entity
 @Table(name = "member")
 public class Member {
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_seq")
-	@SequenceGenerator(name = "member_seq", sequenceName = "MEMBER_SEQ", allocationSize = 1)
-	@Column(name = "member_idx")
-	private Long memberIdx;
+   @Id
+   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_seq")
+   @SequenceGenerator(name = "member_seq", sequenceName = "MEMBER_SEQ", allocationSize = 1)
+   @Column(name = "member_idx")
+   private Long memberIdx;
 
-	@Column(name = "name", length = 100)
-	private String name;
+   @Column(name = "name", length = 100)
+   private String name;
 
-	@Unique
-	@Column(name = "email", length = 100)
-	private String email;
+   @Unique
+   @Column(name = "email", length = 100)
+   private String email;
 
-	@Column(name = "password", length = 100)
-	private String password;
+   @Column(name = "password", length = 100)
+   private String password;
 
-	@Column(name = "phone", length = 100)
-	private String phone;
+   @Column(name = "phone", length = 100)
+   private String phone;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "company_idx")
-	@JsonBackReference
-	private Company company;
+   @ManyToOne(fetch = FetchType.LAZY)
+   @JoinColumn(name = "company_idx")
+   @JsonBackReference
+   private Company company;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "organization_idx")
-	private Organization organization;
+   @ManyToOne(fetch = FetchType.LAZY)
+   @JoinColumn(name = "organization_idx")
+   private Organization organization;
 
-	@Column(name = "rank_name", length = 100)
-	private String rankName = "직원";
+   @Column(name = "rank_name", length = 100)
+   private String rankName = "직원";
 
-	@Column(name = "regist_date")
-	private Date registDate;
+   @Column(name = "regist_date")
+   private Date registDate;
 
-	@Column(name = "certification_number")
-	private Integer certificationNumber;
+   @Column(name = "certification_number")
+   private Integer certificationNumber;
 
-	@Column(name = "is_confirmed")
-	private Integer isConfirmed;
+   @Column(name = "is_confirmed")
+   private Integer isConfirmed;
 
-	@Column(name = "is_banned")
-	private Integer isBanned;
+   @Column(name = "is_banned")
+   private Integer isBanned;
 
-	@Column(name = "phone_company", length = 100)
-	private String phoneCompany;
+   @Column(name = "phone_company", length = 100)
+   private String phoneCompany;
 
-	@Column(name = "status_message", length = 100)
-	private String statusMessage;
+   @Column(name = "status_message", length = 100)
+   private String statusMessage;
 
-	@Column(name = "profile_image", length = 100)
-	private String profileImage;
+   @Column(name = "profile_image", length = 100)
+   private String profileImage;
 
-	@Column(name = "benefit_agree")
-	private Integer benefitAgree;
+   @Column(name = "benefit_agree")
+   private Integer benefitAgree;
 
-	@Column(name = "set_auto_logout")
-	private Integer setAutoLogout;
+   @Column(name = "set_auto_logout")
+   private Integer setAutoLogout;
 
-	@OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
-	private List<ChatMember> chatMemberList;
+   @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+   private List<ChatMember> chatMemberList;
 
-	@OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
-	private List<UserSession> userSessionList;
+   @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+   private List<UserSession> userSessionList;
 
-	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<PostMember> postMembers;
-	
-	@OneToMany(mappedBy = "manager", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Task> managers;
-	
-	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<ScheduleAttender> scheduleAttenders;
-	
-	@OneToMany(mappedBy = "todoManager", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Todo> todoManagers;
-	
-	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<TodoMember> todoMembers;
-	
-	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Voter> voters;
+   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+   private List<PostMember> postMembers;
+   
+   @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL, orphanRemoval = true)
+   private List<Task> managers;
+   
+   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+   private List<ScheduleAttender> scheduleAttenders;
+   
+   @OneToMany(mappedBy = "todoManager", cascade = CascadeType.ALL, orphanRemoval = true)
+   private List<Todo> todoManagers;
+   
+   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+   private List<TodoMember> todoMembers;
+   
+   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+   private List<Voter> voters;
+   @Column(name="is_allowed")
+   private Integer isAllowed = 1;
+
+   @Column(name="is_company_manager")
+   private Integer isCompanyManager;
+
 }

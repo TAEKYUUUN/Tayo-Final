@@ -68,6 +68,9 @@ public class Post {
     @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Vote vote;
     
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+	 private List<Comments> commentsList;
+    
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostMember> postMembers;
     
