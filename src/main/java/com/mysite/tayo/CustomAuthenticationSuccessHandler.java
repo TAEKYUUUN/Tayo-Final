@@ -35,6 +35,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                 response.sendRedirect("/member/certification");
             } else if(member.getCompany() == null) {
             	response.sendRedirect("/createOrJoinCompany");
+            } else if(member.getIsAllowed() != null) {
+            	response.sendRedirect("/notAllowed");
             } else {
             	response.sendRedirect("/dashboard");
             }

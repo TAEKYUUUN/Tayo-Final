@@ -447,6 +447,18 @@ td{
     background-color: rgb(255, 255, 255);
 	
 }
+#div_orgpopupAll{
+	width: 500px;
+    height: 550px;
+    margin-left: -250px;
+    margin-top: -275px;
+    z-index: 13000;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    background-color: rgb(255, 255, 255);
+	
+}
 
 #openOrgSelector{
 	position:absolute; 
@@ -640,4 +652,49 @@ ul {
 }
 #NotBannedFromCompany:hover{
 	text-decoration: underline;
+}
+
+#noMoreManager{
+	color:red;
+}
+#noMoreManager:hover{
+	text-decoration: underline;
+}
+#managerFromNow{
+	color:blue;
+}
+#managerFromNow:hover{
+	text-decoration: underline;
+}
+
+#allowMember:hover{
+	text-decoration: underline;
+}
+#denyMember:hover{
+	text-decoration: underline;
+}
+#noMoreCompanyMember:hover{
+	text-decoration: underline;
+}
+
+#SetOrganizationAll {
+	position: relative;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 20px;
+	height: 54px;
+	position: relative;
+	background: #50545D;
+	border-radius: 2px;
+	box-sizing: border-box;
+	margin-left:14px;
+}
+#selectedMember {
+	display: inline-block;
+	vertical-align: middle;
+	color: #fff;
+	font-size: 14px;
+	font-weight: bold;
 }

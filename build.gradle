@@ -39,7 +39,7 @@ dependencies {
       
       implementation 'eu.bitwalker:UserAgentUtils:1.21' // 유저 정보 가져오기
    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate6:2.17.0'
-   
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 tasks.named('test') {

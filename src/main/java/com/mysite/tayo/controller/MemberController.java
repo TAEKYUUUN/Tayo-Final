@@ -1,5 +1,7 @@
 package com.mysite.tayo.controller;
 
+import java.io.IOException;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +15,7 @@ import com.mysite.tayo.entity.Member;
 import com.mysite.tayo.entity.MemberCreateForm;
 import com.mysite.tayo.service.MemberService;
 
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -74,7 +77,7 @@ public class MemberController {
 	@PostMapping("/regist")
 	public String registMember(
 			@Valid MemberCreateForm memberCreateForm, BindingResult bindingResult,  HttpServletRequest request
-			) {
+			) throws MessagingException, IOException {
 		if(bindingResult.hasErrors()) {
 			return "Regist";
 		}
@@ -92,7 +95,8 @@ public class MemberController {
 		HttpSession session = request.getSession();
 		session.setAttribute("certificationNumber", randomNumber);
 		session.setAttribute("email", memberCreateForm.getEmail());
-		
+		memberService.registerUser(memberCreateForm.getEmail(), randomNumber);
+		System.out.println("메일 잘 갔어요");
 		return "redirect:/member/certification";
 	}
 }

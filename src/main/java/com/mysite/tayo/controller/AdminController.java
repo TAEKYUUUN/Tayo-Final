@@ -21,10 +21,12 @@ import com.mysite.tayo.DTO.OrganizationDTO;
 import com.mysite.tayo.entity.Company;
 import com.mysite.tayo.entity.Member;
 import com.mysite.tayo.entity.Organization;
+import com.mysite.tayo.entity.Post;
 import com.mysite.tayo.entity.Project;
 import com.mysite.tayo.entity.ProjectMember;
 import com.mysite.tayo.entity.UserSession;
 import com.mysite.tayo.repository.MemberRepository;
+import com.mysite.tayo.repository.OrganizationRepository;
 import com.mysite.tayo.repository.ProjectMemberRepository;
 import com.mysite.tayo.repository.ProjectRepository;
 import com.mysite.tayo.service.AdminService;
@@ -45,12 +47,24 @@ public class AdminController {
 	private final ProjectRepository projectRepository;
 	private final ProjectMemberRepository projectMemberRepository;
 	private final MemberRepository memberRepository;
+	private final OrganizationRepository organizationRepository;
 	
 	@GetMapping("/adminProjectControl")
 	public String projectInfo(Model model, Authentication authentication) {
 		Member member = memberService.infoFromLogin(authentication);
 		Company company = member.getCompany();
 		List<Project> projectList =  projectRepository.findByCompanyCompanyIdx(company.getCompanyIdx());
+		ArrayList<Integer> commentsCount = new ArrayList<Integer>();
+		for (int i = 0; i < projectList.size(); i++) {
+			Integer count = 0;
+			List<Post> postList = projectList.get(i).getPostList();
+			for (int j = 0; j < postList.size(); j++) {
+				count += postList.get(j).getCommentsList().size();
+			}
+			commentsCount.add(count);
+		}
+		List<Integer> comments = commentsCount; 
+		model.addAttribute("comments", comments);
 		model.addAttribute("projectList", projectList);
 		return "/Admin/adminProjectControl";
 	}
@@ -129,9 +143,9 @@ public class AdminController {
 					userComputerSessionList.add(_userComputerSession.get());
 				}
 			}
-			if(companyMember.get(i).getIsBanned() == null && companyMember.get(i).getIsConfirmed() == null) {
+			if(companyMember.get(i).getIsBanned() == null && companyMember.get(i).getIsAllowed() == null) {
 				memberCount[0] ++;
-			}else if(companyMember.get(i).getIsBanned() == null && companyMember.get(i).getIsConfirmed() != null) {
+			}else if(companyMember.get(i).getIsBanned() == null && companyMember.get(i).getIsAllowed() != null) {
 				memberCount[1] ++;
 			}else {
 				memberCount[2] ++;
@@ -147,6 +161,46 @@ public class AdminController {
 		return "/Admin/memberList";
 	}
 	
+	@PostMapping("/AllowMember")
+	public @ResponseBody Member allowMember(@RequestBody Long memberIdx) {
+		Member member = memberRepository.findById(memberIdx).get();
+		member.setIsAllowed(null);
+		memberRepository.save(member);
+		return member;
+	}
+	
+	@PostMapping("/DenyMember")
+	public @ResponseBody Member denyMember(@RequestBody Long memberIdx) {
+		Member member = memberRepository.findById(memberIdx).get();
+		member.setIsAllowed(null);
+		member.setCompany(null);
+		memberRepository.save(member);
+		return member;
+	}
+	@PostMapping("/noMoreCompanyMember")
+	public @ResponseBody Member noMoreCompanyMember(@RequestBody Long memberIdx) {
+		Member member = memberRepository.findById(memberIdx).get();
+		member.setIsAllowed(null);
+		member.setCompany(null);
+		member.setRankName(null);
+		member.setOrganization(null);
+		member.setPhoneCompany(null);
+		member.setIsBanned(null);
+		member.setIsCompanyManager(null);
+		memberRepository.save(member);
+		return member;
+	}
+	@PostMapping("/organizationChange")
+	public @ResponseBody Member noMoreCompanyMember(@RequestBody List<Long> newOrg) {
+		Long memberIdx = newOrg.get(0);
+		Long organizationIdx = newOrg.get(1);
+		Member member = memberRepository.findById(memberIdx).get();
+		Organization organization = organizationRepository.findById(organizationIdx).get();
+		member.setOrganization(organization);
+		memberRepository.save(member);
+		return member;
+	}
+	
 	@PostMapping("/AdminMemberBan")
 	public @ResponseBody Member banMember(@RequestBody Long memberIdx) {
 		Member member = memberRepository.findById(memberIdx).get();
@@ -159,6 +213,19 @@ public class AdminController {
 		return member;
 	}
 	
+	@PostMapping("/AdminMemberManager")
+	public @ResponseBody Member managerOrNot(@RequestBody Long memberIdx) {
+		Member member = memberRepository.findById(memberIdx).get();
+		if(member.getCompany().getManager().getMemberIdx() == member.getMemberIdx()) {
+			return member;
+		}else if(member.getIsCompanyManager() ==null){
+			member.setIsCompanyManager(1);
+		}else {
+			member.setIsCompanyManager(null);
+		}
+		memberRepository.save(member);
+		return member;
+	}
 	
 	@GetMapping("/memberAddAll")
 	public String memberAddAll() {
@@ -182,10 +249,10 @@ public class AdminController {
 	public String addMember(
             @RequestParam("popupName") String name,
             @RequestParam("popupEmail") String email,
-            @RequestParam("popupRank") String rank,
+            @RequestParam(value="popupRank", required = false) String rank,
             @RequestParam(value="popupPw", required = false) String pw,
-            @RequestParam("popupPhone") String phone, 
-            @RequestParam("popupOrgIdx") Long organizationIdx,Authentication authentication) {
+            @RequestParam(value="popupPhone", required = false) String phone, 
+            @RequestParam(value="popupOrgIdx", required = false) Long organizationIdx,Authentication authentication) {
 		Optional<Member> member = memberService.existTest(email);
 		
 		if(member.isPresent()) {

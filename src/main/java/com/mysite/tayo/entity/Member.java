@@ -48,7 +48,9 @@ public class Member {
 	 @Column(name="phone", length=100)
 	 private String phone;
 	 
-	 
+	 @Column(name="is_allowed")
+  	 private Integer isAllowed = 1;
+	
 	 @ManyToOne(fetch = FetchType.LAZY)
 	 @JoinColumn(name = "company_idx")
 	 @JsonBackReference
@@ -94,4 +96,7 @@ public class Member {
 	 @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
 	 private List<UserSession> userSessionList;
     
+	 @Column(name="is_company_manager")
+	 private Integer isCompanyManager;
+	 
 }

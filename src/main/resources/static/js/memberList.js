@@ -53,6 +53,145 @@ const popupappear = function(){
 			const banmembers = document.querySelectorAll('#BannedFromCompany');
 			const notBanmembers = document.querySelectorAll('#NotBannedFromCompany');
 			
+			const managerFromNow = document.querySelectorAll('#managerFromNow');
+			const noMoreManager = document.querySelectorAll('#noMoreManager');
+			
+			const allowMember = document.querySelectorAll('#allowMember');
+			const denyMember = document.querySelectorAll('#denyMember');
+			
+			const noMoreCompanyMember = document.querySelectorAll('#noMoreCompanyMember');
+			
+			const cancelSelect = document.querySelector('#cancelSelect');
+			const changeSelectMemberOrg = document.querySelector('#changeSelectMemberOrg');
+			
+			const organizationSaveAll = document.querySelector('#organizationSaveAll');
+		
+			document.querySelector('#noChangeOrgAll').addEventListener('click', ()=>{
+				document.querySelector('#div_backgroundfull').style.display='none';
+				document.querySelector('#div_orgpopupAll').style.display='none';
+			})
+			
+			organizationSaveAll.addEventListener('click', ()=>{
+				const checkboxInTable = document.querySelectorAll('#sortableTable input[type="checkbox"]:not(#checkAllUser)');
+				checkboxInTable.forEach(input=>{
+					if(input.checked === true){
+						let memberIdx = input.parentElement.previousElementSibling.value;
+						let organizationIdx = document.querySelector('.targetOrganization').querySelectorAll('p')[1].innerHTML;
+						organizationChange(memberIdx, organizationIdx);
+					}
+				})
+				location.reload(true);
+			})
+			
+						
+			changeSelectMemberOrg.addEventListener('click', ()=>{
+				document.querySelector('#div_backgroundfull').style.removeProperty('display');
+				document.querySelector('#div_orgpopupAll').style.removeProperty('display');
+			})
+			
+			let selectedcounts = 0;
+			document.querySelectorAll('#sortableTable input[type="checkbox"]:not(#checkAllUser)').forEach(input=>{
+				input.addEventListener('click', (event)=>{
+					event.stopPropagation();
+					document.querySelector('#SetOrganizationAll').style.removeProperty('display');
+					if(input.checked === true){
+						selectedcounts ++;
+						document.querySelector('#selectedCount').textContent=selectedcounts;
+					}else{
+						selectedcounts --;
+						document.querySelector('#selectedCount').textContent=selectedcounts;
+						if(selectedcounts === 0){
+							document.querySelector('#SetOrganizationAll').style.display='none';
+						}
+					}
+				
+				})
+			})
+
+
+			selectAllCheckbox.forEach(input =>{
+				input.addEventListener('change',(event)=>{
+					const selectedtable = input.closest('table');
+					const everyinput = selectedtable.querySelectorAll('tbody input[type="checkbox"]');
+					const ischecked = event.target.checked;
+					
+					everyinput.forEach(checkbox =>{
+						checkbox.checked = ischecked;
+						if(checkbox.checked === true){
+							selectedcounts ++;
+							document.querySelector('#SetOrganizationAll').style.removeProperty('display');
+						}else{
+							selectedcounts =0;
+							document.querySelector('#SetOrganizationAll').style.display='none';
+						}
+					})
+					document.querySelector('#selectedCount').textContent=selectedcounts;
+					
+				})
+			})
+
+			
+			cancelSelect.addEventListener('click', () => {
+				document.querySelector('#SetOrganizationAll').style.display = 'none';
+				document.querySelectorAll('#sortableTable input[type="checkbox"]').forEach(input =>{
+					input.checked = false;
+				})
+				selectedcounts =0;
+			})
+			
+			noMoreCompanyMember.forEach(span=>{
+				span.addEventListener('click', (event)=>{
+					event.stopPropagation();
+					const memberIdx = event.currentTarget.parentElement.parentElement.firstElementChild.value;
+					noMoreCompanyMemberfunction(memberIdx);
+					event.currentTarget.parentElement.parentElement.remove();
+					document.querySelector('#invalidMembers').textContent --;
+				})
+			})
+			
+			denyMember.forEach(span =>{
+				span.addEventListener('click', (event)=>{
+					event.stopPropagation();
+					const memberIdx = event.currentTarget.parentElement.parentElement.firstElementChild.value;
+					denyMemberfunction(memberIdx);
+					location.reload(true);
+				})
+			}) 
+			
+			allowMember.forEach(span =>{
+				span.addEventListener('click',(event)=>{
+					event.stopPropagation();
+					const memberIdx = event.currentTarget.parentElement.parentElement.firstElementChild.value;
+					allowMemberfunction(memberIdx);
+					location.reload(true);
+				})
+			})
+			
+			managerFromNow.forEach(span =>{
+				span.addEventListener('click', (event) => {
+					event.stopPropagation();
+					const memberIdx = event.currentTarget.parentElement.parentElement.firstElementChild.value;
+					managerOrNot(memberIdx);
+					event.currentTarget.style.display='none';
+					event.currentTarget.previousElementSibling.style.display='none';
+					event.currentTarget.previousElementSibling.previousElementSibling.style.removeProperty('display');
+					event.currentTarget.previousElementSibling.previousElementSibling.previousElementSibling.style.removeProperty('display');
+				})
+			})
+			
+			
+			noMoreManager.forEach(span =>{
+				span.addEventListener('click', (event)=>{
+					event.stopPropagation();
+					const memberIdx = event.currentTarget.parentElement.parentElement.firstElementChild.value;
+					managerOrNot(memberIdx);
+					event.currentTarget.nextElementSibling.style.removeProperty('display');
+					event.currentTarget.nextElementSibling.nextElementSibling.style.removeProperty('display');
+					event.currentTarget.style.display = 'none';
+					event.currentTarget.previousElementSibling.style.display = 'none';
+				})
+			})
+			
 			notBanmembers.forEach(span =>{
 				span.addEventListener('click', (event) => {
 					event.stopPropagation();
@@ -66,24 +205,33 @@ const popupappear = function(){
 					NotBannedTbody.appendChild(event.currentTarget.parentElement.parentElement);
 					event.currentTarget.parentElement.style.display='none';
 					event.currentTarget.parentElement.parentElement.querySelector('#BannedFromCompany').parentElement.style.removeProperty('display');
-
+					document.querySelector('#normalMembers').textContent ++;
+					document.querySelector('#invalidMembers').textContent --;
 				})
 			})
 			banmembers.forEach(span=>{
 				span.addEventListener('click', (event)=>{
 					event.stopPropagation(); 
-					const memberIdx = event.currentTarget.parentElement.parentElement.firstElementChild.value;
-					banMember(memberIdx);
-					const bannedTbody = document.querySelector('#bannedTbody');
-					event.currentTarget.parentElement.parentElement.querySelectorAll('td')[0].remove();
-					const deleteTd = document.createElement('td');
-					deleteTd.innerHTML = '<span style="color:red">삭제</span>';
-					event.currentTarget.parentElement.parentElement.appendChild(deleteTd);
-					event.currentTarget.parentElement.style.display='none';
-					event.currentTarget.parentElement.parentElement.querySelector('#NotBannedFromCompany').parentElement.style.removeProperty('display');
-					bannedTbody.appendChild(event.currentTarget.parentElement.parentElement);
-					if(document.querySelector('#noBannedMember')){
-						document.querySelector('#noBannedMember').remove();
+					if(event.currentTarget.parentElement.nextElementSibling.nextElementSibling.firstElementChild.style.display ==='none'){
+						const memberIdx = event.currentTarget.parentElement.parentElement.firstElementChild.value;
+						banMember(memberIdx);
+						const bannedTbody = document.querySelector('#bannedTbody');
+						event.currentTarget.parentElement.parentElement.querySelectorAll('td')[0].remove();
+						const deleteTd = document.createElement('td');
+						deleteTd.innerHTML = '<span style="color:red">삭제</span>';
+						event.currentTarget.parentElement.parentElement.appendChild(deleteTd);
+						event.currentTarget.parentElement.style.display='none';
+						event.currentTarget.parentElement.nextElementSibling.nextElementSibling.querySelectorAll('span')[2].style.display='none';
+						event.currentTarget.parentElement.nextElementSibling.nextElementSibling.querySelectorAll('span')[3].style.display='none';
+						event.currentTarget.parentElement.parentElement.querySelector('#NotBannedFromCompany').parentElement.style.removeProperty('display');
+						bannedTbody.appendChild(event.currentTarget.parentElement.parentElement);
+						if(document.querySelector('#noBannedMember')){
+							document.querySelector('#noBannedMember').remove();
+						}
+						document.querySelector('#normalMembers').textContent --;
+						document.querySelector('#invalidMembers').textContent ++;
+					}else{
+						alert('관리자는 이용중지 시킬 수 없습니다.');
 					}
 				})
 			})
@@ -203,19 +351,6 @@ const popupappear = function(){
 				}
 			})
 			
-			
-			selectAllCheckbox.forEach(input =>{
-				input.addEventListener('change',(event)=>{
-					const selectedtable = input.closest('table');
-					const everyinput = selectedtable.querySelectorAll('tbody input[type="checkbox"]');
-					const ischecked = event.target.checked;
-					
-					everyinput.forEach(checkbox =>{
-						checkbox.checked = ischecked;
-					})
-				})
-			})
-			
 			headtab.forEach((a,index)=>{
 				a.addEventListener('click',(event)=>{
 					headtab.forEach(a=>{
@@ -292,6 +427,92 @@ const popupappear = function(){
 		        }
 		    });
 		}
+
+		const organizationChange = function(memberIdx, organizationIdx) {
+			let newOrg =[memberIdx, organizationIdx]
+			$.ajax({
+				url: "/Admin/organizationChange",
+				type: 'POST',
+				contentType: 'application/json',
+				data: JSON.stringify(newOrg),
+				success: function(response) {
+					console.log(response);
+				},
+				error: function(error) {
+					alert(error.responseText);
+					console.log(error.responseText);
+				}
+			});
+		}
+		const noMoreCompanyMemberfunction = function(memberIdx) {
+
+			$.ajax({
+				url: "/Admin/noMoreCompanyMember",
+				type: 'POST',
+				contentType: 'application/json',
+				data: JSON.stringify(memberIdx),
+				success: function(response) {
+					console.log(response);
+				},
+				error: function(error) {
+					alert(error.responseText);
+					console.log(error.responseText);
+				}
+			});
+		}
+		const denyMemberfunction = function(memberIdx) {
+
+			$.ajax({
+				url: "/Admin/DenyMember",
+				type: 'POST',
+				contentType: 'application/json',
+				data: JSON.stringify(memberIdx),
+				success: function(response) {
+					console.log(response);
+				},
+				error: function(error) {
+					alert(error.responseText);
+					console.log(error.responseText);
+				}
+			});
+		}
+
+		
+		
+const allowMemberfunction = function(memberIdx) {
+
+	$.ajax({
+		url: "/Admin/AllowMember",
+		type: 'POST',
+		contentType: 'application/json',
+		data: JSON.stringify(memberIdx),
+		success: function(response) {
+			console.log(response);
+		},
+		error: function(error) {
+			alert(error.responseText);
+			console.log(error.responseText);
+		}
+	});
+}
+
+		
+const managerOrNot = function(memberIdx) {
+
+	$.ajax({
+		url: "/Admin/AdminMemberManager",
+		type: 'POST',
+		contentType: 'application/json',
+		data: JSON.stringify(memberIdx),
+		success: function(response) {
+			console.log(response);
+		},
+		error: function(error) {
+			alert(error.responseText);
+			console.log(error.responseText);
+		}
+	});
+}
 
 const banMember = function(memberIdx) {
 	

@@ -1,10 +1,16 @@
 package com.mysite.tayo.service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +24,8 @@ import com.mysite.tayo.repository.CompanyRepository;
 import com.mysite.tayo.repository.MemberRepository;
 import com.mysite.tayo.repository.OrganizationRepository;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -46,22 +54,24 @@ public class MemberService {
     	Member member = new Member();
     	Member AuthenticationMember = infoFromLogin(authentication);
     	Long companyIdx = AuthenticationMember.getCompany().getCompanyIdx();
-    	Optional<Organization> organization = organizationRepository.findById(OrganizationIdx);
+    	
     	Optional<Company> company = companyRepository.findById(companyIdx);
-    	if(organization.isPresent() && company.isPresent()) {
+    	if(OrganizationIdx != null) {
+    		Optional<Organization> organization = organizationRepository.findById(OrganizationIdx);
+    		member.setOrganization(organization.get());
+    	}
+    	
     	Date date = new Date();
     	member.setName(name);
     	member.setEmail(email);
     	member.setPassword(passwordEncoder.encode(pw));
-    	member.setOrganization(organization.get());
     	member.setRankName(rank);
     	member.setPhone(phone);
     	member.setRegistDate(date);
     	member.setCompany(company.get());
+    	member.setIsAllowed(null);
     	this.memberRepository.save(member);
-    	}else {
-    		 throw new DataNotFoundException("Error.");
-    	}
+    	
     }
     
     public void registMember(String name, String email, String pw, int randomNumber) {
@@ -132,6 +142,38 @@ public class MemberService {
     		throw new NoSuchElementException("No member found with userId: " + email);
     	}
     	
+    }
+    
+    @Autowired
+    private JavaMailSender mailSender;
+//
+//    public void sendMessage(String to, String subject, String text) {
+//        SimpleMailMessage message = new SimpleMailMessage();
+//        message.setTo(to);
+//        message.setSubject(subject);
+//        message.setText(text);
+//        message.setFrom("minseong2782@gmail.com");
+//        mailSender.send(message);
+//    }
+    public void sendEmailWithImage(String to, String subject, String htmlContent, int code) throws MessagingException, IOException {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+        helper.setTo(to);
+        helper.setSubject(subject);
+        helper.setText(htmlContent.replace("${code}", String.valueOf(code)), true); // true indicates HTML
+        helper.setFrom("minseong2782@gmail.com");
+        mailSender.send(mimeMessage);
+    }
+    public void registerUser(String email, int certificationNumber) throws MessagingException, IOException {
+        // 회원가입 로직 처리 (예: 사용자 저장)
+
+        // 이메일 발송
+        String subject = "Tayo 가입 인증 번호 메일입니다.";
+        String htmlContent = new String(Files.readAllBytes(Paths.get("C:\\git\\Tayo-Final\\src\\main\\resources\\templates\\EmailTemplate.html"))); // 이메일 템플릿 경로
+
+        sendEmailWithImage(email, subject, htmlContent, certificationNumber);
+        System.out.println("메일 잘 갔어요");
     }
     
 }
