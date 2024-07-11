@@ -70,4 +70,10 @@ public class Post {
     
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
 	 private List<Comments> commentsList;
+    
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostMember> postMembers;
+    
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Alarm> alarms;
 }

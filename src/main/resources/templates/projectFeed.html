@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 	<meta charset="UTF-8">
 	<title>Tayo 협업페이지</title>
 	<link rel="stylesheet" type="text/css" th:href="@{/css/projectFeed.css}">
 	<script th:src="@{/js/projectFeed.js}"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
-
 <body>
 	<div id="div_side1">
 		<div id="div_organization_logo">
@@ -221,7 +221,7 @@
 																게시글 수정
 															</div>
 														</li>
-														<li class="post_option_li">
+														<li class="post_option_li" th:onclick="'deletePost(' + ${postData.post.postIdx} + ')'">
 															<div class="post_option_icon">
 																<img src="https://cdn-icons-png.flaticon.com/512/11081/11081117.png" />
 																게시글 삭제
@@ -318,7 +318,7 @@
 																게시글 수정
 															</div>
 															</li>
-														<li class="post_option_li">
+														<li class="post_option_li" th:onclick="'deletePost(' + ${postData.post.postIdx} + ')'">
 															<div class="post_option_icon">
 																<img src="https://cdn-icons-png.flaticon.com/512/11081/11081117.png" />
 																게시글 삭제
@@ -349,21 +349,20 @@
 									                                <img th:src="@{https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d}" style="margin-right: 16px;"/>
 									                            </div>
 									                            <div class="task_manager_box">
-									                                <span class="manager_item">
+									                                <span class="manager_item" style="margin:0;">
 									                                    <span class="worker_profile">
 																			<img th:src="@{https://flow.team/flow-renewal/assets/images/profile-default.png}" />
 									                                    </span>
-									                                    <span class="manager_name" th:text="${postData['manager'].name}">김민성</span>
+									                                    <span class="manager_name" th:text="${postData['data'].manager.name}"></span>
 									                                </span>
-									                                <button type="button" class="update_manager_btn">담당자 변경</button>
 									                            </div>
 									                        </li>
 									                        <li>
 									                            <div class="task_icon_box1">
 									                                <img th:src="@{https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=cfae9e268527a6f7007fe81fd49cab2c9659eea3}"
 									                                    style="margin-right:16px;" />
-									                                <p th:text="${postData != null && postData['data'] != null ? postData['data'].endDate : ''}"></p>
-									                                <button type="button" class="update_btn" name="endDate">마감일 변경</button>
+									                                <p th:text="${postData != null && postData['data'] != null ? postData['data'].endDate : ''}" style="margin-left:3px;">
+																	</p>
 									                            </div>
 									                        </li>
 									                    </ul>
@@ -472,7 +471,7 @@
 																게시글 수정
 															</div>
 														</li>
-														<li class="post_option_li">
+														<li class="post_option_li" th:onclick="'deletePost(' + ${postData.post.postIdx} + ')'">
 															<div class="post_option_icon">
 																<img src="https://cdn-icons-png.flaticon.com/512/11081/11081117.png" />
 																게시글 삭제
@@ -490,7 +489,8 @@
 									                <h4 th:text="${postData != null && postData['data'] != null ? postData['data'].title : ''}"></h4>
 									                <div class="schedule_period_area">
 									                    <span class="schedule_start_date" th:text="${postData != null && postData['data'] != null ? postData['data'].startDate : ''}"></span>
-									                    <span class="schedule_end_date" th:text="${postData != null && postData['data'] != null ? postData['data'].endDate : ''}"></span>
+									                    <span> &ensp;~&ensp;</span>
+														<span class="schedule_end_date" th:text="${postData != null && postData['data'] != null ? postData['data'].endDate : ''}"></span>
 									                </div>
 									            </div>
 									        </div>
@@ -525,12 +525,15 @@
 									                </div>
 									            </div>
 									            <div class="schedule_place_area">
-									                <div class="schedule_icon">
-									                    <img th:src="@{/img/place_icon.png}" />
-									                </div>
-									                <div class="place_details">
-									                    <span th:text="${postData != null && postData['data'] != null ? postData['data'].place : ''}"></span>
-									                </div>
+													<div style="display:flex; align-items:center;">
+										                <div class="schedule_icon">
+										                    <img th:src="@{/img/place_icon.png}" />
+										                </div>
+										                <div class="place_details">
+										                    <span th:text="${postData != null && postData['data'] != null ? postData['data'].place : ''}"></span>
+										                </div>
+													</div>
+													<div th:attr="id=${postData['data'].placeId}, data-lat=${postData['data'].placeLat}, data-lng=${postData['data'].placeLng}" class="place_map"></div>
 									            </div>
 									            <div class="post_card_content" style="white-space: pre-line; height:fit-content; max-height: 250px; overflow-y: auto;">
 									                <p th:text="${postData != null && postData['data'] != null ? postData['data'].contents : ''}"></p>
@@ -621,7 +624,7 @@
 																게시글 수정
 															</div>
 														</li>
-														<li class="post_option_li">
+														<li class="post_option_li" th:onclick="'deletePost(' + ${postData.post.postIdx} + ')'">
 															<div class="post_option_icon">
 																<img src="https://cdn-icons-png.flaticon.com/512/11081/11081117.png" />
 																게시글 삭제
@@ -636,8 +639,30 @@
 									        <div class="post_card_container">
 									            <div class="post_card_content">
 									                <div class="todo_status_area">
-									                    <div class="todo_progress_header">
-									                        <div class="progress_header_left">
+														<div class="todo_progress_header">
+															<!-- 여기 -->
+															<div class="todo_wrap_div">
+																<div style="display:flex; align-items:center; font-size:16px; height:fit-content;">
+																	<div class="task_icon_box2">
+																		<img th:src="@{https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d}"
+																			style="margin-right: 16px;" />
+																	</div>
+																	<div class="task_manager_box">
+																		<span class="manager_item" style="margin:0;">
+																			<span class="worker_profile">
+																				<img th:src="@{https://flow.team/flow-renewal/assets/images/profile-default.png}"/>
+																			</span>
+																			<span class="manager_name" th:text="${postData['data'].todoManagerName}"></span>
+																		</span>
+																	</div>
+																</div>
+																<div class="task_icon_box1" style="margin:0;">
+																	<img th:src="@{https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=cfae9e268527a6f7007fe81fd49cab2c9659eea3}"
+																		style="margin-right:16px;" />
+																	<p th:text="${postData != null && postData['data'] != null ? postData['data'].deadLine : ''}" style="font-size:14px; font-weight: 500;"></p>
+																</div>
+															</div>
+															<div class="progress_header_left">
 									                            <span class="progress_count">0</span>
 									                            <span class="progress_total" th:text="'/' + ${#lists.size(postData.data.todoNames)}"></span>
 									                        </div>
@@ -649,7 +674,7 @@
 									                        <span style="width:0%;"></span>
 									                    </div>
 									                    <ul class="todo_ul">
-									                        <li class="todo_item" th:each="todoName : ${postData.data.todoNames}">
+															<li class="todo_item" th:each="todoName : ${postData.data.todoNames}">
 									                            <div class="todo_list_area">
 									                                <div class="todo_text">
 									                                    <div class="icon_checkbox"></div>
@@ -746,7 +771,7 @@
 																게시글 수정
 															</div>
 														</li>
-														<li class="post_option_li">
+														<li class="post_option_li" th:onclick="'deletePost(' + ${postData.post.postIdx} + ')'">
 															<div class="post_option_icon">
 																<img src="https://cdn-icons-png.flaticon.com/512/11081/11081117.png" />
 																게시글 삭제
@@ -980,7 +1005,7 @@
 		</div>
 		<div id="div_backgroundfull"></div>
 		<!-- Post 작성 Modal -->
-		<div class="modal" style="display: none;">
+		<div id="postModal" class="modal" style="display: none;">
 			<form th:action="@{/projectFeed/{projectIdx}(projectIdx=${projectIdx})}" method="post" enctype="application/x-www-form-urlencoded">
 				<input type="hidden" id="tabType" name="tabType"/>
 				<div class="modal-header">
@@ -1028,53 +1053,102 @@
 		</div>
 		<!-- 참여자 초대 Modal -->
 		<div id="invite-participants-modal" class="invite-modal" style="display: none;">
-			<form id="invite_form">
-			    <div class="invite-modal-content">
-			        <div class="invite-modal-header">
-			            <span class="close" onclick="closeInviteModal()">&times;</span>
-			            <h2 style="margin-top:5px;">참여자 초대</h2>
-			        </div>
-					<div class="invite-modal-nav">
-						<h4 style="margin-left : 20px;">임직원</h4>
-					</div>
-			        <div class="invite-modal-body">
-			            <div class="list">
-							<div class="search-wrapper">
-				                <input type="text" class="invite_searchbar" id="search" placeholder="이름, 소속, 전화번호 검색">
-							</div>
-			                <ul id="employeeList">
-								<li th:each="companyMember : ${companyMemberList}" th:data-id="${companyMember.memberIdx}" th:data-name="${companyMember.name}" class="invite_list">
-									<div class="check_invite">
-										<img src="https://flow.team/flow-renewal/assets/images/icons/icon_check.png?v=7f39425e224a53bff0043caff9f6446b14c0f667"/>
-									</div>
-									<div class="company_member_info">
-										<span><img src="https://flow.team/flow-renewal/assets/images/profile-default.png" alt="" /></span>
-										<dl>
-											<dt>
-												<strong th:text="${companyMember.name}"></strong>
-												<em th:text="${companyMember.rankName}"></em>
-											</dt>
-											<dd>
-												<strong th:text="${companyMember.company.companyName}"></strong>
-												<span th:text="${companyMember.organization != null ? companyMember.organization.organizationName : '-'}"></span>
-											</dd>
-										</dl>
-									</div>
-								</li>
-			                </ul>
-			            </div>
-			            <div class="selected-list">
-			                <h3>선택된 참여자</h3>
-			                <ul id="selectedList"></ul>
-			            </div>
-			        </div>
-			        <div class="invite-modal-footer">
-			            <button class="invite_submit_btn">초대하기</button>
-			        </div>
-			    </div>
-			</form>
+		    <form id="invite_form">
+		        <div class="invite-modal-content">
+		            <div class="invite-modal-header">
+		                <span class="close" onclick="closeInviteModal()">&times;</span>
+		                <h2 style="margin-top:5px;">참여자 초대</h2>
+		            </div>
+		            <div class="invite-modal-nav">
+		                <h4 style="margin-left : 20px;">임직원</h4>
+		            </div>
+		            <div class="invite-modal-body">
+		                <div class="list">
+		                    <div class="search-wrapper">
+		                        <input type="text" class="invite_searchbar" id="search" placeholder="이름, 소속, 전화번호 검색">
+		                    </div>
+		                    <ul id="employeeList">
+		                        <li th:each="companyMember : ${companyMemberList}" th:data-id="${companyMember.memberIdx}" th:data-name="${companyMember.name}" class="invite_list">
+		                            <div class="check_invite">
+		                                <img src="https://flow.team/flow-renewal/assets/images/icons/icon_check.png?v=7f39425e224a53bff0043caff9f6446b14c0f667"/>
+		                            </div>
+		                            <div class="company_member_info">
+		                                <span><img src="https://flow.team/flow-renewal/assets/images/profile-default.png" alt="" /></span>
+		                                <dl>
+		                                    <dt>
+		                                        <strong th:text="${companyMember.name}"></strong>
+		                                        <em th:text="${companyMember.rankName}"></em>
+		                                    </dt>
+		                                    <dd>
+		                                        <strong th:text="${companyMember.company.companyName}"></strong>
+		                                        <span th:text="${companyMember.organization != null ? companyMember.organization.organizationName : '-'}"></span>
+		                                    </dd>
+		                                </dl>
+		                            </div>
+		                        </li>
+		                    </ul>
+		                </div>
+		                <div class="selected-list">
+		                    <h3>선택된 참여자</h3>
+		                    <ul id="selectedList"></ul>
+		                </div>
+		            </div>
+		            <div class="invite-modal-footer">
+		                <button class="invite_submit_btn">초대하기</button>
+		            </div>
+		        </div>
+		    </form>
 		</div>
-	</div>
+		<!-- 담당자 추가 Modal -->
+		<div id="div_add_manager_modal" class="addmanager-modal">
+			<div class="manager_modal_wrap">
+				<div class="search_manager">
+					<input id="managerInput" type="text" autocomplete="off" spellcheck="false" placeholder="담당자를 입력하세요" />
+				</div>
+				<div class="memberlist_wrap">
+					<div class="selectManager" style="padding:10px;">
+						<span class="manager_item" style="display:none;">
+							<span class="selected_profile">
+								<img src="https://flow.team/flow-renewal/assets/images/profile-default.png" />
+							</span>
+							<span class="manager_name">김민성</span>
+						</span>
+					</div>
+					<div class="memberlist_area">
+						<ul class="can_manager_ul scrollbar" style="width: 276px; height: 199px;">
+							<li class="can_manager_li" th:each="projectMember : ${projectMemberList}" th:data-id="${projectMember.member.memberIdx}" th:data-name="${projectMember.member.name}">
+								<div class="check_add_manager">
+									<img
+										src="https://flow.team/flow-renewal/assets/images/icons/icon_check.png?v=7f39425e224a53bff0043caff9f6446b14c0f667" />
+								</div>
+								<div class="can_manager_member_info">
+									<span style="margin-right:4px;">
+										<img src="https://flow.team/flow-renewal/assets/images/profile-default.png"
+											style="width:40px; height:40px; border-radius:14px;" alt="" />
+									</span>
+									<dl>
+										<dt>
+											<strong th:text="${projectMember.member.name}">우태균</strong>
+											<em th:text="${projectMember.member.rankName}">신</em>
+										</dt>
+										<dd>
+											<strong th:text="${projectMember.member.company.companyName}">Kakao</strong>
+											<span th:text="${projectMember.member.organization != null ? projectMember.member.organization.organizationName : '&ensp;-'}"></span>
+										</dd>
+									</dl>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="btn_wrap">
+					<form id="managerForm">
+						<button class="add_submit_btn">선택</button>
+					</form>
+				</div>
+			</div>
+		</div>
+		</div>
 	</div>
 </body>
 

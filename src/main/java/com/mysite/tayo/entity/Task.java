@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -55,6 +56,6 @@ public class Task {
 	@Column(name = "contents", columnDefinition = "CLOB")
 	private String contents;
 	
-	@OneToMany(mappedBy = "task", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "task", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<LowerTask> lowerTasks = new ArrayList<>();
 }

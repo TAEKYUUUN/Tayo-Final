@@ -27,7 +27,7 @@ public class ProjectService {
 	private final ProjectMemberRepository projectMemberRepository;
 	private final MemberRepository memberRepository;
 	private final AlarmRepository alarmRepository;
-	
+		
 	// 프로젝트 생성
 	public void createProject(String projectName, Integer mainTab, Integer projectType, Integer withoutConfirm, Long memberIdx, Company company) {
 		Date date = new Date();
