@@ -31,9 +31,11 @@ public class ChatController {
 
 	
 	@GetMapping("/chatRoom/{chatIdx}")
-	public String chat(Model model, @PathVariable("chatIdx") Long chatIdx) {
+	public String chat(Model model, @PathVariable("chatIdx") Long chatIdx, Authentication authentication) {
+		Member member = memberService.infoFromLogin(authentication);
 		Optional<Chat> _chatList = this.chatService.getId(chatIdx);
 		Chat chatList = _chatList.get();
+		model.addAttribute("member", member);
 		model.addAttribute("chatList", chatList);
 		return "chatRoom";
 	}
@@ -63,8 +65,9 @@ public class ChatController {
     }
 
 	@GetMapping("/chatCollection")
-	public String chatCollection(Model model) {
-		List<Chat> chatList = this.chatService.getList();
+	public String chatCollection(Model model, Authentication authentication) {
+		Member member = memberService.infoFromLogin(authentication);
+		List<Chat> chatList = this.chatService.getList(member);
 		model.addAttribute("chatList", chatList);
 		return "chatCollection";
 	}

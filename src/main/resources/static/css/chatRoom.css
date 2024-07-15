@@ -235,7 +235,7 @@
 
       .left-section {
       	width: 100%;
-      	padding: 0 0 0px 20px;
+      	padding: 0 0 5px 20px;
       	position: relative;
       	float: left;
       	font-size: 14px;
@@ -243,7 +243,7 @@
 
       .right-section {
       	width: 100%;
-      	padding: 10px 20px 0 0;
+      	padding: 0 20px 10px 0;
       	position: relative;
       	float: right;
       	font-size: 14px;
@@ -503,9 +503,6 @@
       	text-align: center;
       }
 
-      .chat-container> :last-child>li {
-      	padding-bottom: 20px;
-      }
 
       footer {
       	width: 100%;
@@ -1003,6 +1000,7 @@
       	text-overflow: ellipsis;
       	white-space: nowrap;
       	overflow: hidden;
+      	margin: 0;
       }
 
       .file-size {
@@ -1033,13 +1031,13 @@
 
       .icons-arrow_down {
       	width: 19.02px;
-      	height: 18px;
+      	height: 30px;
       	background-image: url('https://flow.team/flow-renewal/assets/images/chat-sprite.png');
       	position: initial;
       	display: inline-block;
-      	background-size: 990px;
+      	background-size: 998px;
       	text-indent: -9999px;
-      	background-position: 977px 29px;
+      	background-position: 989px 31px;
       }
 
       .user-file:hover {
@@ -1058,7 +1056,7 @@
       }
 
       .btn-download:hover .icons-arrow_down {
-      	background-position: 938px 29px;
+      	background-position: 950px 31px;
       }
 
       .pre-img {

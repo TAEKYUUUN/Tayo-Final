@@ -94,7 +94,8 @@
 					<div class="check-menu-item"></div>
 					<i th:text="${chatContents.hasFile.fileType}" class="icon-file"></i>
 					<ul class="info">
-						<li th:text="${chatContents.hasFile.fileName}" class="name"></li>
+						<li th:text="${#strings.substring(chatContents.hasFile.fileName, chatContents.hasFile.fileName.indexOf('_') + 1)}"
+							class="name"></li>
 						<li th:text="${chatContents.hasFile.data.length/1024 + 'KB'}"></li>
 						<li th:text="${chatContents.member.name}"></li>
 						<li th:text="${chatContents.time}"></li>
@@ -110,9 +111,9 @@
 						and (chatContents.hasFile.fileType == 'image/png' or chatContents.hasFile.fileType == 'image/jpeg')}"
 					class="js-collection-item collection-img-item">
 					<div class="check-menu-item"></div>
-					<i class="icon-view" style="
-                background-image: url(https://flow.team/flowImg/FLOW_2024070227817_d98ec06e-a8b3-42fb-b695-88e539d282a0_thumb.png?width=40&height=40);
-              "></i>
+
+					<i class="icon-view"><img  th:src="${chatContents.getFileUrl()}" />
+					</i>
 					<ul class="info">
 						<li class="name">사진.png</li>
 						<li>1.69 KB</li>

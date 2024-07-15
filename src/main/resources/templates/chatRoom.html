@@ -14,6 +14,96 @@
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 	<script>
 		document.addEventListener('DOMContentLoaded', function () {
+			// 이벤트 리스너를 초기화하는 함수
+			function addEventListenersToButtons() {
+				const modalMoreBtns = document.querySelectorAll('.modal-more-btn');
+				const modalMores = document.querySelectorAll('.modal-more');
+				const replyOpenBtns = document.querySelectorAll('.reply-open-btn');
+				const chatContainer = document.querySelector('.chat-container');
+				const replyIdxInput = document.getElementById('reply-idx');
+				const chatReplyAlert = document.querySelector('.chat-reply-alert');
+				const replyChatTxt = document.getElementById('reply-chat-txt');
+				const replyFrom = document.getElementById('reply-from');
+
+
+
+				modalMoreBtns.forEach((btn, index) => {
+					const container = modalMores[index];
+					btn.addEventListener('click', () => {
+						container.style.display = 'block';
+					});
+					container.addEventListener('mouseleave', () => {
+						container.style.display = 'none';
+					});
+				});
+
+				replyOpenBtns.forEach((btn) => {
+					btn.addEventListener('click', (e) => {
+						const chatContainerLastChild = chatContainer.lastElementChild;
+						chatContainerLastChild.style.paddingBottom = '70px';
+						scrollToBottom()
+						const chatTxtWr = e.target.closest('.chat-txt-wr');
+						if (chatTxtWr) {
+							const userSection = e.target.closest('.user-section');
+							const chatTxt = chatTxtWr.querySelector('.chat-txt');
+							const fileTit = chatTxtWr.querySelector('.file-tit');
+							const chatContentIdx = chatTxtWr.closest('li').querySelector('input').value;
+							replyIdxInput.value = chatContentIdx;
+							replyChatContentIdx = chatContentIdx;
+
+							chatReplyAlert.style.display = 'block';
+							chatReplyAlert.classList.add('on');
+							if (chatTxt) {
+								replyChatTxt.innerText = chatTxt.innerText;
+							} else if (fileTit) {
+								replyChatTxt.innerText = fileTit.innerText;
+							}
+							if (userSection) {
+								const userName = userSection.querySelector('.user-title span strong');
+								if (userName) {
+									replyFrom.innerText = `${userName.innerText}에게 답장`;
+								}
+							} else {
+								replyFrom.innerText = '나에게 답장';
+							}
+						}
+					});
+				});
+
+				// 이벤트 위임을 통해 동적 요소에도 이벤트 리스너 적용
+				document.body.addEventListener('click', function (e) {
+					if (e.target.classList.contains('copy')) {
+						const chatTxtWr = e.target.closest('.chat-txt-wr');
+						if (chatTxtWr) {
+							const chatTxt = chatTxtWr.querySelector('.chat-txt');
+							if (chatTxt) {
+								const text = chatTxt.innerText;
+								navigator.clipboard.writeText(text).then(() => {
+									alert('텍스트가 복사되었습니다.');
+								}).catch((err) => {
+									console.error('텍스트 복사 실패:', err);
+								});
+							} else {
+								console.error('chat-txt 요소를 찾을 수 없습니다.');
+							}
+						} else {
+							console.error('chat-txt-wr 요소를 찾을 수 없습니다.');
+						}
+					}
+				});
+
+				const btnCloseReply = document.querySelector('.btn-close-reply');
+				btnCloseReply.addEventListener('click', () => {
+					const lastChild = chatContainer.lastElementChild;
+					lastChild.style.paddingBottom = '20px';
+					replyReset();
+				});
+			}
+
+			// DOM이 로드된 후 초기 이벤트 리스너 설정
+			// 웹소켓 실행시 이벤트 핸들러가 사라져서 재 호출을 위해 달아 놓음
+			addEventListenersToButtons();
+
 			const noticebtn = document.querySelector('.small-notice-button');
 			const noticeBox = document.querySelector('.notice-box');
 			const noticeCloseBtns = document.querySelectorAll('.notice-box-close-btn');
@@ -30,17 +120,27 @@
 			const replyChatTxt = document.getElementById('reply-chat-txt');
 			const replyFrom = document.getElementById('reply-from');
 			const chatContainer = document.querySelector('.chat-container');
-			const chatContainerLastChile = document.querySelector('.chat-container').lastElementChild.querySelector('div');
 			const iconFile = document.querySelectorAll('.icon-file');
 			const replyIdxInput = document.getElementById('reply-idx');
 
+			let replyChatContentIdx;
 
+			scrollToBottom();
+
+			function replyReset() {
+				chatReplyAlert.style.display = 'none';
+				chatReplyAlert.classList.remove('on');
+				replyIdxInput.value = ''; // 답장 인덱스 값 초기화
+				replyChatContentIdx = undefined;
+				const chatContainerLastChild = chatContainer.lastElementChild;
+				chatContainerLastChild.style.paddingBottom = '20px';
+			}
 
 			noticebtn.addEventListener('click', () => {
 				noticeBox.style.display = 'block';
 			});
 
-			noticeCloseBtns.forEach(btn => {
+			noticeCloseBtns.forEach((btn) => {
 				btn.addEventListener('click', () => {
 					noticeBox.style.display = 'none';
 				});
@@ -53,34 +153,11 @@
 
 			modalMoreBtns.forEach((btn, index) => {
 				const container = modalMores[index];
-
 				btn.addEventListener('click', () => {
 					container.style.display = 'block';
 				});
-
 				container.addEventListener('mouseleave', () => {
 					container.style.display = 'none';
-				});
-			});
-
-			copyBtn.forEach(btn => {
-				btn.addEventListener('click', (e) => {
-					const chatTxtWr = e.target.closest('.chat-txt-wr');
-					if (chatTxtWr) {
-						const chatTxt = chatTxtWr.querySelector('.chat-txt');
-						if (chatTxt) {
-							const text = chatTxt.innerText;
-							navigator.clipboard.writeText(text).then(() => {
-								alert('텍스트가 복사되었습니다.');
-							}).catch(err => {
-								console.error('텍스트 복사 실패:', err);
-							});
-						} else {
-							console.error('chat-txt 요소를 찾을 수 없습니다.');
-						}
-					} else {
-						console.error('chat-txt-wr 요소를 찾을 수 없습니다.');
-					}
 				});
 			});
 
@@ -89,68 +166,37 @@
 			});
 
 			chatMenu.addEventListener('click', function (e) {
-				var isClickInside = menuContainer.contains(e.target);
-
+				const isClickInside = menuContainer.contains(e.target);
 				if (!isClickInside) {
 					chatMenu.style.display = 'none';
 				}
 			});
 
-			replyOpenBtn.forEach(btn => {
-				btn.addEventListener('click', (e) => {
-					const lastChild = chatContainerLastChile.style.paddingBottom = '70px';
-					const chatTxtWr = e.target.closest('.chat-txt-wr');
-					if (chatTxtWr) {
-						const userSection = e.target.closest('.user-section');
-						const chatTxt = chatTxtWr.querySelector('.chat-txt');
-						const fileTit = chatTxtWr.querySelector('.file-tit');
-						const chatContentIdx = chatTxtWr.closest('li').querySelector('input').value;
-						replyIdxInput.value = chatContentIdx;
-
-						chatReplyAlert.style.display = 'block';
-						chatReplyAlert.classList.add('on'); // 'on' 클래스 추가
-						if (chatTxt) {
-							const text = chatTxt.innerText;
-							replyChatTxt.innerText = text;
-						} else {
-							const text = fileTit.innerText;
-							replyChatTxt.innerText = text;
-						}
-						if (userSection) {
-							const userName = userSection.querySelector('.user-title span strong');
-							if (userName) {
-								replyFrom.innerText = `${userName.innerText}에게 답장`;
-							}
-						} else {
-							replyFrom.innerText = '나에게 답장';
-						}
-					}
-				});
-			});
-
-			btnCloseReply.addEventListener('click', () => {
-				const lastChild = chatContainerLastChile.style.paddingBottom = '20px';
-				chatReplyAlert.style.display = 'none';
-				chatReplyAlert.classList.remove('on'); // 'on' 클래스 제거
-				replyIdxInput.value = ''; // Clear the reply index value
-			});
-
 			document.querySelectorAll('.menu-btns li').forEach(function (item) {
 				item.addEventListener('click', function () {
-					window.open('http://localhost:8095/chatCollection', '_blank', 'width=640,height=800');
+					window.open(
+						'http://localhost:8095/chatCollection',
+						'_blank',
+						'width=640,height=800'
+					);
 				});
 			});
 
-			iconFile.forEach(icon => {
+			iconFile.forEach((icon) => {
 				const fileType = icon.innerText;
-
 				if (fileType === 'application/haansofthwp') {
 					icon.classList.add('icon-hwp');
-				} else if (fileType === 'application/vnd.openxmlformats-officedocument.presentationml.presentation') {
+				} else if (
+					fileType ===
+					'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+				) {
 					icon.classList.add('icon-ppt');
 				} else if (fileType === 'application/msword') {
 					icon.classList.add('icon-etc');
-				} else if (fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+				} else if (
+					fileType ===
+					'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+				) {
 					icon.classList.add('icon-excel');
 				} else if (fileType === 'application/pdf') {
 					icon.classList.add('icon-pdf');
@@ -159,202 +205,389 @@
 				}
 			});
 
-		// chatContent에 대해 form 태그 생성 및 전송
-
+			// chatContent에 대해 form 태그 생성 및 전송
 			const chatContentsForm = document.getElementById('chat-contents-form');
 			const createPostContent = document.querySelector('.create-post-content');
 			const contentInputBtn = document.getElementById('content-input');
 			const chatIdx = chatContentsForm.querySelector('input').value;
-
-
-
-			//////////////////////// 웹소켓 ////////////////////////
-			const username = document.getElementById('senderName').innerText;
+			// 웹소켓 설정
+			const loginMember = document.getElementById('login-member').value;
+			const userName = document.getElementById('senderName').innerText;
 			const userIdx = document.getElementById('senderIdx').innerText;
 			const chatMsg = document.querySelector('.chat-container');
+			let replyIdx;
+			let chatContent;
 
+			const websocket = new WebSocket('ws://localhost:8095/ws/chat');
+
+			// 주기적으로 상태 확인
+			setInterval(() => {
+				const displayStyle = window.getComputedStyle(chatReplyAlert).display;
+
+				if (displayStyle === 'block') {
+					replyIdx = replyChatContentIdx;
+				} else {
+					replyIdx = '//~//null//~//';
+				}
+			}, 100);
 
 			function send() {
 
-				let msg = document.querySelector(".create-post-content");
+				const msg = document.querySelector('.create-post-content');
+				chatContent = msg.innerText;
 
-				let chatContent = msg.innerText;
-
-				let message = {
-					memberName: username,
+				const message = {
+					userName: userName,
 					chatIdx: chatIdx,
 					content: chatContent,
-					member: userIdx
-				}; 
-				
-				console.log(username + ":" + msg.innerText);
-				websocket.send(username + ":" + msg.innerText);
-				websocket.send(JSON.stringify(message))
-
+					userIdx: userIdx,
+					replyIdx: replyIdx
+				};
+				console.log(message);
+				console.log(userName + ':' + msg.innerText);
+				websocket.send(JSON.stringify(message));
 				msg.innerText = '';
 			}
-			//채팅창에서 나갔을 때
+
 			function onClose(evt) {
-				var str = username + ": 님이 방을 나가셨습니다.";
-				websocket.send(str);
+				console.log("websocket close")
+				/*const str = `<div class='chat-out'><span>${userName}님이 방을 나가셨습니다.</span></div>`;
+				chatMsg.innerHTML += str;
+				if (chatContent === undefined) {
+					chatContent = '//~//null//~//';
+				}
+				if (replyIdx === undefined) {
+					replyIdx = '//~//null//~//';
+				}
+
+				const message = {
+					userName: userName,
+					chatIdx: chatIdx,
+					content: chatContent,
+					userIdx: userIdx,
+					replyIdx: replyIdx
+				};
+				websocket.send(JSON.stringify(message));*/
+
 			}
 
-			//채팅창에 들어왔을 때
 			function onOpen(evt) {
-				var str = username + ": 님이 입장하셨습니다.";
-				websocket.send(str);
+				console.log("websocket open")
+				/*const str = `<div class='chat-out'><span>${userName}님이 입장하셨습니다.</span></div>`;
+				chatMsg.innerHTML += str;
+				if (chatContent === undefined) {
+					chatContent = '//~//null//~//';
+				}
+				if (replyIdx === undefined) {
+					replyIdx = '//~//null//~//';
+				}
+				const message = {
+					userName: userName,
+					chatIdx: chatIdx,
+					content: chatContent,
+					userIdx: userIdx,
+					replyIdx: replyIdx
+				};
+				console.log(message);
+				addEventListenersToButtons(); // 새로 추가된 요소에 이벤트 리스너 재적용
+				websocket.send(JSON.stringify(message));*/
 			}
 
-			function onMessage(msg) {
-				var data = msg.data;
-				var sessionId = null;
-				//데이터를 보낸 사람
-				var message = null;
-				var arr = data.split(":");
+			function onMessage(evt) {
+				const requestData = JSON.parse(evt.data);
+				const {curUserIdx, curChatContent, chatContentTime, maxChatContentIdx, replyChatContent, replyMemberName} = requestData;
+				console.log(curUserIdx, curChatContent, maxChatContentIdx, replyChatContent, replyMemberName);
 
-				for (var i = 0; i < arr.length; i++) {
-					console.log('arr[' + i + ']: ' + arr[i]);
+				let replyContent;
+				let replyUserName;
+
+				if (replyChatContent !== null) {
+					replyContent = replyChatContent;
+					replyUserName = replyMemberName;
 				}
+				console.log(replyUserName, replyContent);
+				try {
+					const cur_session = loginMember;
+					const sessionId = curUserIdx;
+					const message = curChatContent;
 
-				var cur_session = username;
+					if (sessionId == cur_session && message !== '//~//null//~//'
+						&& (replyChatContent === null)) {
+						// 내가 보낸경우
+						const str = `
+		          <li class='right-section'>
+					<input type="hidden" value='${maxChatContentIdx}'>
+		            <div>
+		              <div class='chat-right clearfix'>
+		                <div class='chat-txt-wr'>
+		                  <div class='chat-btns'>
+		                    <div>
+		                      <div class='chat-btn-wrap'>
+		                        <button class='reply-open-btn'>
+		                          <img src='/img/chat-btn-left.png' alt='' />
+		                        </button>
+		                        <div class='medal-more-wrap'>
+		                          <button class='modal-more-btn'>
+		                            <img src='/img/chat-btn-right.png' alt='' />
+		                          </button>
+		                          <ul class='modal-more'>
+		                            <li><button class='copy'>복사</button></li>
+		                            <li><button class='notice'>공지설정</button></li>
+		                            <li class='delete-only-for-me'><button class='del'>나에게서만 삭제</button></li>
+		                            <li class='delete-all'><button class='del'>전체삭제</button></li>
+		                          </ul>
+		                        </div>
+		                      </div>
+		                      <div class='user-time'>${chatContentTime}</div>
+		                    </div>
+		                    <div class='chat-read'></div>
+		                    <div class='chat-read-none'></div>
+		                  </div>
+		                  <div class='chat-txt'>
+		                    <div>${message}</div>
+		                  </div>
+		                </div>
+		              </div>
+		            </div>
+		          </li>`;
+						chatMsg.innerHTML += str;
+						addEventListenersToButtons(); // 새로 추가된 요소에 이벤트 리스너 재적용
+						scrollToBottom();
 
-				//현재 세션에 로그인 한 사람
-				console.log("cur_session : " + cur_session);
-				sessionId = arr[0];
-				message = arr[1];
+					} else if (sessionId == cur_session && message !== '//~//null//~//' && replyChatContent !== null) {
+						// 내가 보낸경우 + 답장인경우
+						str = `						
+						<li class='right-section'>
+							<input type="hidden" value='${maxChatContentIdx}'>
+						  <div>
+						    <div class='chat-right clearfix'>
+						      <div class='chat-txt-wr'>
+						        <div class='chat-btns'>
+						          <div>
+						            <div class='chat-btn-wrap'>
+						              <button class='reply-open-btn'>
+						                <img src='/img/chat-btn-left.png' alt='' />
+						              </button>
+						              <div class='medal-more-wrap'>
+						                <button class='modal-more-btn'>
+						                  <img src='/img/chat-btn-right.png' alt='' />
+						                </button>
+						                <ul class='modal-more'>
+						                  <li>
+						                    <button class='copy'>복사</button>
+						                  </li>
+						                  <li class='notice'>
+						                    <button>공지설정</button>
+						                  </li>
+						                  <li class='delete-only-for-me'>
+						                    <button class='del'>나에게서만 삭제</button>
+						                  </li>
+						                  <li class='delete-all'>
+						                    <button class='del'>전체삭제</button>
+						                  </li>
+						                </ul>
+						              </div>
+						            </div>
+						            <div class='user-time'>${chatContentTime}</div>
+						          </div>
+						          <div class='chat-read'></div>
+						          <div class='chat-read-none'></div>
+						        </div>
+						        <div class='reply-box'>
+						          <div class='chat-txt-reply'>
+						            <strong>${replyUserName}님에게 답장</strong>
+						            <p>${replyContent}</p>
+						          </div>
+						          <div class='chat-txt'> 
+						            <div>${message}</div>
+						          </div>
+						        </div>
+						      </div>
+						    </div>
+						  </div>
+						</li>`
+						chatMsg.innerHTML += str;
+						addEventListenersToButtons();
+						scrollToBottom();
+					} else if (sessionId != cur_session && message !== '//~//null//~//'
+						&& (replyChatContent === null)) {
+						// 상대가 보낸경우
+						const str = `<li class='left-section'>
+							<input type="hidden" value='${maxChatContentIdx}'>
+						  <div class='user-picture'>
+						    <img src='/img/chat_profile.png' alt='' />
+						  </div>
+						  <div class='user-section'>
+						    <div class='user-title'>
+						      <span>
+						        <strong>${userName}</strong>
+						      </span>
+						    </div>
+						    <div class='chat-left clearfix'>
+						      <div class='chat-txt-wr'>
+						        <div class='chat-txt'>
+						          <div>${message}</div>
+						        </div>
+						        <div class='chat-btns'>
+						          <div class='chat-read'></div>
+						          <div class='chat-read-none'></div>
+						          <div>
+						            <div class='chat-btn-wrap'>
+						              <button class='reply-open-btn'>
+						                <img src='/img/chat-btn-left.png' alt='' />
+						              </button>
+						              <div class='medal-more-wrap'>
+						                <button class='modal-more-btn'>
+						                  <img src='/img/chat-btn-right.png' alt='' />
+						                </button>
+						                <ul class='modal-more'>
+						                  <li>
+						                    <button class='copy'>복사</button>
+						                  </li>
+						                  <li class='notice'>
+						                    <button type='submit'>공지설정</button>
+						                  </li>
+						                  <li class='delete-only-for-me'>
+						                    <button class='del'>나에게서만 삭제</button>
+						                  </li>
+						                  <li class='delete-all'>
+						                    <button class='del'>전체삭제</button>
+						                  </li>
+						                </ul>
+						              </div>
+						            </div>
+						            <div class='user-time'>${chatContentTime}</div>
+						          </div>
+						        </div>
+						      </div>
+						    </div>
+						  </div>
+						</li>`;
+						chatMsg.innerHTML += str;
+						addEventListenersToButtons();
+						scrollToBottom();
+					} else if (sessionId != cur_session && message !== '//~//null//~//' && replyChatContent !== null) {
+						// 상대가 보낸경우 + 답장인 경우
+						const str = `<li class='left-section'>
+							<input type="hidden" value='${maxChatContentIdx}'>
+						  <div class='user-picture'>
+						    <img src='/img/chat_profile.png' alt='' />
+						  </div>
+						  <div class='user-section'>
+						    <div class='user-title'>
+						      <span>
+						        <strong>${userName}</strong>
+						      </span>
+						    </div>
+						    <div class='chat-left clearfix'>
+						      <div class='chat-txt-wr'>
+						        <div class='reply-box'>
+						          <div class='chat-txt-reply'>
+									<strong>${replyUserName}님에게 답장</strong>
+						            <p>${replyContent}</p>
+						          </div>
+						          <div class='chat-txt'>
+						            <div>${message}</div>
+						          </div>
+						        </div>
+						        <div class='chat-btns'>
+						          <div></div>
+						          <div class='chat-read-none'></div>
 
-				alert(sessionId);
-				console.log("sessionID : " + sessionId);
-				console.log("cur_session : " + cur_session);
+						          <div>
+						            <div class='chat-btn-wrap'>
+						              <button class='reply-open-btn'>
+						                <img src='/img/chat-btn-left.png' alt='' />
+						              </button>
+						              <div class='medal-more-wrap'>
+						                <button class='modal-more-btn'>
+						                  <img src='/img/chat-btn-right.png' alt='' />
+						                </button>
+						                <ul class='modal-more'>
+						                  <li>
+						                    <button class='copy'>복사</button>
+						                  </li>
+						                  <li class='notice'>
+						                    <button type='submit'>공지설정</button>
+						                  </li>
+						                  <li class='delete-only-for-me'>
+						                    <button class='del'>나에게서만 삭제</button>
+						                  </li>
+						                  <li class='delete-all'>
+						                    <button class='del'>전체삭제</button>
+						                  </li>
+						                </ul>
+						              </div>
+						            </div>
+						            <div class='user-time'>${chatContentTime}</div>
+						          </div>
+						        </div>
+						      </div>
+						    </div>
+						  </div>
+						</li>`;
+						chatMsg.innerHTML += str;
+						addEventListenersToButtons();
+						scrollToBottom();
+					}
 
-				//로그인 한 클라이언트와 타 클라이언트를 분류하기 위함
-
-				if (sessionId == cur_session) {
-					var str = "<li class='right-section'>";
-					str += "<div>";
-					str += "<div class='chat-right clearfix'>";
-					str += "<div class='chat-txt-wr'>";
-					str += "<div class='chat-btns'>";
-					str += "<div>";
-					str += "<div class='chat-btn-wrap'>";
-					str += "<button class='reply-open-btn'>";
-					str += "<img src='/img/chat-btn-left.png' alt='' />";
-					str += "</button>";
-					str += "<div class='medal-more-wrap'>";
-					str += "<button class='modal-more-btn'>";
-					str += "<img src='/img/chat-btn-right.png' alt='' />";
-					str += "</button>";
-					str += "<ul class='modal-more'>";
-					str += "<li><button class='copy'>복사</button></li>";
-					str += "<li >";
-					str += "<button class='notice'>공지설정</button>";
-					str += "</li>";
-					str += "<li class='delete-only-for-me'>";
-					str += "<button class='del'>나에게서만 삭제</button>";
-					str += "</li>";
-					str += "<li class='delete-all'>";
-					str += "<button class='del'>전체삭제</button>";
-					str += "</li>";
-					str += "</ul>";
-					str += "</div>";
-					str += "</div>";
-					str += "<div class='user-time'>";
-					str += "</div>";
-					str += "</div>";
-					str += "<div class='chat-read'></div>";
-					str += "<div ";
-					str += "class='chat-read-none'></div>";
-					str += "</div>";
-					str += "<div class='chat-txt'>";
-					str += "<div>" + message + "</div>";
-					str += "</div>";
-					str += "</div>";
-					str += "</div>";
-					str += "</div>";
-					str += "</li>";
-					chatMsg.innerHTML += str;
+				} catch (error) {
+					console.error('onMessage error:', error);
 				}
-				else {
-					/*var str = "<div class='col-6'>";
-					str += "<div class='alert alert-warning'>";
-					str += "<b>" + sessionId + " : " + message + "</b>";
-					str += "</div></div>";
-					chatmsg.append(str);*/
-				}
-
 			}
 
-
-
-
-			const websocket = new WebSocket("ws://localhost:8095/ws/chat");
 
 			websocket.onmessage = onMessage;
 			websocket.onopen = onOpen;
 			websocket.onclose = onClose;
-			//////////////////////// 웹소켓 끝 //////////////////////// 
 
-			// 새로운 form 요소 생성
-			const form = document.createElement('form');
-			form.method = 'post';  // 필요에 따라 action 속성도 설정 가능
-			form.action = '/chatRoom/' + chatIdx; // 실제 서버 엔드포인트로 변경
+			// 새로운 form 요소 생성 및 설정
+			/*			const form = document.createElement('form');
+						form.method = 'post';
+						form.action = '/chatRoom/' + chatIdx;
+			
+						const hiddenInput = document.createElement('input');
+						hiddenInput.type = 'hidden';
+						hiddenInput.name = 'chatContents';
+						hiddenInput.id = 'hidden-content-input';
+			
+						while (chatContentsForm.firstChild) {
+							form.appendChild(chatContentsForm.firstChild);
+						}
+			
+						form.appendChild(hiddenInput);
+						chatContentsForm.parentNode.replaceChild(form, chatContentsForm);
+						form.classList.add('write-wr');*/
+			function scrollToBottom() {
+				chatContainer.scrollTop = chatContainer.scrollHeight;
+			}
 
-			// 숨겨진 입력 필드 생성
-			const hiddenInput = document.createElement('input');
-			hiddenInput.type = 'hidden';
-			hiddenInput.name = 'chatContents';
-			hiddenInput.id = 'hidden-content-input';
 
-			// form 요소에 기존의 chat-contents-form 자식 요소들을 추가
-			while (chatContentsForm.firstChild) {
-				form.appendChild(chatContentsForm.firstChild);
-			};
-
-			// form 요소에 숨겨진 입력 필드 추가
-			form.appendChild(hiddenInput);
-
-			// 기존의 chat-contents-form을 form으로 교체
-			chatContentsForm.parentNode.replaceChild(form, chatContentsForm);
-			form.classList.add('write-wr'); // 기존의 class 유지
-
-			// 폼 제출 이벤트 리스너 추가
-			form.addEventListener('submit', function (event) {
-				event.preventDefault();  // 기본 제출 동작 방지
-
-				// contenteditable div의 텍스트를 숨겨진 입력 필드에 복사
-				hiddenInput.value = createPostContent.innerText.trim();
-
-				// 입력된 값이 없으면 폼 제출하지 않음
-				if (hiddenInput.value === '') {
+			contentInputBtn.addEventListener('click', function (event) {
+				event.preventDefault();
+				let chatContentMsg = createPostContent.innerText.trim();
+				if (chatContentMsg === '') {
 					alert('메시지를 입력하세요.');
 					return;
 				}
-
-				// 폼 제출
-				const lastChild = chatContainerLastChile.style.paddingBottom = '20px';
-				chatReplyAlert.style.display = 'none';
-				chatReplyAlert.classList.remove('on'); // 'on' 클래스 제거
+				replyReset()
 				send();
-				//form.submit();
 			});
 
-			// contenteditable div에서 Enter 키 눌렀을 때 폼 제출
+
 			createPostContent.addEventListener('keydown', function (event) {
 				if (event.key === 'Enter' && !event.shiftKey) {
-					event.preventDefault();  // Enter 키의 기본 동작 방지
-					// 답장기능
-					// 답장기능
-					const lastChild = chatContainerLastChile.style.paddingBottom = '20px';
-					chatReplyAlert.style.display = 'none'; 
-					chatReplyAlert.classList.remove('on'); // 'on' 클래스 제거
+					event.preventDefault();
+					let chatContentMsg = createPostContent.innerText.trim();
+					if (chatContentMsg === '') {
+						alert('메시지를 입력하세요.');
+						return;
+					}
+					replyReset()
 					send();
-
-					//form.dispatchEvent(new Event('submit'));  // 폼 제출 이벤트 트리거
 				}
 			});
-		});
 
-		document.addEventListener('DOMContentLoaded', function () {
 			const fileInput = document.getElementById('file-input');
 			const fileUploadForm = document.getElementById('file-upload-form');
 			const fileButton = document.querySelector('.btn-files');
@@ -365,13 +598,17 @@
 
 			fileInput.addEventListener('change', function () {
 				fileUploadForm.submit();
+				scrollToBottom();
 			});
+
 		});
+
 
 	</script>
 </head>
 
 <body>
+	<input id="login-member" type="hidden" th:value="${member.memberIdx}" />
 	<div class="chat-wr">
 		<header>
 			<div>
@@ -395,7 +632,7 @@
 				class="notice-top">
 				<i><img src="/img/chat-notice-icon.png" alt="" /></i>
 				<div class="notice-content">
-					<div th:text="${chatContent.text}" class="chat-notice"></div>
+					<div th:utext="${chatContent.text}" class="chat-notice"></div>
 					<div class="author">
 						<strong th:text="${chatContent.member.name}" class="notice-content-user-name"></strong>
 						<em th:text="${#dates.format(chatContent.time, 'yyyy-MM-dd HH:MM')}"
@@ -421,7 +658,7 @@
 					 ' (' + #dates.format(chatContents.time, 'E') + ')'}"></span>
 					</div>
 				</div>
-				<li th:if="${chatContents.member.memberIdx != 1 
+				<li th:if="${chatContents.member.memberIdx != member.memberIdx 
 						and chatContents.isReply == null
 						and chatContents.notice == null
 						and chatContents.hasFile == null
@@ -438,7 +675,6 @@
 							<div class="chat-txt-wr">
 								<div class="chat-txt">
 									<div th:if="${chatContents.text != null}" th:utext="${chatContents.text}"></div>
-									<div th:if="${chatContents.emote != null}" th:text="${chatContents.emote}"></div>
 								</div>
 								<div class="chat-btns">
 									<div th:if="${#lists.size(chatContents.chatUnreaderList) > 0}"
@@ -480,7 +716,7 @@
 						</div>
 					</div>
 				</li>
-				<li th:if="${chatContents.member.memberIdx == 1 
+				<li th:if="${chatContents.member.memberIdx == member.memberIdx 
 						and chatContents.isReply == null 
 						and chatContents.notice == null
 						and chatContents.hasFile == null }" class="right-section">
@@ -526,14 +762,13 @@
 								</div>
 								<div class="chat-txt">
 									<div th:if="${chatContents.text != null}" th:utext="${chatContents.text}"></div>
-									<div th:if="${chatContents.emote != null}" th:text="${chatContents.emote}"></div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</li>
 
-				<li th:if="${chatContents.member.memberIdx == 1 
+				<li th:if="${chatContents.member.memberIdx == member.memberIdx 
 						and chatContents.isReply != null
 						and chatContents.notice == null
 						and chatContents.hasFile == null }" class="right-section">
@@ -580,8 +815,7 @@
 								<div class="reply-box">
 									<div class="chat-txt-reply">
 										<strong th:text="${chatContents.isReply.member.name} +'님에게 답장'"></strong>
-										</strong>
-										<p th:text="${chatContents.isReply.text}"></p>
+										<p th:utext="${chatContents.isReply.text}"></p>
 									</div>
 									<div class="chat-txt">
 										<div th:if="${chatContents.text != null}" th:utext="${chatContents.text}"></div>
@@ -593,7 +827,7 @@
 						</div>
 					</div>
 				</li>
-				<li th:if="${chatContents.member.memberIdx != 1 
+				<li th:if="${chatContents.member.memberIdx != member.memberIdx 
 						and chatContents.isReply != null
 						and chatContents.notice == null }" class="left-section">
 					<input type="hidden" th:value="${chatContents.chatContentsIdx}">
@@ -609,12 +843,10 @@
 								<div class="reply-box">
 									<div class="chat-txt-reply">
 										<strong th:text="${chatContents.isReply.member.name} +'님에게 답장'"></strong>
-										<p th:text="${chatContents.isReply.text}"></p>
+										<p th:utext="${chatContents.isReply.text}"></p>
 									</div>
 									<div class="chat-txt">
 										<div th:if="${chatContents.text != null}" th:utext="${chatContents.text}"></div>
-										<div th:if="${chatContents.emote != null}" th:text="${chatContents.emote}">
-										</div>
 									</div>
 								</div>
 								<div class="chat-btns">
@@ -664,7 +896,7 @@
  							 + ${#dates.format(chatContents.time, 'yyyy-MM-dd HH:mm')}"></span>
 				</div>
 				<!--				수정사항					-->
-				<li th:if="${chatContents.member.memberIdx != 1 
+				<li th:if="${chatContents.member.memberIdx != member.memberIdx 
 									and chatContents.isReply == null
 									and chatContents.notice == null
 									and chatContents.hasFile != null
@@ -685,13 +917,15 @@
 									<div class="file-wr">
 										<div><i th:text="${chatContents.hasFile.fileType}" class="icon-file"></i></div>
 										<div class="file-info file-down">
-											<p th:text="${chatContents.hasFile.fileName}" class="file-tit"></p>
+											<p th:text="${#strings.substring(chatContents.hasFile.fileName, chatContents.hasFile.fileName.indexOf('_') + 1)}" class="file-tit"></p>
+
 											<span th:text="${chatContents.hasFile.data.length/1024 + 'KB'}"
 												class="file-size ellipsis"></span>
 										</div>
-										<button class="js-download-button btn-download">
+										<a th:href="${chatContents.getFileUrl()}"
+											class="js-download-button btn-download">
 											<i class="icons-arrow_down"></i>
-										</button>
+										</a>
 									</div>
 								</div>
 								<div class="chat-btns">
@@ -734,7 +968,7 @@
 						</div>
 					</div>
 				</li>
-				<li th:if="${chatContents.member.memberIdx == 1 
+				<li th:if="${chatContents.member.memberIdx == member.memberIdx 
 									and chatContents.isReply == null 
 									and chatContents.notice == null
 									and chatContents.hasFile != null 
@@ -784,20 +1018,21 @@
 									<div class="file-wr">
 										<div><i th:text="${chatContents.hasFile.fileType}" class="icon-file"></i></div>
 										<div class="file-info file-down">
-											<p th:text="${chatContents.hasFile.fileName}" class="file-tit"></p>
+											<p th:text="${#strings.substring(chatContents.hasFile.fileName, chatContents.hasFile.fileName.indexOf('_') + 1)}" class="file-tit"></p>
 											<span th:text="${chatContents.hasFile.data.length/1024 + 'KB'}"
 												class="file-size ellipsis"></span>
 										</div>
-										<button class="js-download-button btn-download">
+										<a th:href="${chatContents.getFileUrl()}"
+											class="js-download-button btn-download">
 											<i class="icons-arrow_down"></i>
-										</button>
+										</a>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</li>
-				<li th:if="${chatContents.member.memberIdx != 1 
+				<li th:if="${chatContents.member.memberIdx != member.memberIdx 
 								                 and chatContents.isReply == null 
 								                 and chatContents.notice == null
 								                 and chatContents.hasFile != null 
@@ -814,7 +1049,7 @@
 						<div class="chat-left clearfix">
 							<div class="chat-txt-wr">
 								<div class="pre-img">
-									<img class="chat-contents-img" src="/img/text0705.png" alt="" />
+									<img class="chat-contents-img" th:src="${chatContents.getFileUrl()}" />
 								</div>
 								<div class="chat-btns">
 									<div th:if="${#lists.size(chatContents.chatUnreaderList) > 0}"
@@ -833,11 +1068,10 @@
 												<ul class="modal-more">
 													<li><button class="copy">복사</button></li>
 													<li class="notice">
-														<form th:action="@{|/chatRoom/${chat.chatIdx}|}" method="post">
-															<input type="hidden" name="chatContentsIdx"
-																th:value="${chatContents.chatContentsIdx}" />
-															<button type="submit">공지설정</button>
-														</form>
+														<input type="hidden" name="chatContentsIdx"
+															th:value="${chatContents.chatContentsIdx}" />
+														<button type="submit">공지설정</button>
+														<!--														</form>-->
 													</li>
 													<li class="delete-only-for-me">
 														<button class="del">나에게서만 삭제</button>
@@ -856,7 +1090,7 @@
 						</div>
 					</div>
 				</li>
-				<li th:if="${chatContents.member.memberIdx == 1 
+				<li th:if="${chatContents.member.memberIdx == member.memberIdx 
 				                 and chatContents.isReply == null 
 				                 and chatContents.notice == null
 				                 and chatContents.hasFile != null 
@@ -903,7 +1137,7 @@
 										class="chat-read-none"></div>
 								</div>
 								<div class="pre-img">
-									<img class="chat-contents-img" src="/img/text0705.png" alt="" />
+									<img class="chat-contents-img" th:src="${chatContents.getFileUrl()}" />
 								</div>
 							</div>
 						</div>
@@ -913,10 +1147,8 @@
 
 		</ul>
 		<footer th:each="chat : ${chatList}">
-			<div th:each="chatMember : ${chat.chatMemberList}" th:if="${chatMember.member}"
-				th:text="${chatMember.member.name}" style="display: none;" id="senderName"></div>
-			<div th:each="chatMember : ${chat.chatMemberList}" th:if="${chatMember.member}"
-				th:text="${chatMember.member.memberIdx}" style="display: none;" id="senderIdx"></div>
+			<div th:text="${member.name}" style="display: none;" id="senderName"></div>
+			<div th:text="${member.memberIdx}" style="display: none;" id="senderIdx"></div>
 			<div>
 				<div class="btn-wr">
 					<button class="btn-emo">
@@ -927,7 +1159,7 @@
 						enctype="multipart/form-data" style="display:none;">
 						<input type="file" id="file-input" name="file">
 					</form>
-					<button button type="button" class="btn-files" onclick="triggerFileUpload()">
+					<button type="button" class="btn-files">
 						<img src="/img/chat_clip_icon.png" alt="" />
 						<span class="tooltiptext file">파일 첨부</span>
 					</button>
@@ -1008,6 +1240,7 @@
 			</article>
 		</div>
 	</div>
+
 </body>
 
 </html>
