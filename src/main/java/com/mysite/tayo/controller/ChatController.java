@@ -1,8 +1,10 @@
 package com.mysite.tayo.controller;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.mysite.tayo.entity.Chat;
+import com.mysite.tayo.entity.ChatContents;
 import com.mysite.tayo.entity.Member;
 import com.mysite.tayo.service.ChatService;
 import com.mysite.tayo.service.MemberService;
@@ -32,12 +35,23 @@ public class ChatController {
 	
 	@GetMapping("/chatRoom/{chatIdx}")
 	public String chat(Model model, @PathVariable("chatIdx") Long chatIdx, Authentication authentication) {
-		Member member = memberService.infoFromLogin(authentication);
-		Optional<Chat> _chatList = this.chatService.getId(chatIdx);
-		Chat chatList = _chatList.get();
-		model.addAttribute("member", member);
-		model.addAttribute("chatList", chatList);
-		return "chatRoom";
+	    Member member = memberService.infoFromLogin(authentication);
+	    Optional<Chat> _chatList = this.chatService.getId(chatIdx);
+	    Chat chatList = _chatList.get();
+
+	    // 채팅 내용을 시간 기준으로 정렬합니다.
+	    List<ChatContents> sortedChatContentsList = chatList.getChatContentsList().stream()
+	        .sorted(Comparator.comparing(ChatContents::getTime))
+	        .collect(Collectors.toList());
+
+	    Long maxNotice = chatService.maxNotice(chatIdx);
+	    System.out.println(maxNotice);
+
+	    model.addAttribute("member", member);
+	    model.addAttribute("chatList", chatList);
+	    model.addAttribute("sortedChatContentsList", sortedChatContentsList);
+	    model.addAttribute("maxNotice", maxNotice);
+	    return "chatRoom";
 	}
 
     @PostMapping("/chatRoom/{chatIdx}")
@@ -48,7 +62,7 @@ public class ChatController {
                           @PathVariable("chatIdx") Long chatIdx,
                           Authentication authentication) throws IOException {
         Member member = memberService.infoFromLogin(authentication);
-
+        
         if (chatContentsIdx == null) {
             chatService.addChatContent(chatIdx, chatContents, member, replyIdx, file);
         } else {

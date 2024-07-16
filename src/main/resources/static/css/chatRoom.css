@@ -114,8 +114,8 @@
       .small-notice-button {
       	width: 30px;
       	height: 30px;
+      	background: url(https://flow.team/flow-renewal/assets/images/chat-sprite.png) no-repeat -112px -181px;
       	background-size: 820px;
-      	/* display: none; */
       	position: fixed;
       	top: 74px;
       	right: 10px;

@@ -65,6 +65,10 @@ public class ChatService {
 		return chatContentsRepository.findMemberNameByReplyIdx(replyIdx);
 	}
 	
+	public Long maxNotice(Long chatIdx) {
+		return chatContentsRepository.findMaxNoticeChatContentIdxByChatContentIdx(chatIdx);
+	}
+	
 
 	
 //	chatContents 엔티티에 저장할 데이터들
