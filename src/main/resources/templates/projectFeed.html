@@ -95,8 +95,8 @@
 			<div id="div_prj_detail_top">
 				<ul id="detail_tab" class="project_detail_menu">
 					<li class="tab_item">
-						<div>
-							<a><img src="/img/peed_icon.png" />피드</a>
+						<div style="color:black;">
+							<a style="color:black;"><img src="/img/peed_icon.png" />피드</a>
 						</div>
 					</li>
 					<li class="tab_item">
@@ -254,6 +254,40 @@
 															<span>다시 알림</span>
 														</div>
 													</div>
+													<div class="post_react_selection" id="postReact">
+														<ul>
+															<li class="add-reaction" data="1">
+																<a href="#" role="button">
+																	<i class="icon-emoji like"></i>
+																	<p class="emoji-text">좋아요</p>
+																</a>
+															</li>
+															<li class="add-reaction" data="2">
+																<a href="#" role="button">
+																	<i class="icon-emoji please"></i>
+																	<p class="emoji-text">부탁해요</p>
+																</a>
+															</li>
+															<li class="add-reaction" data="3">
+																<a href="#" role="button">
+																	<i class="icon-emoji sad"></i>
+																	<p class="emoji-text">힘들어요</p>
+																</a>
+															</li>
+															<li class="add-reaction" data="4">
+																<a href="#" role="button">
+																	<i class="icon-emoji great"></i>
+																	<p class="emoji-text">훌륭해요</p>
+																</a>
+															</li>
+															<li class="add-reaction" data="5">
+																<a href="#" role="button">
+																	<i class="icon-emoji thank"></i>
+																	<p class="emoji-text">감사해요</p>
+																</a>
+															</li>
+														</ul>
+													</div>
 													<div class="cmt_read_area">
 														<div class="comment_count_area">
 															<span>댓글</span>
@@ -273,12 +307,28 @@
 															</div>
 															<div class="comment_container">
 																<div class="comment_user_area">
-																	<span class="user_name" th:text="${comment.member.name}"></span>
-																	<span class="record_date" th:text="${#dates.format(comment.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
-																	<span class="comment_react">☺좋아요</span>
-																	<button class="delete_comment_btn" th:if="${member == comment.member}">삭제</button>
+																	<span class="user_name" th:text="${comment.comment.member.name}"></span>
+																	<span class="record_date" th:text="${#dates.format(comment.comment.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
+																	<span class="comment_react_on" th:if="${comment.isLiked}" th:attr="data-comment-id=${comment.comment.commentsIdx}">
+																		<em  class="comment_like_cancel on">좋아요 취소</em>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																	</span>
+																	<span class="comment_react" th:if="${comment.isLiked}" th:attr="data-comment-id=${comment.comment.commentsIdx}" style="display:none;">
+																		<em  class="comment_like">좋아요</em>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																	</span>
+																	
+																	<span class="comment_react" th:if="${!comment.isLiked}" th:attr="data-comment-id=${comment.comment.commentsIdx}">
+																		<em  class="comment_like">좋아요</em>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																	</span>
+																	<span class="comment_react_on" th:if="${!comment.isLiked}" th:attr="data-comment-id=${comment.comment.commentsIdx}" style="display:none;">
+																		<em  class="comment_like_cancel on">좋아요 취소</em>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																	</span>
+																	<button class="delete_comment_btn" th:if="${member == comment.comment.member}">삭제</button>
 																</div>
-																<div th:text="${comment.contents}"></div>
+																<div th:text="${comment.comment.contents}"></div>
 															</div>
 														</li>
 													</ul>
@@ -335,14 +385,14 @@
 									                <div class="task_option">
 									                    <ul class="task_content_group">
 									                        <li class="task_status_area">
-									                            <div class="task_icon_box1">
-									                                <img th:src="@{https://flow.team/flow-renewal/assets/images/icons/icon-post-status.svg?v=b3a5b7f86f05f658d1ce954c34f8c33a61ea8873}" style="margin-right: 10px;"/>
-																	<button type="button" class="task_state_btn request" th:classappend="${postData['data'].condition == '1'} ? 'active' : ''">요청</button>
-																	    <button type="button" class="task_state_btn progress" th:classappend="${postData['data'].condition == '2'} ? 'active' : ''">진행</button>
-																	    <button type="button" class="task_state_btn feedback" th:classappend="${postData['data'].condition == '3'} ? 'active' : ''">피드백</button>
-																	    <button type="button" class="task_state_btn completion" th:classappend="${postData['data'].condition == '4'} ? 'active' : ''">완료</button>
-																	    <button type="button" class="task_state_btn hold" th:classappend="${postData['data'].condition == '5'} ? 'active' : ''">보류</button>
-									                            </div>
+																<div class="task_icon_box1" th:data-post-idx="${postData.post.postIdx}">
+																    <img th:src="@{https://flow.team/flow-renewal/assets/images/icons/icon-post-status.svg?v=b3a5b7f86f05f658d1ce954c34f8c33a61ea8873}" style="margin-right: 10px;"/>
+																    <button type="button" class="task_state_btn request" th:classappend="${postData['data'].condition == '1'} ? 'active' : ''" onclick="updateTaskCondition(this, 1)">요청</button>
+																    <button type="button" class="task_state_btn progress" th:classappend="${postData['data'].condition == '2'} ? 'active' : ''" onclick="updateTaskCondition(this, 2)">진행</button>
+																    <button type="button" class="task_state_btn feedback" th:classappend="${postData['data'].condition == '3'} ? 'active' : ''" onclick="updateTaskCondition(this, 3)">피드백</button>
+																    <button type="button" class="task_state_btn completion" th:classappend="${postData['data'].condition == '4'} ? 'active' : ''" onclick="updateTaskCondition(this, 4)">완료</button>
+																    <button type="button" class="task_state_btn hold" th:classappend="${postData['data'].condition == '5'} ? 'active' : ''" onclick="updateTaskCondition(this, 5)">보류</button>
+																</div>
 									                        </li>
 									                        <li class="task_manager_area">
 									                            <div class="task_icon_box2">
@@ -407,6 +457,40 @@
 									                        <span>다시 알림</span>
 									                    </div>
 									                </div>
+													<div class="post_react_selection" id="postReact">
+														<ul>
+															<li class="add-reaction" data="1">
+																<a href="#" role="button">
+																	<i class="icon-emoji like"></i>
+																	<p class="emoji-text">좋아요</p>
+																</a>
+															</li>
+															<li class="add-reaction" data="2">
+																<a href="#" role="button">
+																	<i class="icon-emoji please"></i>
+																	<p class="emoji-text">부탁해요</p>
+																</a>
+															</li>
+															<li class="add-reaction" data="3">
+																<a href="#" role="button">
+																	<i class="icon-emoji sad"></i>
+																	<p class="emoji-text">힘들어요</p>
+																</a>
+															</li>
+															<li class="add-reaction" data="4">
+																<a href="#" role="button">
+																	<i class="icon-emoji great"></i>
+																	<p class="emoji-text">훌륭해요</p>
+																</a>
+															</li>
+															<li class="add-reaction" data="5">
+																<a href="#" role="button">
+																	<i class="icon-emoji thank"></i>
+																	<p class="emoji-text">감사해요</p>
+																</a>
+															</li>
+														</ul>
+													</div>
 									                <div class="cmt_read_area">
 									                    <div class="comment_count_area">
 									                        <span>댓글</span>
@@ -426,12 +510,32 @@
 															</div>
 															<div class="comment_container">
 																<div class="comment_user_area">
-																	<span class="user_name" th:text="${comment.member.name}"></span>
-																	<span class="record_date" th:text="${#dates.format(comment.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
-																	<span class="comment_react">☺좋아요</span>
-																	<button class="delete_comment_btn" th:if="${member == comment.member}">삭제</button>
+																	<span class="user_name" th:text="${comment.comment.member.name}"></span>
+																	<span class="record_date" th:text="${#dates.format(comment.comment.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
+																	<span class="comment_react_on" th:if="${comment.isLiked}"
+																		th:attr="data-comment-id=${comment.comment.commentsIdx}">
+																		<em class="comment_like_cancel on">좋아요 취소</em>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																	</span>
+																	<span class="comment_react" th:if="${comment.isLiked}" th:attr="data-comment-id=${comment.comment.commentsIdx}"
+																		style="display:none;">
+																		<em class="comment_like">좋아요</em>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																	</span>
+															
+																	<span class="comment_react" th:if="${!comment.isLiked}"
+																		th:attr="data-comment-id=${comment.comment.commentsIdx}">
+																		<em class="comment_like">좋아요</em>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																	</span>
+																	<span class="comment_react_on" th:if="${!comment.isLiked}"
+																		th:attr="data-comment-id=${comment.comment.commentsIdx}" style="display:none;">
+																		<em class="comment_like_cancel on">좋아요 취소</em>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																	</span>
+																	<button class="delete_comment_btn" th:if="${member == comment.comment.member}">삭제</button>
 																</div>
-																<div th:text="${comment.contents}"></div>
+																<div th:text="${comment.comment.contents}"></div>
 															</div>
 														</li>
 													</ul>
@@ -502,26 +606,27 @@
 									                <div class="schedule_attenderlist_box">
 									                    <div class="attender_wrap">
 									                        <span class="attend_group">
-									                            <span class="attender_item" th:each="attender : ${postData.data.attenders}">
-									                                <img th:src="@{https://flow.team/flow-renewal/assets/images/profile-default.png}" alt="우태균" />
-									                            </span>
-									                        </span>
-									                        <button type="button" class="update_attender_btn">참석자 변경</button>
-									                    </div>
-									                    <div class="attender_count">
-									                        <span class="attender_status_text participate">
-									                            <span>참석</span>
-									                            <em>0</em>
-									                        </span>
-									                        <span class="attender_status_text absence">
-									                            <span>불참</span>
-									                            <em>0</em>
-									                        </span>
-									                        <span class="attender_status_text undetermine">
-									                            <span>미정</span>
-									                            <em>0</em>
+																<span class="attender_item" style="border:none;" th:each="attender : ${postData.data.attenders}"
+																      th:classappend="${attender.isAttend.equals('1')} ? 'participate' : (${attender.isAttend.equals('2')} ? 'absence' : (${attender.isAttend.equals('3')} ? 'undetermined' : ''))">
+																    <img th:src="@{https://flow.team/flow-renewal/assets/images/profile-default.png}" />
+																    <div class="tooltip_text" th:text="${attender.memberName}"></div>
+																</span>
 									                        </span>
 									                    </div>
+														<div class="attender_count">
+														    <span class="attender_status_text participate" style="border:none;">
+														        <span>참석</span>
+														        <em th:text="${postData.attenderCounts.participate}">0</em>
+														    </span>
+														    <span class="attender_status_text absence" style="border:none;">
+														        <span>불참</span>
+														        <em th:text="${postData.attenderCounts.absence}">0</em>
+														    </span>
+														    <span class="attender_status_text undetermine" style="border:none;">
+														        <span>미정</span>
+														        <em th:text="${postData.attenderCounts.undetermine}">0</em>
+														    </span>
+														</div>
 									                </div>
 									            </div>
 									            <div class="schedule_place_area">
@@ -538,11 +643,11 @@
 									            <div class="post_card_content" style="white-space: pre-line; height:fit-content; max-height: 250px; overflow-y: auto;">
 									                <p th:text="${postData != null && postData['data'] != null ? postData['data'].contents : ''}"></p>
 									            </div>
-									            <div class="attend_button_area">
-									                <button class="attend_btn participate_on">참석</button>
-									                <button class="attend_btn absence_on">불참</button>
-									                <button class="attend_btn undetermine_on">미정</button>
-									            </div>
+												<div class="attend_button_area" th:data-post-idx="${postData.post.postIdx}">
+												    <button class="attend_btn participate_btn" th:classappend="${postData.currentAttenderStatus == 1} ? 'on'" onclick="checkScheduleAttendance(this, 1)">참석</button>
+												    <button class="attend_btn absence_btn" th:classappend="${postData.currentAttenderStatus == 2} ? 'on'" onclick="checkScheduleAttendance(this, 2)">불참</button>
+												    <button class="attend_btn undetermine_btn" th:classappend="${postData.currentAttenderStatus == 3} ? 'on'" onclick="checkScheduleAttendance(this, 3)">미정</button>
+												</div>
 									            <div class="post_bottom_area">
 									                <div class="bottom_btn_area">
 									                    <div class="post_reaction">
@@ -560,7 +665,41 @@
 									                        <span>다시 알림</span>
 									                    </div>
 									                </div>
-									                <div class="cmt_read_area">
+													<div class="post_react_selection" id="postReact">
+														<ul>
+															<li class="add-reaction" data="1">
+																<a href="#" role="button">
+																	<i class="icon-emoji like"></i>
+																	<p class="emoji-text">좋아요</p>
+																</a>
+															</li>
+															<li class="add-reaction" data="2">
+																<a href="#" role="button">
+																	<i class="icon-emoji please"></i>
+																	<p class="emoji-text">부탁해요</p>
+																</a>
+															</li>
+															<li class="add-reaction" data="3">
+																<a href="#" role="button">
+																	<i class="icon-emoji sad"></i>
+																	<p class="emoji-text">힘들어요</p>
+																</a>
+															</li>
+															<li class="add-reaction" data="4">
+																<a href="#" role="button">
+																	<i class="icon-emoji great"></i>
+																	<p class="emoji-text">훌륭해요</p>
+																</a>
+															</li>
+															<li class="add-reaction" data="5">
+																<a href="#" role="button">
+																	<i class="icon-emoji thank"></i>
+																	<p class="emoji-text">감사해요</p>
+																</a>
+															</li>
+														</ul>
+													</div>
+													<div class="cmt_read_area">
 									                    <div class="comment_count_area">
 									                        <span>댓글</span>
 									                        <span th:text="${#lists.size(postData.comments)}"></span>
@@ -579,12 +718,32 @@
 															</div>
 															<div class="comment_container">
 																<div class="comment_user_area">
-																	<span class="user_name" th:text="${comment.member.name}"></span>
-																	<span class="record_date" th:text="${#dates.format(comment.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
-																	<span class="comment_react">☺좋아요</span>
-																	<button class="delete_comment_btn" th:if="${member == comment.member}">삭제</button>
+																	<span class="user_name" th:text="${comment.comment.member.name}"></span>
+																	<span class="record_date" th:text="${#dates.format(comment.comment.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
+																	<span class="comment_react_on" th:if="${comment.isLiked}"
+																		th:attr="data-comment-id=${comment.comment.commentsIdx}">
+																		<em class="comment_like_cancel on">좋아요 취소</em>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																	</span>
+																	<span class="comment_react" th:if="${comment.isLiked}" th:attr="data-comment-id=${comment.comment.commentsIdx}"
+																		style="display:none;">
+																		<em class="comment_like">좋아요</em>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																	</span>
+															
+																	<span class="comment_react" th:if="${!comment.isLiked}"
+																		th:attr="data-comment-id=${comment.comment.commentsIdx}">
+																		<em class="comment_like">좋아요</em>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																	</span>
+																	<span class="comment_react_on" th:if="${!comment.isLiked}"
+																		th:attr="data-comment-id=${comment.comment.commentsIdx}" style="display:none;">
+																		<em class="comment_like_cancel on">좋아요 취소</em>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																	</span>
+																	<button class="delete_comment_btn" th:if="${member == comment.comment.member}">삭제</button>
 																</div>
-																<div th:text="${comment.contents}"></div>
+																<div th:text="${comment.comment.contents}"></div>
 															</div>
 														</li>
 													</ul>
@@ -707,6 +866,40 @@
 									                        <span>다시 알림</span>
 									                    </div>
 									                </div>
+													<div class="post_react_selection" id="postReact">
+														<ul>
+															<li class="add-reaction" data="1">
+																<a href="#" role="button">
+																	<i class="icon-emoji like"></i>
+																	<p class="emoji-text">좋아요</p>
+																</a>
+															</li>
+															<li class="add-reaction" data="2">
+																<a href="#" role="button">
+																	<i class="icon-emoji please"></i>
+																	<p class="emoji-text">부탁해요</p>
+																</a>
+															</li>
+															<li class="add-reaction" data="3">
+																<a href="#" role="button">
+																	<i class="icon-emoji sad"></i>
+																	<p class="emoji-text">힘들어요</p>
+																</a>
+															</li>
+															<li class="add-reaction" data="4">
+																<a href="#" role="button">
+																	<i class="icon-emoji great"></i>
+																	<p class="emoji-text">훌륭해요</p>
+																</a>
+															</li>
+															<li class="add-reaction" data="5">
+																<a href="#" role="button">
+																	<i class="icon-emoji thank"></i>
+																	<p class="emoji-text">감사해요</p>
+																</a>
+															</li>
+														</ul>
+													</div>
 									                <div class="cmt_read_area">
 									                    <div class="comment_count_area">
 									                        <span>댓글</span>
@@ -726,12 +919,32 @@
 															</div>
 															<div class="comment_container">
 																<div class="comment_user_area">
-																	<span class="user_name" th:text="${comment.member.name}"></span>
-																	<span class="record_date" th:text="${#dates.format(comment.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
-																	<span class="comment_react">☺좋아요</span>
-																	<button class="delete_comment_btn" th:if="${member == comment.member}">삭제</button>
+																	<span class="user_name" th:text="${comment.comment.member.name}"></span>
+																	<span class="record_date" th:text="${#dates.format(comment.comment.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
+																	<span class="comment_react_on" th:if="${comment.isLiked}"
+																		th:attr="data-comment-id=${comment.comment.commentsIdx}">
+																		<em class="comment_like_cancel on">좋아요 취소</em>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																	</span>
+																	<span class="comment_react" th:if="${comment.isLiked}" th:attr="data-comment-id=${comment.comment.commentsIdx}"
+																		style="display:none;">
+																		<em class="comment_like">좋아요</em>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																	</span>
+															
+																	<span class="comment_react" th:if="${!comment.isLiked}"
+																		th:attr="data-comment-id=${comment.comment.commentsIdx}">
+																		<em class="comment_like">좋아요</em>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																	</span>
+																	<span class="comment_react_on" th:if="${!comment.isLiked}"
+																		th:attr="data-comment-id=${comment.comment.commentsIdx}" style="display:none;">
+																		<em class="comment_like_cancel on">좋아요 취소</em>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																	</span>
+																	<button class="delete_comment_btn" th:if="${member == comment.comment.member}">삭제</button>
 																</div>
-																<div th:text="${comment.contents}"></div>
+																<div th:text="${comment.comment.contents}"></div>
 															</div>
 														</li>
 													</ul>
@@ -852,6 +1065,40 @@
 									                        <span>다시 알림</span>
 									                    </div>
 									                </div>
+													<div class="post_react_selection" id="postReact">
+														<ul>
+															<li class="add-reaction" data="1">
+																<a href="#" role="button">
+																	<i class="icon-emoji like"></i>
+																	<p class="emoji-text">좋아요</p>
+																</a>
+															</li>
+															<li class="add-reaction" data="2">
+																<a href="#" role="button">
+																	<i class="icon-emoji please"></i>
+																	<p class="emoji-text">부탁해요</p>
+																</a>
+															</li>
+															<li class="add-reaction" data="3">
+																<a href="#" role="button">
+																	<i class="icon-emoji sad"></i>
+																	<p class="emoji-text">힘들어요</p>
+																</a>
+															</li>
+															<li class="add-reaction" data="4">
+																<a href="#" role="button">
+																	<i class="icon-emoji great"></i>
+																	<p class="emoji-text">훌륭해요</p>
+																</a>
+															</li>
+															<li class="add-reaction" data="5">
+																<a href="#" role="button">
+																	<i class="icon-emoji thank"></i>
+																	<p class="emoji-text">감사해요</p>
+																</a>
+															</li>
+														</ul>
+													</div>
 									                <div class="cmt_read_area">
 									                    <div class="comment_count_area">
 									                        <span>댓글</span>
@@ -871,12 +1118,32 @@
 															</div>
 															<div class="comment_container">
 																<div class="comment_user_area">
-																	<span class="user_name" th:text="${comment.member.name}"></span>
-																	<span class="record_date" th:text="${#dates.format(comment.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
-																	<span class="comment_react">☺좋아요</span>
-																	<button class="delete_comment_btn" th:if="${member == comment.member}">삭제</button>
+																	<span class="user_name" th:text="${comment.comment.member.name}"></span>
+																	<span class="record_date" th:text="${#dates.format(comment.comment.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
+																	<span class="comment_react_on" th:if="${comment.isLiked}"
+																		th:attr="data-comment-id=${comment.comment.commentsIdx}">
+																		<em class="comment_like_cancel on">좋아요 취소</em>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																	</span>
+																	<span class="comment_react" th:if="${comment.isLiked}" th:attr="data-comment-id=${comment.comment.commentsIdx}"
+																		style="display:none;">
+																		<em class="comment_like">좋아요</em>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																	</span>
+															
+																	<span class="comment_react" th:if="${!comment.isLiked}"
+																		th:attr="data-comment-id=${comment.comment.commentsIdx}">
+																		<em class="comment_like">좋아요</em>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																	</span>
+																	<span class="comment_react_on" th:if="${!comment.isLiked}"
+																		th:attr="data-comment-id=${comment.comment.commentsIdx}" style="display:none;">
+																		<em class="comment_like_cancel on">좋아요 취소</em>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																	</span>
+																	<button class="delete_comment_btn" th:if="${member == comment.comment.member}">삭제</button>
 																</div>
-																<div th:text="${comment.contents}"></div>
+																<div th:text="${comment.comment.contents}"></div>
 															</div>
 														</li>
 													</ul>

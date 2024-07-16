@@ -30,6 +30,7 @@ import com.mysite.tayo.repository.MemberRepository;
 import com.mysite.tayo.repository.ProjectRepository;
 import com.mysite.tayo.service.CommentService;
 import com.mysite.tayo.service.MemberService;
+import com.mysite.tayo.service.PostMemberService;
 import com.mysite.tayo.service.PostService;
 
 import lombok.RequiredArgsConstructor;
@@ -52,6 +53,9 @@ public class PostController {
 	
 	@Autowired
 	private CommentService commentService;
+	
+	@Autowired
+	private PostMemberService postMemberService;
 
 	@PostMapping("/projectFeed/{projectIdx}")
 	public String createPost(Authentication authentication, @PathVariable("projectIdx") Long projectIdx,
@@ -172,9 +176,86 @@ public class PostController {
 	}
 	
 	@DeleteMapping("/{postIdx}")
-	public @ResponseBody String deletePost(@PathVariable("postIdx") Long postIdx) {
-		postService.deletePostById(postIdx);
-		return "sex";
+	public @ResponseBody Map<String, Object> deletePost(@PathVariable("postIdx") Long postIdx) {
+	    postService.deletePostById(postIdx);
+
+	    Map<String, Object> response = new HashMap<>();
+	    response.put("success", true);
+	    
+	    return response;
 	}
 	
+	@PostMapping("/checkCommentLike/{commentIdx}")
+	public ResponseEntity<Map<String, Object>> checkCommentLike(@PathVariable("commentIdx") Long commentIdx, Authentication authentication) {
+        Member member = memberService.infoFromLogin(authentication);
+
+        try {
+            commentService.checkCommentLike(commentIdx, member);
+            int newLikeCount = commentService.getLikeCount(commentIdx);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("newLikeCount", newLikeCount);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            e.printStackTrace(); // 에러 로그 출력
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("error", e.getMessage()); // 에러 메시지 추가
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+	
+	@DeleteMapping("/cancelCommentLike/{commentIdx}")
+	public @ResponseBody Map<String, Object> deleteCommentsReact(@PathVariable("commentIdx") Long commentIdx, Authentication authentication) {
+	    Member member = memberService.infoFromLogin(authentication);
+	    commentService.cancelCommentLike(commentIdx, member.getMemberIdx());
+
+	    Map<String, Object> response = new HashMap<>();
+	    response.put("success", true);
+
+	    return response;
+	}
+	
+	@PostMapping("/updateTaskCondition")
+	public ResponseEntity<Map<String, String>> updateTaskCondition(@RequestBody Map<String, Object> payload, Authentication authentication) {
+	    Map<String, String> response = new HashMap<>();
+	    try {
+	        Member member = memberService.infoFromLogin(authentication);
+	        Long memberIdx = member.getMemberIdx();
+
+	        // Retrieve and convert values from the payload
+	        Long postIdx = Long.valueOf((Integer) payload.get("postIdx"));
+	        int newCondition = (Integer) payload.get("newCondition");
+
+	        postMemberService.updateTaskCondition(postIdx, newCondition, memberIdx);
+
+	        response.put("message", "업무 상태가 정상적으로 변경되었습니다.");
+	        return ResponseEntity.ok(response);
+	    } catch (Exception e) {
+	        response.put("message", "권한이 없습니다.");
+	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+	    }
+	}
+	
+	@PostMapping("/checkScheduleAttendance")
+    public ResponseEntity<Map<String, String>> checkScheduleAttendance(
+            @RequestParam("postIdx") Long postIdx,
+            @RequestParam("attendance") int attendance,
+            Authentication authentication) {
+        
+        Member member = memberService.infoFromLogin(authentication);
+        Long memberIdx = member.getMemberIdx();
+        Map<String, String> response = new HashMap<>();
+        
+        try {
+            postMemberService.checkScheduleAttendance(postIdx, memberIdx, attendance);
+            response.put("message", "일정 참여여부가 정상적으로 변경되었습니다.");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("message", "참여여부 업데이트에 실패하였습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }

@@ -1034,28 +1034,257 @@ document.addEventListener('DOMContentLoaded', function() {
 		initialize();
 	}
 	
+	/////////////////////////// 댓글, 포스트 반응 /////////////////////////////////
+	const postReactions = document.querySelectorAll('.post_reaction');
+
+    postReactions.forEach(postReaction => {
+        postReaction.addEventListener('click', function(event) {
+            event.stopPropagation();
+            const postReactSelection = this.closest('.post_bottom_area').querySelector('.post_react_selection');
+            postReactSelection.style.display = 'block';
+        });
+    });
+
+	document.addEventListener('click', function(event) {
+		postReactions.forEach(postReaction => {
+			const postReactSelection = postReaction.closest('.post_bottom_area').querySelector('.post_react_selection');
+			if (!postReactSelection.contains(event.target) && !postReaction.contains(event.target)) {
+				postReactSelection.style.display = 'none';
+			}
+		});
+	});
+
+	/////////////////////////////// 댓글 좋아요 설정 ///////////////////////////////////
+	const commentReacts = document.querySelectorAll('.comment_react');
+
+	commentReacts.forEach(commentReact => {
+		commentReact.addEventListener('click', async function() {
+			const commentIdx = this.getAttribute('data-comment-id');
+
+			try {
+				const response = await fetch(`/checkCommentLike/${commentIdx}`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({}) // 빈 바디 전송
+				});
+
+				const data = await response.json();
+				if (data.success) {
+					const nowComment = commentReact.closest('.comment_container').querySelector('.comment_react');
+					const newComment = commentReact.closest('.comment_container').querySelector('.comment_react_on');
+					const nowlikeCnt = nowComment.querySelector('.comment_like_cnt');
+					const newlikeCnt = newComment.querySelector('.comment_like_cnt');
+
+					if (nowlikeCnt) {
+						nowlikeCnt.textContent = parseInt(nowlikeCnt.textContent) + 1;
+						if (newlikeCnt) {
+							newlikeCnt.textContent = nowlikeCnt.textContent;
+						} else {
+							const newSpan = document.createElement('span');
+							newSpan.classList.add('comment_like_cnt');
+							newSpan.textContent = nowlikeCnt.textContent;
+							newComment.appendChild(newSpan);
+						}
+					} else {
+						const newSpan = document.createElement('span');
+						newSpan.classList.add('comment_like_cnt');
+						newSpan.textContent = 1;
+						newComment.appendChild(newSpan);
+					}
+					nowComment.style.display = 'none';
+					newComment.style.display = 'inline'; // 스타일을 명확히 설정합니다.
+				} else {
+					alert('좋아요를 처리하는데 실패했습니다. 에러 메시지: ' + (data.error || '알 수 없는 오류'));
+				}
+			} catch (error) {
+				console.error('Error:', error);
+				alert('좋아요를 처리하는데 실패했습니다.');
+			}
+		});
+	});
+
+	/////////////////////////////// 댓글 좋아요 취소 //////////////////////////////////////
+	const commentReactsCancel = document.querySelectorAll('.comment_react_on');
+
+	commentReactsCancel.forEach(commentReactCancel => {
+		commentReactCancel.addEventListener('click', async function() {
+			const commentIdx = this.getAttribute('data-comment-id');
+
+			try {
+				const response = await fetch(`/cancelCommentLike/${commentIdx}`, {
+					method: 'DELETE',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({}) // 빈 바디 전송
+				});
+
+				const data = await response.json();
+				if (data.success) {
+					const newComment = commentReactCancel.closest('.comment_container').querySelector('.comment_react');
+					const nowComment = commentReactCancel.closest('.comment_container').querySelector('.comment_react_on');
+					const nowlikeCnt = nowComment.querySelector('.comment_like_cnt');
+					const newlikeCnt = newComment.querySelector('.comment_like_cnt');
+
+					if (parseInt(nowlikeCnt.textContent) === 1) {
+						if (newlikeCnt) newlikeCnt.remove();
+						nowlikeCnt.remove();
+					} else {
+						nowlikeCnt.textContent = parseInt(nowlikeCnt.textContent) - 1;
+						if (newlikeCnt) {
+							newlikeCnt.textContent = nowlikeCnt.textContent;
+						} else {
+							const newSpan = document.createElement('span');
+							newSpan.classList.add('comment_like_cnt');
+							newSpan.textContent = nowlikeCnt.textContent;
+							newComment.appendChild(newSpan);
+						}
+					}
+					nowComment.style.display = 'none';
+					newComment.style.display = 'inline'; // 스타일을 명확히 설정합니다.
+				} else {
+					alert('좋아요 취소를 처리하는데 실패했습니다. 에러 메시지: ' + (data.error || '알 수 없는 오류'));
+				}
+			} catch (error) {
+				console.error('Error:', error);
+				alert('좋아요 취소를 처리하는데 실패했습니다.');
+			}
+		});
+	});
+	
 });
 
+/////////////////////////// 게시글 삭제 ///////////////////////////////////////////
 function deletePost(postIdx) {
-		if (confirm('정말 이 게시글을 삭제하시겠습니까?')) {
-			fetch(`/${postIdx}`, {
-				method: 'DELETE',
-				headers: {
-					'Content-Type': 'application/json'
+	if (confirm('정말 이 게시글을 삭제하시겠습니까?')) {
+		fetch(`/${postIdx}`, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		})
+			.then(response => {
+				if (response.ok) {
+					alert('게시글이 삭제되었습니다.');
+					// 삭제 후 페이지 새로고침 또는 게시글 목록 갱신
+					window.location.reload();
+				} else {
+					alert('게시글 삭제에 실패했습니다.');
 				}
 			})
-				.then(response => {
-					if (response.ok) {
-						alert('게시글이 삭제되었습니다.');
-						// 삭제 후 페이지 새로고침 또는 게시글 목록 갱신
-						window.location.reload();
-					} else {
-						alert('게시글 삭제에 실패했습니다.');
-					}
-				})
-				.catch(error => {
-					console.error('Error:', error);
-					alert('게시글 삭제 중 오류가 발생했습니다.');
-				});
-		}
+			.catch(error => {
+				console.error('Error:', error);
+				alert('게시글 삭제 중 오류가 발생했습니다.');
+			});
 	}
+}
+
+///////////////////////// Task Condition 변경 ///////////////////////////////////////
+function updateTaskCondition(button, newCondition) {
+    const postIdx = Number(button.closest('.task_icon_box1').getAttribute('data-post-idx'));
+    const nowActiveButton = button.closest('.task_icon_box1').querySelector('.active');
+    const request = button.closest('.task_icon_box1').querySelector('.request');
+    const progress = button.closest('.task_icon_box1').querySelector('.progress');
+    const feedback = button.closest('.task_icon_box1').querySelector('.feedback');
+    const completion = button.closest('.task_icon_box1').querySelector('.completion');
+    const hold = button.closest('.task_icon_box1').querySelector('.hold');
+
+	// 현재 active 상태의 조건을 확인
+	let currentCondition;
+	if (request.classList.contains('active')) currentCondition = 1;
+	else if (progress.classList.contains('active')) currentCondition = 2;
+	else if (feedback.classList.contains('active')) currentCondition = 3;
+	else if (completion.classList.contains('active')) currentCondition = 4;
+	else if (hold.classList.contains('active')) currentCondition = 5;
+
+	// 새로운 상태와 현재 상태가 같으면 아무 것도 하지 않음
+	if (currentCondition === newCondition) {
+		return;
+	}
+	
+    fetch('/updateTaskCondition', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ postIdx: postIdx, newCondition: newCondition })
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            return response.json().then(err => { throw new Error(err.message); });
+        }
+    })
+    .then(data => {
+        alert(data.message);
+        switch (newCondition) {
+            case 1:
+                nowActiveButton.classList.remove('active');
+                request.classList.add('active');
+                break;
+            case 2:
+                nowActiveButton.classList.remove('active');
+                progress.classList.add('active');
+                break;
+            case 3:
+                nowActiveButton.classList.remove('active');
+                feedback.classList.add('active');
+                break;
+            case 4:
+                nowActiveButton.classList.remove('active');
+                completion.classList.add('active');
+                break;
+            case 5:
+                nowActiveButton.classList.remove('active');
+                hold.classList.add('active');
+                break;
+        }
+    })
+    .catch(error => {
+        alert(error.message);
+        console.error('Error:', error);
+    });
+}
+
+document.querySelectorAll('.your-button-class').forEach(button => {
+    button.addEventListener('click', function() {
+        const newCondition = this.getAttribute('data-new-condition');
+        updateTaskCondition(this, newCondition);
+    });
+});
+
+////////////////////// Schedule Attendance 변경 ///////////////////////
+function checkScheduleAttendance(button, attendance) {
+    // 이미 'on' 클래스가 있는 버튼을 클릭한 경우 동작 중지
+    if (button.classList.contains('on')) {
+        return;
+    }
+
+    const postIdx = button.closest('.attend_button_area').getAttribute('data-post-idx');
+
+    fetch('/checkScheduleAttendance', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `postIdx=${postIdx}&attendance=${attendance}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+
+        // 모든 버튼에서 'on' 클래스 제거
+        const buttons = button.closest('.attend_button_area').querySelectorAll('.attend_btn');
+        buttons.forEach(btn => btn.classList.remove('on'));
+
+        // 클릭된 버튼에 'on' 클래스 추가
+        button.classList.add('on');
+    })
+    .catch(error => {
+        alert('Failed to update attendance status.');
+        console.error('Error:', error);
+    });
+}
