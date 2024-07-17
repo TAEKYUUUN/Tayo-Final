@@ -209,7 +209,7 @@
 								<div th:switch="${postData.post.fileType}">
 									<!-- fileType=1 , Paragraph -->
 									<div th:case="'1'">
-										<div class="post_box">
+										<div class="post_box" th:attr="data-post-idx=${postData.post.postIdx}" data-file-type="1">
 										    <div class="post_top_area">
 										        <span class="participants_profile">
 										            <i><img th:src="@{https://flow.team/flow-renewal/assets/images/profile-default.png}" alt="Profile" /></i>
@@ -356,7 +356,7 @@
 									</div>
 									<!-- fileType=2 , Task -->
 									<div th:case="'2'">
-									    <div class="post_box">
+									    <div class="post_box" th:attr="data-post-idx=${postData.post.postIdx}" data-file-type="2">
 									        <div class="post_top_area">
 									            <span class="participants_profile">
 									                <i><img th:src="${postData.member.profileImage != null ? postData.member.profileImage : 'https://flow.team/flow-renewal/assets/images/profile-default.png'}" alt="Profile" /></i>
@@ -569,7 +569,7 @@
 									</div>
 									<!-- fileType=3 , Schedule -->
 									<div th:case="'3'">
-									    <div class="post_box">
+									    <div class="post_box" th:attr="data-post-idx=${postData.post.postIdx}" data-file-type="3">
 									        <div class="post_top_area">
 									            <span class="participants_profile">
 									                <i><img th:src="@{https://flow.team/flow-renewal/assets/images/profile-default.png}" alt="Profile" /></i>
@@ -783,7 +783,7 @@
 									</div>
 									<!-- fileType=4 , Todo -->
 									<div th:case="'4'">
-									    <div class="post_box">
+									    <div class="post_box" th:attr="data-post-idx=${postData.post.postIdx}" data-file-type="4">
 									        <div class="post_top_area">
 									            <span class="participants_profile">
 									                <i><img th:src="${postData.member.profileImage != null ? postData.member.profileImage : 'https://flow.team/flow-renewal/assets/images/profile-default.png'}" alt="Profile" /></i>
@@ -990,7 +990,7 @@
 									</div>
 									<!-- fileType=5 , Vote -->
 									<div th:case="'5'">
-									    <div class="post_box">
+									    <div class="post_box" th:attr="data-post-idx=${postData.post.postIdx}" data-file-type="5">
 									        <div class="post_top_area">
 									            <span class="participants_profile">
 									                <i><img th:src="${postData.member.profileImage != null ? postData.member.profileImage : 'https://flow.team/flow-renewal/assets/images/profile-default.png'}" alt="Profile" /></i>
@@ -1019,15 +1019,15 @@
 												</div>
 									        </div>
 									        <div class="post_title_area" style="flex-direction: column;">
-									            <h4>
-									                <span th:text="${postData != null && postData['data'] != null ? postData['data'].title : ''}"></span>
-									                <span class="em_vote_proceed" th:if="${postData['data'] != null && postData['data'].endVote == 0}">
-									                    진행중
-									                </span>
-									                <span class="em_vote_proceed" th:if="${postData['data'] != null && postData['data'].endVote != 0 && postData['data'].endVote == 1}">
-									                    종료
-									                </span>
-									            </h4>
+												<h4>
+												    <span class="em_vote_proceed" th:if="${postData.data != null && postData.data.endVote != null && postData.data.endVote == 0}">
+												        진행중
+												    </span>
+												    <span class="em_vote_proceed" th:if="${postData.data != null && postData.data.endVote != null && postData.data.endVote == 1}">
+												        종료
+												    </span>
+												    <span th:text="${postData != null && postData['data'] != null ? postData['data'].title : ''}"></span>
+												</h4>
 									            <div class="vote_detail_title">
 									                <div th:text="${postData != null && postData['data'] != null ? postData['data'].voteDetail : ''}">
 									                </div>
@@ -1043,7 +1043,7 @@
 									                <div class="vote_participant_button_area">
 									                    <button class="vote_result_btn">
 									                        <span>
-									                            <span class="participant_num">0</span>
+									                            <span class="participant_num" th:text="${postData.data.participantCount}"></span>
 									                            <span> 명 참여 중 ></span>
 									                        </span>
 									                    </button>
@@ -1053,12 +1053,12 @@
 									                        <ul data-type="text">
 									                            <li class="vote_item" th:each="voteItem : ${postData.data.voteItems}">
 									                                <div class="vote_check_option">
-									                                    <input id="option1" type="checkbox" />
+									                                    <input type="checkbox" th:attr="data-vote-item-id=${voteItem.voteItemIdx}" />
 									                                </div>
 									                                <div class="vote_option_content">
 									                                    <div class="vote_option_name">
 									                                        <span class="option_name" th:text="${voteItem.itemName}"></span>
-									                                        <span class="vote_count">0 명</span>
+									                                        <span class="vote_count" th:text="${voteItem.voteCount + ' 명'}"></span>
 									                                    </div>
 									                                    <div class="vote_graph">
 									                                        <span></span>
@@ -1192,7 +1192,7 @@
 									            </div>
 									        </div>
 									    </div>
-									</div>
+									</div> <!-- th:case5 종료 -->
 								</div>
 							</div>
 						</div>

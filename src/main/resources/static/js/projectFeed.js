@@ -862,136 +862,194 @@ document.addEventListener('DOMContentLoaded', function() {
 	document.querySelectorAll('.cmt_input').forEach(commentInput => {
         const submitComment = commentInput.closest('.post_comment_input_area').querySelector('#submitComment');
 
-        function fetchComments(postIdx, commentInput) {
-            fetch(`/comments?postIdx=${postIdx}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        updateCommentsList(data.comments, commentInput);
-                        const commentsSection = commentInput.closest('.post_box');
-                        if (commentsSection) {
-                            updateCommentCount(commentsSection, data.comments.length);
-                        }
-                    } else {
-                        console.error('댓글을 불러오는데 실패했습니다:', data);
-                    }
-                })
-                .catch(error => {
-                    console.error('오류:', error);
-                });
-        }
+		function fetchComments(postIdx, commentInput) {
+			console.log(`Starting fetchComments with postIdx: ${postIdx}`);
+			fetch(`/comments?postIdx=${postIdx}`)
+				.then(response => {
+					console.log('fetchComments - Received response:', response);
+					if (!response.ok) {
+						throw new Error(`HTTP error! status: ${response.status}`);
+					}
+					return response.json();
+				})
+				.then(data => {
+					console.log('fetchComments - Parsed response data:', data);
+					if (data.success) {
+						console.log('fetchComments - Updating comments list');
+						updateCommentsList(data.comments, commentInput);
+						const commentsSection = commentInput.closest('.post_box');
+						if (commentsSection) {
+							console.log('fetchComments - Updating comment count');
+							updateCommentCount(commentsSection, data.comments.length);
+						} else {
+							console.error('fetchComments - commentsSection를 찾을 수 없습니다. commentInput:', commentInput);
+						}
+					} else {
+						console.error('fetchComments - 댓글을 불러오는데 실패했습니다:', data);
+					}
+				})
+				.catch(error => {
+					console.error('fetchComments 오류:', error);
+				});
+		}
 
-        function updateCommentsList(comments, commentInput) {
-            const commentsSection = commentInput.closest('.post_box');
-            if (!commentsSection) {
-                console.error('comments-section을 찾을 수 없습니다.');
-                return;
-            }
+		function updateCommentsList(comments, commentInput) {
+			console.log('updateCommentsList - Received comments:', comments);
+			const commentsSection = commentInput.closest('.post_box');
+			if (!commentsSection) {
+				console.error('updateCommentsList - commentsSection을 찾을 수 없습니다.');
+				return;
+			}
 
-            const commentsContainer = commentsSection.querySelector('.post_comment_list');
-            if (!commentsContainer) {
-                console.error('댓글 컨테이너를 찾을 수 없습니다.');
-                return;
-            }
-            commentsContainer.innerHTML = '';
+			const commentsContainer = commentsSection.querySelector('.post_comment_list');
+			if (!commentsContainer) {
+				console.error('updateCommentsList - 댓글 컨테이너를 찾을 수 없습니다.');
+				return;
+			}
+			commentsContainer.innerHTML = '';
 
-            comments.forEach(comment => {
-                if (comment.member) {
-                    const commentElement = document.createElement('li');
-                    commentElement.classList.add('post_comment_item');
-                    commentElement.innerHTML = `
-                        <div class="comment_profile">
-                            <img src="https://flow.team/flow-renewal/assets/images/profile-default.png" />
-                        </div>
-                        <div class="comment_container">
-                            <div class="comment_user_area">
-                                <span class="user_name">${comment.member.name}</span>
-                                <span class="record_date">${new Date(comment.writeTime).toLocaleString()}</span>
-                                <span class="comment_react_on" data-comment-id="${comment.commentsIdx}" style="${comment.isLiked ? '' : 'display:none;'}">
-                                    <em class="comment_like_cancel on">좋아요 취소</em>
-                                    ${comment.likeCount > 0 ? `<span class="comment_like_cnt">${comment.likeCount}</span>` : ''}
-                                </span>
-                                <span class="comment_react" data-comment-id="${comment.commentsIdx}" style="${comment.isLiked ? 'display:none;' : ''}">
-                                    <em class="comment_like">좋아요</em>
-                                    ${comment.likeCount > 0 ? `<span class="comment_like_cnt">${comment.likeCount}</span>` : ''}
-                                </span>
-                                <button class="delete_comment_btn" data-comment-id="${comment.commentsIdx}" style="${String(comment.member.memberIdx) === String(user.id) ? '' : 'display:none;'}">삭제</button>
-                            </div>
-                            <div>${comment.contents}</div>
-                        </div>
-                    `;
-                    commentsContainer.appendChild(commentElement);
-                } else {
-                    console.error('comment.member is null or undefined', comment);
-                }
-            });
-        }
+			comments.forEach(comment => {
+				console.log('updateCommentsList - Processing comment:', comment);
+				if (comment.member) {
+					const commentElement = document.createElement('li');
+					commentElement.classList.add('post_comment_item');
+					commentElement.innerHTML = `
+                <div class="comment_profile">
+                    <img src="https://flow.team/flow-renewal/assets/images/profile-default.png" />
+                </div>
+                <div class="comment_container">
+                    <div class="comment_user_area">
+                        <span class="user_name">${comment.member.name}</span>
+                        <span class="record_date">${new Date(comment.writeTime).toLocaleString()}</span>
+                        <span class="comment_react_on" data-comment-id="${comment.commentsIdx}" style="${comment.isLiked ? '' : 'display:none;'}">
+                            <em class="comment_like_cancel on">좋아요 취소</em>
+                            ${comment.likeCount > 0 ? `<span class="comment_like_cnt">${comment.likeCount}</span>` : ''}
+                        </span>
+                        <span class="comment_react" data-comment-id="${comment.commentsIdx}" style="${comment.isLiked ? 'display:none;' : ''}">
+                            <em class="comment_like">좋아요</em>
+                            ${comment.likeCount > 0 ? `<span class="comment_like_cnt">${comment.likeCount}</span>` : ''}
+                        </span>
+                        <button class="delete_comment_btn" data-comment-id="${comment.commentsIdx}" style="${String(comment.member.memberIdx) === String(user.id) ? '' : 'display:none;'}">삭제</button>
+                    </div>
+                    <div>${comment.contents}</div>
+                </div>
+            `;
+					commentsContainer.appendChild(commentElement);
+				} else {
+					console.error('updateCommentsList - comment.member is null or undefined', comment);
+				}
+			});
+		}
 
-        function updateCommentCount(commentsSection, count) {
-            const commentCountElement = commentsSection.querySelector('#commentCount');
-            if (commentCountElement) {
-                commentCountElement.textContent = count;
-            } else {
-                console.error('commentCountElement를 찾을 수 없습니다.');
-            }
-        }
+		function updateCommentCount(commentsSection, count) {
+			console.log('updateCommentCount - Updating comment count to:', count);
+			const commentCountElement = commentsSection.querySelector('#commentCount');
+			if (commentCountElement) {
+				commentCountElement.textContent = count;
+			} else {
+				console.error('updateCommentCount - commentCountElement를 찾을 수 없습니다. commentsSection:', commentsSection);
+			}
+		}
 
-        function submitCommentFunction() {
-            const postIdx = commentInput.getAttribute('data-post-id');
-            const commentContent = commentInput.value.trim();
-            if (commentContent) {
-                const payload = {
-                    postIdx: postIdx,
-                    contents: commentContent
-                };
+		function submitCommentFunction() {
+			const postIdx = commentInput.getAttribute('data-post-id');
+			const commentContent = commentInput.value.trim();
+			if (commentContent) {
+				const payload = {
+					postIdx: postIdx,
+					contents: commentContent
+				};
 
-                console.log('Sending payload:', JSON.stringify(payload)); // 디버깅을 위해 추가
+				console.log('Sending payload:', JSON.stringify(payload)); // 디버깅을 위해 추가
 
-                fetch('/comments', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload)
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        fetchComments(postIdx, commentInput); // 댓글을 불러와서 업데이트
-                        commentInput.value = ''; // 입력 필드 초기화
-                        const commentsSection = commentInput.closest('.post_box');
-                        if (commentsSection) {
-                            const currentCount = parseInt(commentsSection.querySelector('#commentCount').textContent, 10);
-                            updateCommentCount(commentsSection, currentCount + 1); // 댓글 수 증가
-                        }
-                    } else {
-                        console.log(data);
-                        alert('댓글 등록에 실패했습니다.');
-                    }
-                })
-                .catch(error => {
-                    console.error('오류:', error);
-                    alert('댓글 등록 중 오류가 발생했습니다.');
-                });
-            }
-        }
+				fetch('/comments', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(payload)
+				})
+					.then(response => {
+						console.log('Received response:', response);
+						if (!response.ok) {
+							throw new Error(`HTTP error! status: ${response.status}`);
+						}
+						return response.json();
+					})
+					.then(data => {
+						console.log('Parsed response data:', data); // 디버깅을 위해 추가
+						if (data.success) {
+							fetchComments(postIdx, commentInput); // 댓글을 불러와서 업데이트
+							commentInput.value = ''; // 입력 필드 초기화
+							const commentsSection = commentInput.closest('.post_box');
+							if (commentsSection) {
+								console.log('Found commentsSection:', commentsSection); // 디버깅을 위해 추가
+								const commentCountElement = commentsSection.querySelector('#commentCount');
+								if (commentCountElement) {
+									const currentCount = parseInt(commentCountElement.textContent, 10);
+									updateCommentCount(commentsSection, currentCount + 1); // 댓글 수 증가
+								} else {
+									console.error('commentCountElement를 찾을 수 없습니다. commentsSection:', commentsSection);
+								}
+							} else {
+								console.error('commentsSection를 찾을 수 없습니다. commentInput:', commentInput);
+							}
+						} else {
+							console.log(data);
+							alert('댓글 등록에 실패했습니다.');
+						}
+					})
+					.catch(error => {
+						console.error('오류:', error);
+						alert('댓글 등록 중 오류가 발생했습니다.');
+					});
+			}
+		}
 
-        commentInput.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault();
-                submitCommentFunction();
-            }
-        });
+		commentInput.addEventListener('keydown', function(event) {
+			if (event.key === 'Enter' && !event.shiftKey) {
+				event.preventDefault();
+				submitCommentFunction();
+			}
+		});
 
-        submitComment.addEventListener('click', function() {
-            submitCommentFunction();
-        });
-    });
+		submitComment.addEventListener('click', function() {
+			submitCommentFunction();
+		});
+	});
+
+	function deleteComment(commentId, commentInput) {
+		if (confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
+			fetch(`/comments/${commentId}/delete`, {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json',
+				}
+			})
+				.then(response => {
+					console.log('Received response:', response);
+					if (!response.ok) {
+						throw new Error(`HTTP error! status: ${response.status}`);
+					}
+					return response.json();
+				})
+				.then(data => {
+					console.log('Parsed response data:', data); // 디버깅을 위해 추가
+					if (data.success) {
+						const postIdx = commentInput.getAttribute('data-post-id');
+						console.log('Fetching comments for postIdx:', postIdx);
+						fetchComments(postIdx, commentInput);
+					} else {
+						console.error('댓글 삭제에 실패했습니다:', data);
+						alert('댓글 삭제에 실패했습니다.');
+					}
+				})
+				.catch(error => {
+					console.error('댓글 삭제 중 오류가 발생했습니다:', error);
+					alert('댓글 삭제 중 오류가 발생했습니다.');
+				});
+		}
+	}
 
     // 이벤트 위임을 사용하여 삭제 버튼 이벤트 리스너 추가
     document.body.addEventListener('click', function(event) {
@@ -1832,6 +1890,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	commentReacts.forEach(commentReact => {
 		commentReact.addEventListener('click', async function() {
 			const commentIdx = this.getAttribute('data-comment-id');
+			console.log(`Clicked comment with ID: ${commentIdx}`);
 
 			try {
 				const response = await fetch(`/checkCommentLike/${commentIdx}`, {
@@ -1843,6 +1902,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				});
 
 				const data = await response.json();
+				console.log('Response data:', data);
 				if (data.success) {
 					const nowComment = commentReact.closest('.comment_container').querySelector('.comment_react');
 					const newComment = commentReact.closest('.comment_container').querySelector('.comment_react_on');
@@ -1974,7 +2034,177 @@ document.addEventListener('DOMContentLoaded', function() {
 				});
 		});
 	});
+	
+	////////////////////////////////////// 투표 참여 ///////////////////////////////////////////
+	const voteBtns = document.querySelectorAll('.vote_btn');
+    const voteEndBtns = document.querySelectorAll('.vote_end_btn');
+    const voteResultBtns = document.querySelectorAll('.vote_result_btn');
 
+	voteBtns.forEach(voteBtn => {
+		voteBtn.addEventListener('click', async function() {
+			const postBox = voteBtn.closest('.post_box');
+			const postIdx = postBox.getAttribute('data-post-idx');
+			const tabType = postBox.getAttribute('data-file-type');
+
+			if (tabType !== '5') {
+				return; // 투표가 아닌 게시물은 무시합니다.
+			}
+
+			if (!postIdx) {
+				console.error('Invalid postIdx:', postIdx);
+				alert('유효하지 않은 게시물 ID입니다.');
+				return;
+			}
+
+			const voteCheckBoxes = postBox.querySelectorAll('.vote_check_option input[type="checkbox"]');
+			const selectedItems = [];
+			voteCheckBoxes.forEach(checkbox => {
+				if (checkbox.checked) {
+					selectedItems.push(checkbox.getAttribute('data-vote-item-id'));
+				}
+			});
+
+			if (selectedItems.length === 0) {
+				alert('하나 이상의 항목을 선택해주세요.');
+				return;
+			}
+
+			try {
+				const response = await fetch(`/vote/${postIdx}`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({ voteItemIds: selectedItems })
+				});
+
+				const contentType = response.headers.get('content-type');
+				let data;
+				if (contentType && contentType.includes('application/json')) {
+					data = await response.json();
+				} else {
+					data = await response.text();
+				}
+
+				if (response.ok) {
+					alert('투표가 성공적으로 제출되었습니다.');
+					const participantNumElement = postBox.querySelector('.participant_num');
+					if (participantNumElement) {
+						const currentCount = parseInt(participantNumElement.textContent, 10);
+						participantNumElement.textContent = currentCount + 1;
+					}
+					fetchVoteResults(postBox, postIdx);
+				} else {
+					alert(`투표 제출에 실패했습니다: ${data.message || data}`);
+				}
+			} catch (error) {
+				console.error('Error:', error);
+				alert('투표 제출 중 오류가 발생했습니다.');
+			}
+		});
+	});
+    voteEndBtns.forEach(voteEndBtn => {
+        voteEndBtn.addEventListener('click', async function () {
+            if (confirm('정말로 투표를 종료하시겠습니까?')) {
+                const postBox = voteEndBtn.closest('.post_box');
+                const postIdx = postBox.getAttribute('data-post-idx');
+                const tabType = postBox.getAttribute('data-file-type');
+                
+                if (tabType !== '5') {
+                    return; // 투표가 아닌 게시물은 무시합니다.
+                }
+
+                if (!postIdx) {
+                    console.error('Invalid postIdx:', postIdx);
+                    alert('유효하지 않은 게시물 ID입니다.');
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`/vote/end/${postIdx}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    const data = await response.json();
+                    if (response.ok) {
+                        alert('투표가 성공적으로 종료되었습니다.');
+                        fetchVoteResults(postBox, postIdx);
+                    } else {
+                        alert(`투표 종료에 실패했습니다: ${data.message}`);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('투표 종료 중 오류가 발생했습니다.');
+                }
+            }
+        });
+    });
+
+    voteResultBtns.forEach(voteResultBtn => {
+        voteResultBtn.addEventListener('click', function () {
+            const postBox = voteResultBtn.closest('.post_box');
+            const postIdx = postBox.getAttribute('data-post-idx');
+            const tabType = postBox.getAttribute('data-file-type');
+            
+            if (tabType !== '5') {
+                return; // 투표가 아닌 게시물은 무시합니다.
+            }
+            
+            fetchVoteResults(postBox, postIdx);
+        });
+    });
+
+    async function fetchVoteResults(postBox, postIdx) {
+        const tabType = postBox.getAttribute('data-file-type');
+        if (tabType !== '5') {
+            return; // 투표가 아닌 게시물은 무시합니다.
+        }
+
+        if (!postIdx) {
+            console.error('Invalid postIdx:', postIdx);
+            alert('유효하지 않은 게시물 ID입니다.');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/vote/${postIdx}/results`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                updateVoteResults(postBox, data);
+            } else {
+                alert(`투표 결과를 가져오는데 실패했습니다: ${data.message}`);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('투표 결과를 가져오는 중 오류가 발생했습니다.');
+        }
+    }
+
+    function updateVoteResults(postBox, results) {
+        const voteItems = postBox.querySelectorAll('.vote_item');
+        voteItems.forEach(voteItem => {
+            const optionName = voteItem.querySelector('.option_name').textContent;
+            if (results.hasOwnProperty(optionName)) {
+                const voteCount = voteItem.querySelector('.vote_count');
+                voteCount.textContent = `${results[optionName]} 명`;
+            }
+        });
+    }
+
+    // 페이지 로드 시 각 게시글에 대해 투표 결과를 가져옵니다.
+    document.querySelectorAll('.post_box[data-file-type="5"]').forEach(postBox => {
+        const postIdx = postBox.getAttribute('data-post-idx');
+        fetchVoteResults(postBox, postIdx);
+    });
 	
 // 'DOMContentLoaded' 끝나는 시점
 });
@@ -1983,7 +2213,7 @@ document.addEventListener('DOMContentLoaded', function() {
 ///////////////////////////////////// 게시글 삭제 //////////////////////////////////////
 function deletePost(postIdx) {
 	if (confirm('정말 이 게시글을 삭제하시겠습니까?')) {
-		fetch(`/${postIdx}`, {
+		fetch(`/${postIdx}/delete`, {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json'
@@ -2111,36 +2341,4 @@ function checkScheduleAttendance(button, attendance) {
         alert('Failed to update attendance status.');
         console.error('Error:', error);
     });
-}
-
-function deleteComment(commentId, commentInput) {
-	if (confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
-		fetch(`/comments/${commentId}`, {
-			method: 'DELETE',
-			headers: {
-				'Content-Type': 'application/json',
-			}
-		})
-			.then(response => {
-				if (!response.ok) {
-					throw new Error(`HTTP error! status: ${response.status}`);
-				}
-				return response.json();
-			})
-			.then(data => {
-				console.log('Received response:', data); // 디버깅을 위해 추가
-				if (data.success) {
-					// 댓글을 삭제한 후 댓글 목록을 다시 불러옵니다.
-					const postIdx = commentInput.getAttribute('data-post-id');
-					fetchComments(postIdx, commentInput);
-				} else {
-					console.error('댓글 삭제에 실패했습니다:', data);
-					alert('댓글 삭제에 실패했습니다.');
-				}
-			})
-			.catch(error => {
-				console.error('댓글 삭제 중 오류가 발생했습니다:', error);
-				alert('댓글 삭제 중 오류가 발생했습니다.');
-			});
-	}
 }

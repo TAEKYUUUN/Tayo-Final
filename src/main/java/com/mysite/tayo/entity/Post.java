@@ -1,5 +1,6 @@
 package com.mysite.tayo.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -72,14 +73,14 @@ public class Post {
     
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-	 private List<Comments> commentsList;
+	private List<Comments> comments = new ArrayList<>();
     
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostMember> postMembers;
+    private List<PostMember> postMembers = new ArrayList<>();
     
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Alarm> alarms;
+    private List<Alarm> alarms = new ArrayList<>();
     
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostReact> postReacts;
+    private List<PostReact> postReacts = new ArrayList<>();
 }

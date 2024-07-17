@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.mysite.tayo.entity.Alarm;
@@ -17,6 +18,7 @@ import com.mysite.tayo.entity.UncheckComments;
 import com.mysite.tayo.repository.AlarmRepository;
 import com.mysite.tayo.repository.CommentsReactRepository;
 import com.mysite.tayo.repository.CommentsRepository;
+import com.mysite.tayo.repository.MemberRepository;
 import com.mysite.tayo.repository.UncheckCommentsRepository;
 
 import jakarta.transaction.Transactional;
@@ -33,6 +35,8 @@ public class CommentService {
 	private final UncheckCommentsRepository uncheckRepository;
 	
 	private final CommentsReactRepository commentsReactRepository;
+	
+	private final MemberRepository memberRepository;
 	
 	// 해당 포스트의 댓글들을 리스트로 Get
 	public List<Comments> findByPost(Post post) {
@@ -93,9 +97,13 @@ public class CommentService {
 	// 댓글 좋아요 취소
 	@Transactional
 	public void cancelCommentLike(Long commentIdx, Long memberIdx) {
-		if(commentsReactRepository.existsByCommentsAndMember(commentIdx, memberIdx)){
-			commentsReactRepository.deleteByCommentsCommentsIdxAndMemberMemberIdx(commentIdx, memberIdx);
-		}
+	    try {
+	        if (commentsReactRepository.existsByCommentsAndMember(commentIdx, memberIdx)) {
+	            commentsReactRepository.deleteByCommentsCommentsIdxAndMemberMemberIdx(commentIdx, memberIdx);
+	        }
+	    } catch (DataIntegrityViolationException e) {
+	    	e.getMessage();
+	    }
 	}
 	
 	// 댓글과 그 댓글의 좋아요 수를 한번에 가져오기
@@ -114,11 +122,14 @@ public class CommentService {
     }
 	
 	// 댓글 삭제
-	public boolean deleteComment(Long commentIdx) {
+	@Transactional
+    public boolean deleteComment(Long commentIdx) {
         try {
+            commentsReactRepository.deleteByCommentsCommentsIdx(commentIdx);
             commentsRepository.deleteById(commentIdx);
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }

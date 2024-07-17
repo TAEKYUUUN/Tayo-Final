@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -158,40 +159,40 @@ public class PostController {
 	// 댓글 작성 PostMapping
 	@PostMapping("/comments")
 	public @ResponseBody ResponseEntity<Map<String, Object>> addComment(@RequestBody Map<String, Object> payload,
-			Authentication authentication) {
-		Map<String, Object> response = new HashMap<>();
-		try {
-			Member member = memberService.infoFromLogin(authentication);
-			Long postIdx = Long.valueOf(payload.get("postIdx").toString());
-			String contents = payload.get("contents").toString();
+	        Authentication authentication) {
+	    Map<String, Object> response = new HashMap<>();
+	    try {
+	        Member member = memberService.infoFromLogin(authentication);
+	        Long postIdx = Long.valueOf(payload.get("postIdx").toString());
+	        String contents = payload.get("contents").toString();
 
-			Optional<Post> postOptional = postService.getPost(postIdx);
+	        Optional<Post> postOptional = postService.getPost(postIdx);
 
-			if (!postOptional.isPresent()) {
-				response.put("success", false);
-				response.put("message", "Post not found");
-				System.out.println("Response: " + response); // 디버깅용 로그 추가
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-			}
+	        if (!postOptional.isPresent()) {
+	            response.put("success", false);
+	            response.put("message", "Post not found");
+	            System.out.println("Response: " + response); // 디버깅용 로그 추가
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+	        }
 
-			Post post = postOptional.get();
-			commentService.createComment(member, post, contents);
-			response.put("success", true);
-			response.put("message", "댓글이 등록되었습니다.");
-			System.out.println("Response: " + response); // 디버깅용 로그 추가
-			return ResponseEntity.ok(response);
-		} catch (Exception e) {
-			response.put("success", false);
-			response.put("message", "댓글 등록에 실패했습니다.");
-			System.out.println("Error Response: " + response); // 디버깅용 로그 추가
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-		}
+	        Post post = postOptional.get();
+	        commentService.createComment(member, post, contents);
+	        response.put("success", true);
+	        response.put("message", "댓글이 등록되었습니다.");
+	        System.out.println("Response: " + response); // 디버깅용 로그 추가
+	        return ResponseEntity.ok(response);
+	    } catch (Exception e) {
+	        response.put("success", false);
+	        response.put("message", "댓글 등록에 실패했습니다.");
+	        System.out.println("Error Response: " + response); // 디버깅용 로그 추가
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+	    }
 	}
 	
 	
 	// 해당 게시글의 댓글들 가져오는 GetMapping
 	@GetMapping("/comments")
-	public ResponseEntity<Map<String, Object>> getComments(@RequestParam("postIdx") Long postIdx) {
+	public @ResponseBody ResponseEntity<Map<String, Object>> getComments(@RequestParam("postIdx") Long postIdx) {
 		Map<String, Object> response = new HashMap<>();
 		try {
 			Optional<Post> postOptional = postService.getPost(postIdx);
@@ -218,8 +219,8 @@ public class PostController {
 	}
 	
 	// 댓글 삭제하는 DeleteMapping
-	@DeleteMapping("/{commentIdx}")
-    public ResponseEntity<Map<String, Object>> deleteComment(@PathVariable("commentIdx") Long commentIdx) {
+	@DeleteMapping("/comments/{commentIdx}/delete")
+    public @ResponseBody ResponseEntity<Map<String, Object>> deleteComment(@PathVariable("commentIdx") Long commentIdx) {
         Map<String, Object> response = new HashMap<>();
         try {
             boolean deleted = commentService.deleteComment(commentIdx);
@@ -240,7 +241,7 @@ public class PostController {
     }
 	
 	// 게시물 삭제하는 DeleteMapping
-	@DeleteMapping("/{postIdx}")
+	@DeleteMapping("/{postIdx}/delete")
 	public @ResponseBody Map<String, Object> deletePost(@PathVariable("postIdx") Long postIdx) {
 	    postService.deletePostById(postIdx);
 
@@ -253,26 +254,28 @@ public class PostController {
 	
 	// 댓글 좋아요 표시 PostMapping
 	@PostMapping("/checkCommentLike/{commentIdx}")
-	public ResponseEntity<Map<String, Object>> checkCommentLike(@PathVariable("commentIdx") Long commentIdx, Authentication authentication) {
-        Member member = memberService.infoFromLogin(authentication);
+	public @ResponseBody ResponseEntity<Map<String, Object>> checkCommentLike(@PathVariable("commentIdx") Long commentIdx, Authentication authentication) {
+	    Member member = memberService.infoFromLogin(authentication);
+	    System.out.println("checkCommentLike called with commentIdx: " + commentIdx + " and member: " + member.getEmail());
 
-        try {
-            commentService.checkCommentLike(commentIdx, member);
-            int newLikeCount = commentService.getLikeCount(commentIdx);
+	    try {
+	        commentService.checkCommentLike(commentIdx, member);
+	        int newLikeCount = commentService.getLikeCount(commentIdx);
+	        System.out.println("New like count for comment " + commentIdx + ": " + newLikeCount);
 
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", true);
-            response.put("newLikeCount", newLikeCount);
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("success", true);
+	        response.put("newLikeCount", newLikeCount);
 
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            e.printStackTrace(); // 에러 로그 출력
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", false);
-            response.put("error", e.getMessage()); // 에러 메시지 추가
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
-    }
+	        return ResponseEntity.ok(response);
+	    } catch (Exception e) {
+	        e.printStackTrace(); // 에러 로그 출력
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("success", false);
+	        response.put("error", e.getMessage()); // 에러 메시지 추가
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+	    }
+	}
 	
 	// 댓글 좋아요 취소 DeleteMapping
 	@DeleteMapping("/cancelCommentLike/{commentIdx}")
@@ -288,7 +291,7 @@ public class PostController {
 	
 	// Task(업무) 진행상태 업데이트 PostMapping
 	@PostMapping("/updateTaskCondition")
-	public ResponseEntity<Map<String, String>> updateTaskCondition(@RequestBody Map<String, Object> payload, Authentication authentication) {
+	public @ResponseBody ResponseEntity<Map<String, String>> updateTaskCondition(@RequestBody Map<String, Object> payload, Authentication authentication) {
 	    Map<String, String> response = new HashMap<>();
 	    try {
 	        Member member = memberService.infoFromLogin(authentication);
@@ -310,7 +313,7 @@ public class PostController {
 	
 	// Schedule(일정) 참여여부 Update PostMapping
 	@PostMapping("/checkScheduleAttendance")
-    public ResponseEntity<Map<String, String>> checkScheduleAttendance(
+    public @ResponseBody ResponseEntity<Map<String, String>> checkScheduleAttendance(
             @RequestParam("postIdx") Long postIdx,
             @RequestParam("attendance") int attendance,
             Authentication authentication) {
@@ -331,7 +334,7 @@ public class PostController {
 	
 	// 할일 체크 통해 Update PutMapping
 	@PutMapping("/todo/update/{todonameIdx}")
-	public ResponseEntity<Map<String, Object>> updateTodoMemberStatus(
+	public @ResponseBody ResponseEntity<Map<String, Object>> updateTodoMemberStatus(
 	        Authentication authentication,
 	        @PathVariable("todonameIdx") Long todonameIdx,
 	        @RequestParam("isDone") Integer isDone) {
@@ -354,9 +357,54 @@ public class PostController {
 	    }
 	}
 	
+	
+	// 투표 참여 PostMapping
+	@PostMapping("/vote/{postIdx}")
+	public ResponseEntity<?> vote(@PathVariable("postIdx") Long postIdx,
+	                              @RequestBody Map<String, Object> request,
+	                              Authentication authentication) {
+	    try {
+	        Member member = memberService.infoFromLogin(authentication);
+	        Long memberIdx = member.getMemberIdx();
+	        List<?> voteItemIdsRaw = (List<?>) request.get("voteItemIds");
+	        List<Long> voteItemIdxs = voteItemIdsRaw.stream()
+	                                                .map(id -> Long.valueOf(id.toString()))
+	                                                .collect(Collectors.toList());
+
+	        postMemberService.participateVote(postIdx, memberIdx, voteItemIdxs);
+
+	        return ResponseEntity.ok().body(Collections.singletonMap("message", "Vote submitted successfully"));
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("message", e.getMessage()));
+	    }
+	}
+	
+	//투표종료 PostMapping
+	@PostMapping("vote/end/{postIdx}")
+    public ResponseEntity<?> endVote(@PathVariable("postIdx") Long postIdx) {
+        try {
+            postMemberService.endVote(postIdx);
+            return ResponseEntity.ok("Vote ended successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+	
+	// 투표 결과 받아오는 GetMapping
+	@GetMapping("vote/{postIdx}/results")
+    public ResponseEntity<?> getVoteResults(@PathVariable("postIdx") Long postIdx) {
+        try {
+            Map<String, Integer> results = postMemberService.getVoteResults(postIdx);
+            return ResponseEntity.ok(results);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+	
+	
 	// 글 수정할 데이터를 받아오는 GetMapping
 	@GetMapping("/projectFeed/{projectIdx}/edit/{postIdx}")
-	public ResponseEntity<Map<String, Object>> getPostForEdit(@PathVariable("projectIdx") Long projectIdx,
+	public @ResponseBody ResponseEntity<Map<String, Object>> getPostForEdit(@PathVariable("projectIdx") Long projectIdx,
 			@PathVariable("postIdx") Long postIdx) {
 		Optional<Post> postOptional = postService.getPost(postIdx);
 		if (!postOptional.isPresent()) {
@@ -480,7 +528,7 @@ public class PostController {
 	            params.put("managerIdx", Long.parseLong(allParams.get("managerIdx").toString()));
 	        }
 	        if (allParams.containsKey("selectedDate") && !allParams.get("selectedDate").toString().isEmpty()) {
-	            params.put("allEndDate", java.sql.Date.valueOf(allParams.get("selectedDate").toString()));
+	            params.put("selectedDate", java.sql.Date.valueOf(allParams.get("selectedDate").toString()));
 	        }
 
 	        if (allParams.containsKey("startDatetime")) {
@@ -527,7 +575,7 @@ public class PostController {
 	            case "2":
 	                if (!params.containsKey("title") || !params.containsKey("content") ||
 	                    !params.containsKey("condition") || !params.containsKey("managerIdx") ||
-	                    !params.containsKey("taskEndDate")) {
+	                    !params.containsKey("selectedDate")) {
 	                    throw new IllegalArgumentException("Title, content, condition, managerIdx, and selectedDate are required for tabType 2");
 	                }
 	                break;
