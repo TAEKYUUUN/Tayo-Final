@@ -84,7 +84,7 @@ public class CommentService {
 			Alarm alarm = new Alarm();
 			alarm.setAlarmTime(date);
 			alarm.setAlarmType(4);
-			alarm.setComments(comment);
+			alarm.setCommentsReact(commentReact);
 			alarm.setMember(comment.getMember());
 			this.alarmRepository.save(alarm);
 		}
@@ -113,4 +113,13 @@ public class CommentService {
         return commentsWithLikeCount;
     }
 	
+	// 댓글 삭제
+	public boolean deleteComment(Long commentIdx) {
+        try {
+            commentsRepository.deleteById(commentIdx);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

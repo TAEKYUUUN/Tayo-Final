@@ -25,7 +25,7 @@ public class TodoMember {
 	
 	@ManyToOne
 	@JoinColumn(name = "todo_name_idx", referencedColumnName = "todo_name_idx")
-	private TodoName todoname;
+	private TodoName todoName;
 	
 	@ManyToOne
 	@JoinColumn(name = "member_idx", referencedColumnName = "member_idx")
@@ -33,5 +33,13 @@ public class TodoMember {
 	
 	@Column(name = "is_done")
 	private Integer isDone;
+	
+	public Integer getIsDone() {
+        return isDone != null ? isDone : 0; // 기본값 설정
+    }
+
+    public void setIsDone(Integer isDone) {
+        this.isDone = isDone;
+    }
 }
 

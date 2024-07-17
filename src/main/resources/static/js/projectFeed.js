@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const tabs = document.querySelectorAll('.tabs');
     const tabTypeInput = document.getElementById('tabType');
 
+	// Post 작성 modal 초기화
     function resetModalFields() {
         const fields = modal.querySelectorAll('input[type="text"], input[type="hidden"], input[type="datetime-local"], input[type="checkbox"], textarea');
         fields.forEach(field => {
@@ -20,72 +21,135 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    function initializeFlatpickr() {
-		// Initialize flatpickr
+    // 할일 마감일추가 modal 초기화
+	function initializeFlatpickrForTodo() {
 		var datePicker = flatpickr("#datepicker", {
 			enableTime: false,
 			dateFormat: "Y-m-d",
 		});
 
-		// Get the modal
 		var calendarmodal = document.getElementById("div_calendar_modal");
-
-		// Get the button that opens the modal
 		var btn = document.getElementById("endDate");
-
-		// Get the span to show selected date
 		var selectedDateText = document.getElementById("selectedDateText");
-
-		// Get the hidden input to store selected date
 		var hiddenSelectedDate = document.getElementById("hiddenSelectedDate");
-
-		// Get the <span> element that closes the modal
 		var span = document.getElementsByClassName("close1")[0];
 
-		// When the user clicks the button, open the modal and show datepicker
 		btn.onclick = function() {
+			var calendarModalContent = document.querySelector(".calendar-modal-content");
+			calendarModalContent.style.margin = "7.6% auto";
 			calendarmodal.style.display = "block";
 			datePicker.open(); // Open the date picker
 		}
 
-		// When the user clicks on <span> (x), close the modal
 		span.onclick = function() {
 			calendarmodal.style.display = "none";
 		}
 
-		// When the user clicks anywhere outside of the modal, close it
 		window.onclick = function(event) {
 			if (event.target == calendarmodal) {
 				calendarmodal.style.display = "none";
 			}
 		}
 
-		// Handle the date selection
 		document.getElementById("selectDate").onclick = function(event) {
-			event.preventDefault(); // form 제출 막음
-
+			event.preventDefault();
 			var selectedDate = document.getElementById("datepicker").value;
 			var dayOfWeek = new Date(selectedDate).toLocaleDateString('ko-KR', { weekday: 'short' });
 			selectedDateText.textContent = `${selectedDate} (${dayOfWeek}) 까지`;
-			selectedDateText.style.display = "inline"; // Show the selected date text
+			selectedDateText.style.display = "inline";
 			selectedDateText.style.marginLeft = '15px';
-			btn.style.display = "none"; // Hide the button
-			hiddenSelectedDate.value = selectedDate; // Set the hidden input value
+			btn.style.display = "none";
+			hiddenSelectedDate.value = selectedDate;
 			calendarmodal.style.display = "none";
 		}
 	}
 
-	function initializeTaskStateButtons() {
-		const taskStateButtons = document.querySelectorAll('.task_state_btn');
-		taskStateButtons.forEach(button => {
-			button.addEventListener('click', function() {
-				taskStateButtons.forEach(btn => btn.classList.remove('active'));
-				this.classList.add('active');
-				document.getElementById('hiddenCondition').value = this.value;
-			});
+	// 업무 마감일 추가 modal 초기화
+	function initializeFlatpickrForTask() {
+		var datePicker = flatpickr("#datepicker", {
+			enableTime: false,
+			dateFormat: "Y-m-d",
 		});
-	}
 
+		var calendarmodal = document.getElementById("div_calendar_modal");
+		var btn = document.getElementById("endDate");
+		var selectedDateText = document.getElementById("selectedDateText");
+		var hiddenSelectedDate = document.getElementById("hiddenSelectedDate");
+		var span = document.getElementsByClassName("close1")[0];
+
+		btn.onclick = function() {
+			calendarmodal.style.display = "block";
+			datePicker.open();
+		}
+
+		span.onclick = function() {
+			calendarmodal.style.display = "none";
+		}
+
+		window.onclick = function(event) {
+			if (event.target == calendarmodal) {
+				calendarmodal.style.display = "none";
+			}
+		}
+
+		document.getElementById("selectDate").onclick = function(event) {
+			event.preventDefault();
+			var selectedDate = document.getElementById("datepicker").value;
+			var dayOfWeek = new Date(selectedDate).toLocaleDateString('ko-KR', { weekday: 'short' });
+			selectedDateText.textContent = `${selectedDate} (${dayOfWeek}) 까지`;
+			selectedDateText.style.display = "inline";
+			selectedDateText.style.marginLeft = '15px';
+			btn.style.display = "none";
+			hiddenSelectedDate.value = selectedDate;
+			calendarmodal.style.display = "none";
+		}
+	}
+	
+	// Vote 마감일추가 modal 초기화
+	function initializeFlatpickrForVote() {
+		var datePicker = flatpickr("#datepicker", {
+			enableTime: false,
+			dateFormat: "Y-m-d",
+		});
+
+		var calendarmodal = document.getElementById("div_calendar_modal");
+		var btn = document.getElementById("add_voteEndDate");
+		var selectedDateText = document.getElementById("selectedDateText");
+		var hiddenSelectedDate = document.getElementById("hiddenSelectedDate");
+		var span = document.getElementsByClassName("close1")[0];
+
+		btn.onclick = function() {
+			var calendarModalContent = document.querySelector(".calendar-modal-content");
+			calendarModalContent.style.margin = "36% 44%";
+			calendarmodal.style.display = "block";
+			span.style.right = '97px';
+			datePicker.open(); // Open the date picker
+		}
+
+		span.onclick = function() {
+			calendarmodal.style.display = "none";
+		}
+
+		window.onclick = function(event) {
+			if (event.target == calendarmodal) {
+				calendarmodal.style.display = "none";
+			}
+		}
+
+		document.getElementById("selectDate").onclick = function(event) {
+			event.preventDefault();
+			var selectedDate = document.getElementById("datepicker").value;
+			var dayOfWeek = new Date(selectedDate).toLocaleDateString('ko-KR', { weekday: 'short' });
+			selectedDateText.textContent = `${selectedDate} (${dayOfWeek}) 까지`;
+			selectedDateText.style.display = "inline";
+			selectedDateText.style.marginLeft = '15px';
+			btn.style.display = "none";
+			hiddenSelectedDate.value = selectedDate;
+			calendarmodal.style.display = "none";
+		}
+	}
+	
+	// Task 하위 업무 추가
 	function initializeLowerTaskHandlers() {
 		document.getElementById('addLowerTask').addEventListener('click', function() {
 			addLowerTask();
@@ -156,8 +220,17 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	}
 	
+	// Todo 할일 추가
 	function initializeTodoInputHandlers() {
 		function createNewTodoEdit() {
+			const taskContainer = document.querySelector('.input-group2');
+			const currentTasks = taskContainer.querySelectorAll('.div_todo_edit');
+
+			if (currentTasks.length >= 5) {
+				alert('할 일은 최대 5개까지만 추가할 수 있습니다.');
+				return;
+			}
+
 			const newDiv = document.createElement('div');
 			newDiv.className = 'div_todo_edit';
 
@@ -178,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			newDiv.appendChild(newInput);
 			newDiv.appendChild(removeButton);
 
-			document.querySelector('.input-group2').appendChild(newDiv);
+			taskContainer.appendChild(newDiv);
 
 			newInput.addEventListener('keydown', handleKeyDown);
 
@@ -196,6 +269,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		initialInput.addEventListener('keydown', handleKeyDown);
 	}
 
+	// 글 작성 클릭시 -> Post 작성 modal 열리게
     createPostArea.addEventListener('click', function() {
         modal.style.display = 'block';
         backgroundFull.style.display = 'block';
@@ -203,10 +277,8 @@ document.addEventListener('DOMContentLoaded', function() {
         tabTypeInput.value = 1; // 기본값 설정
         updateModalContent(1);
         
-        // Reset styles for all tabs
         tabs.forEach(t => t.style = "");
         
-        // Set style for the default tab (tab-paragraph)
         const paragraphTab = document.querySelector('.tab-paragraph');
         paragraphTab.style.color = 'black';
         paragraphTab.style.borderBottom = '2px solid #666';
@@ -255,7 +327,8 @@ document.addEventListener('DOMContentLoaded', function() {
             addVoteContent();
         }
     }
-
+	
+	// Post = 'Paragraph'
 	function addParagraphContent() {
 		const modalContent = document.querySelector('.modal-content');
 		modalContent.style.minHeight = '';
@@ -273,6 +346,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		modalContent.innerHTML = paragraphContent;
 	}
 
+	// Post = 'Task'
 	function addTaskContent() {
 		const modalContent = document.querySelector('.modal-content');
 		modalContent.style.minHeight = '592px';
@@ -330,6 +404,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			event.stopPropagation();
 			var modal = document.getElementById("div_add_manager_modal");
 			modal.style.display = "block";
+			modal.style.right = '881px';
+			modal.style.top = '288px';
 		});
 
 		document.getElementById('managerForm').addEventListener('submit', function(event) {
@@ -364,11 +440,12 @@ document.addEventListener('DOMContentLoaded', function() {
 			modal.style.display = "none";
 		});
 
-		initializeFlatpickr();
+		initializeFlatpickrForTask();
 		initializeTaskStateButtons();
 		initializeLowerTaskHandlers();
 	}
 
+	// // Post = 'Schedule'
 	function addScheduleContent() {
 		const modalContent = document.querySelector('.modal-content');
 		modalContent.style.minHeight = '592px';
@@ -426,6 +503,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	}
 
+	// // Post = 'Todo'
 	function addTodoContent() {
 		const modalContent = document.querySelector('.modal-content');
 		modalContent.style.minHeight = '592px';
@@ -492,10 +570,11 @@ document.addEventListener('DOMContentLoaded', function() {
 			modal.style.display = "none";
 		});
 
-		initializeFlatpickr();
+		initializeFlatpickrForTodo();
 		initializeTodoInputHandlers();
 	}
 
+	// Post = 'Vote'
 	function addVoteContent() {
         const modalContent = document.querySelector('.modal-content');
         modalContent.style.minHeight = '592px';
@@ -523,7 +602,16 @@ document.addEventListener('DOMContentLoaded', function() {
                             <img src="/img/vote_enddate.png"/>
                             <span>투표 마감일</span>
                         </div>
+                        <span id="selectedDateText" style="display:none; font-size:14px;"></span>
+                        <input type="hidden" id="hiddenSelectedDate" name="selectedDate">
                         <button type="button" id="add_voteEndDate">마감일 추가</button>
+                        <div id="div_calendar_modal" class="calendar-modal">
+		                    <div class="calendar-modal-content">
+		                        <span class="close1">&times;</span>
+		                        <input type="text" id="datepicker" placeholder="날짜를 선택하세요">
+		                        <button id="selectDate">선택</button>
+		                    </div>
+               			</div>
                     </div>
                     <div class="pluralVote vote_option">
                         <div class="option_name">
@@ -555,31 +643,55 @@ document.addEventListener('DOMContentLoaded', function() {
         const voteContainer = document.querySelector('.voteContainer');
         const addVoteitemBtn = document.getElementById('addVoteitem');
 
-        function createNewVoteItemEdit() {
-            const newDiv = document.createElement('div');
-            newDiv.className = 'div_voteitem_edit';
+		function createNewVoteItemEdit() {
+			const voteItemArea = document.querySelector('.input-group2');
+			const currentVoteItems = voteItemArea.querySelectorAll('.div_voteitem_edit');
 
-            const newInput = document.createElement('input');
-            newInput.type = 'text';
-            newInput.placeholder = '항목 추가 (Enter 또는 Tab) / 최대 60자';
-            newInput.className = 'voteitem_input';
-            newInput.name = 'voteItems';
+			if (currentVoteItems.length >= 5) {
+				alert('투표 항목은 최대 5개까지만 추가할 수 있습니다.');
+				return;
+			}
 
-            const removeButton = document.createElement('button');
-            removeButton.textContent = 'x';
-            removeButton.className = 'remove-btn';
-            removeButton.style.right = '-17px';
-            removeButton.addEventListener('click', () => {
-                newDiv.remove();
-            });
+			const newDiv = document.createElement('div');
+			newDiv.className = 'div_voteitem_edit';
 
-            newDiv.appendChild(newInput);
-            newDiv.appendChild(removeButton);
+			const newInput = document.createElement('input');
+			newInput.type = 'text';
+			newInput.placeholder = '항목 추가 (Enter 또는 Tab) / 최대 60자';
+			newInput.className = 'voteitem_input';
+			newInput.name = 'voteItems';
 
-            voteContainer.parentNode.insertBefore(newDiv, voteContainer);
-        }
+			const removeButton = document.createElement('button');
+			removeButton.textContent = 'x';
+			removeButton.className = 'remove-btn';
+			removeButton.style.right = '-17px';
+			removeButton.addEventListener('click', () => {
+				newDiv.remove();
+			});
 
-        addVoteitemBtn.addEventListener('click', createNewVoteItemEdit);
+			newDiv.appendChild(newInput);
+			newDiv.appendChild(removeButton);
+
+			voteContainer.parentNode.insertBefore(newDiv, voteContainer);
+			
+			newInput.addEventListener('keydown', handleKeyDown);
+        	newInput.focus();
+		}
+		
+		function handleKeyDown(event) {
+			if (event.key === 'Enter' || event.key === 'Tab') {
+				event.preventDefault();
+				createNewVoteItemEdit();
+			}
+		}
+
+		document.querySelectorAll('.voteitem_input').forEach(input => {
+			input.addEventListener('keydown', handleKeyDown);
+		});
+
+		addVoteitemBtn.addEventListener('click', createNewVoteItemEdit);
+		
+		initializeFlatpickrForVote();
     }
 
     const form = document.querySelector('form');
@@ -605,8 +717,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // 프로젝트 멤버 추가(초대)
-    // Modal functions for inviting participants
+    //////////////////////////// 프로젝트 멤버 초대(추가) ////////////////////////////////////
     const inviteButton = document.querySelector('#div_invite_prjmem img');
     const nothingMemberButton = document.querySelector('.nothing_btn');
     const inviteModal = document.getElementById("invite-participants-modal");
@@ -638,6 +749,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+	// 선택된 리스트 따로 표시
     function toggleInviteSelectedList(id, name) {
         try {
             const selectedList = document.getElementById('selectedList');
@@ -745,39 +857,125 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('.invite_submit_btn').addEventListener('click', inviteParticipants);
 
 
-	///////////////////////// 댓글 관련 //////////////////////////////////////
-    // 댓글 등록
-    document.querySelectorAll('#commentInput').forEach(commentInput => {
-        const submitComment = document.getElementById('submitComment');
+	//////////////////////////////////// 댓글 관련 //////////////////////////////////////
+	// 댓글 등록, 삭제
+	document.querySelectorAll('.cmt_input').forEach(commentInput => {
+        const submitComment = commentInput.closest('.post_comment_input_area').querySelector('#submitComment');
+
+        function fetchComments(postIdx, commentInput) {
+            fetch(`/comments?postIdx=${postIdx}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        updateCommentsList(data.comments, commentInput);
+                        const commentsSection = commentInput.closest('.post_box');
+                        if (commentsSection) {
+                            updateCommentCount(commentsSection, data.comments.length);
+                        }
+                    } else {
+                        console.error('댓글을 불러오는데 실패했습니다:', data);
+                    }
+                })
+                .catch(error => {
+                    console.error('오류:', error);
+                });
+        }
+
+        function updateCommentsList(comments, commentInput) {
+            const commentsSection = commentInput.closest('.post_box');
+            if (!commentsSection) {
+                console.error('comments-section을 찾을 수 없습니다.');
+                return;
+            }
+
+            const commentsContainer = commentsSection.querySelector('.post_comment_list');
+            if (!commentsContainer) {
+                console.error('댓글 컨테이너를 찾을 수 없습니다.');
+                return;
+            }
+            commentsContainer.innerHTML = '';
+
+            comments.forEach(comment => {
+                if (comment.member) {
+                    const commentElement = document.createElement('li');
+                    commentElement.classList.add('post_comment_item');
+                    commentElement.innerHTML = `
+                        <div class="comment_profile">
+                            <img src="https://flow.team/flow-renewal/assets/images/profile-default.png" />
+                        </div>
+                        <div class="comment_container">
+                            <div class="comment_user_area">
+                                <span class="user_name">${comment.member.name}</span>
+                                <span class="record_date">${new Date(comment.writeTime).toLocaleString()}</span>
+                                <span class="comment_react_on" data-comment-id="${comment.commentsIdx}" style="${comment.isLiked ? '' : 'display:none;'}">
+                                    <em class="comment_like_cancel on">좋아요 취소</em>
+                                    ${comment.likeCount > 0 ? `<span class="comment_like_cnt">${comment.likeCount}</span>` : ''}
+                                </span>
+                                <span class="comment_react" data-comment-id="${comment.commentsIdx}" style="${comment.isLiked ? 'display:none;' : ''}">
+                                    <em class="comment_like">좋아요</em>
+                                    ${comment.likeCount > 0 ? `<span class="comment_like_cnt">${comment.likeCount}</span>` : ''}
+                                </span>
+                                <button class="delete_comment_btn" data-comment-id="${comment.commentsIdx}" style="${String(comment.member.memberIdx) === String(user.id) ? '' : 'display:none;'}">삭제</button>
+                            </div>
+                            <div>${comment.contents}</div>
+                        </div>
+                    `;
+                    commentsContainer.appendChild(commentElement);
+                } else {
+                    console.error('comment.member is null or undefined', comment);
+                }
+            });
+        }
+
+        function updateCommentCount(commentsSection, count) {
+            const commentCountElement = commentsSection.querySelector('#commentCount');
+            if (commentCountElement) {
+                commentCountElement.textContent = count;
+            } else {
+                console.error('commentCountElement를 찾을 수 없습니다.');
+            }
+        }
 
         function submitCommentFunction() {
-            const postId = commentInput.getAttribute('data-post-id');
+            const postIdx = commentInput.getAttribute('data-post-id');
             const commentContent = commentInput.value.trim();
             if (commentContent) {
+                const payload = {
+                    postIdx: postIdx,
+                    contents: commentContent
+                };
+
+                console.log('Sending payload:', JSON.stringify(payload)); // 디버깅을 위해 추가
+
                 fetch('/comments', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        post: {
-                            postIdx: postId,
-                        },
-                        contents: commentContent
-                    })
+                    body: JSON.stringify(payload)
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.success) {
-                        // 댓글 추가 후 처리 로직 (예: 댓글 리스트 갱신)
-                        location.reload(); // 페이지를 새로고침하여 댓글 리스트 갱신
+                        fetchComments(postIdx, commentInput); // 댓글을 불러와서 업데이트
+                        commentInput.value = ''; // 입력 필드 초기화
+                        const commentsSection = commentInput.closest('.post_box');
+                        if (commentsSection) {
+                            const currentCount = parseInt(commentsSection.querySelector('#commentCount').textContent, 10);
+                            updateCommentCount(commentsSection, currentCount + 1); // 댓글 수 증가
+                        }
                     } else {
                         console.log(data);
                         alert('댓글 등록에 실패했습니다.');
                     }
                 })
                 .catch(error => {
-                    console.error('Error:', error);
+                    console.error('오류:', error);
                     alert('댓글 등록 중 오류가 발생했습니다.');
                 });
             }
@@ -794,11 +992,26 @@ document.addEventListener('DOMContentLoaded', function() {
             submitCommentFunction();
         });
     });
-    
-    ////////////////////////  포스트 옵션 ///////////////////////////////
+
+    // 이벤트 위임을 사용하여 삭제 버튼 이벤트 리스너 추가
+    document.body.addEventListener('click', function(event) {
+        if (event.target.classList.contains('delete_comment_btn')) {
+            event.stopPropagation(); // 이벤트 전파 중지
+            event.preventDefault(); // 기본 동작 막기
+            const commentId = event.target.getAttribute('data-comment-id');
+            const postBox = event.target.closest('.post_box');
+            const commentInput = postBox.querySelector('.cmt_input');
+            deleteComment(commentId, commentInput);
+        }
+    }, true); // 캡처링 단계에서 이벤트 리스너 추가
+	
+
+	////////////////////////////////////////  포스트 옵션 ////////////////////////////////////////////
+	
 	// 포스트 옵션 (게시글 삭제, 게시글 수정)
 	document.querySelectorAll('.post-option-toggle').forEach(function(toggle) {
-		toggle.addEventListener('click', function() {
+		toggle.addEventListener('click', function(event) {
+			event.stopPropagation(); // 이벤트 버블링을 막습니다.
 			const id = this.getAttribute('data-id');
 			const optionUl = document.getElementById('postOptionUl' + id);
 
@@ -811,9 +1024,589 @@ document.addEventListener('DOMContentLoaded', function() {
 			optionUl.style.display = 'block';
 		});
 	});
-    
-    
-    ////////////////////////  담당자 지정  ///////////////////////////////
+
+	document.addEventListener('click', function(event) {
+		document.querySelectorAll('.post_option_ul').forEach(function(ul) {
+			ul.style.display = 'none';
+		});
+	});
+
+	// ul 내부를 클릭했을 때 이벤트가 버블링되지 않도록.
+	document.querySelectorAll('.post_option_ul').forEach(function(ul) {
+		ul.addEventListener('click', function(event) {
+			event.stopPropagation();
+		});
+	});
+
+	// 게시글 수정 버튼 클릭 이벤트 리스너
+	document.querySelectorAll('.post_option_li').forEach(function(item) {
+		item.addEventListener('click', function() {
+			if (this.textContent.trim() === '게시글 수정') {
+				const postIdx = this.closest('ul').getAttribute('data-post-idx');
+				const projectIdx = this.closest('ul').getAttribute('data-project-idx');
+				backgroundFull.style.display = 'block';
+				openEditModal(projectIdx, postIdx);
+			}
+		});
+	});
+
+	// 모달 닫기 버튼 클릭 이벤트 리스너
+	document.querySelectorAll('.close-btn').forEach(function(btn) {
+		btn.addEventListener('click', function() {
+			document.getElementById('postReviseModal').style.display = 'none';
+			document.getElementById('postModal').style.display = 'none';
+			backgroundFull.style.display = 'none';
+		});
+	});
+
+	// 하위 업무 상태에 따른 클래스 반환
+	function getTaskConditionClass(condition) {
+		switch (condition) {
+			case '1': return 'request';
+			case '2': return 'progress';
+			case '3': return 'feedback';
+			case '4': return 'completion';
+			case '5': return 'hold';
+			default: return 'request';
+		}
+	}
+
+	// 하위 업무 상태에 따른 텍스트 반환
+	function getTaskConditionText(condition) {
+		switch (condition) {
+			case '1': return '요청';
+			case '2': return '진행';
+			case '3': return '피드백';
+			case '4': return '완료';
+			case '5': return '보류';
+			default: return '요청';
+		}
+	}
+	
+	// Task 수정 시 담당자 변경 Modal
+	function initializeManagerModalForEditTask() {
+		const modal = document.getElementById("div_add_manager_modal");
+		const button = document.getElementById("editManager");
+		const managerNameElement = document.getElementById("managerName");
+		const managerIdxElement = document.getElementById("managerIdx");
+
+		button.addEventListener("click", function(event) {
+			event.stopPropagation();
+			modal.style.display = "block";
+			if (position) {
+				modal.style.right = '846px';
+				modal.style.top = '241px';
+			}
+		});
+
+		document.getElementById("managerForm").addEventListener("submit", function(event) {
+			event.preventDefault();
+			const selectedManager = document.querySelector('.manager_item[data-id]');
+			if (selectedManager) {
+				const id = selectedManager.getAttribute('data-id');
+				const name = selectedManager.querySelector('.manager_name').innerText;
+				managerIdxElement.value = id;
+				managerNameElement.innerText = name;
+			}
+			modal.style.display = "none";
+		});
+
+		window.onclick = function(event) {
+			if (event.target == modal) {
+				modal.style.display = "none";
+			}
+		};
+	}
+
+	// Task 수정 시 마감일 변경 modal
+	function initializeEndDateModalForEditTask() {
+		const modal = document.getElementById("div_calendar_modal");
+		const button = document.getElementById("endDate");
+		const datePicker = document.getElementById("taskDatepicker");
+		const selectedDateText = document.getElementById("selectedDateText");
+		const taskEndDateSpan = document.getElementById("taskEndDate");
+
+		console.log(taskEndDateSpan);
+		
+		flatpickr(datePicker, {
+			enableTime: false,
+			dateFormat: "Y-m-d",
+		});
+
+		button.onclick = function() {
+			modal.style.display = "block";
+			modal.style.left = '34px';
+			modal.style.top = '159px';
+			datePicker._flatpickr.open();
+		};
+
+		modal.querySelector(".close1").onclick = function() {
+			modal.style.display = "none";
+		};
+
+		window.onclick = function(event) {
+			if (event.target == modal) {
+				modal.style.display = "none";
+			}
+		};
+
+		document.getElementById("selectDate").onclick = function(event) {
+			event.preventDefault();
+			const selectedDate = datePicker.value;
+			const dayOfWeek = new Date(selectedDate).toLocaleDateString('ko-KR', { weekday: 'short' });
+			selectedDateText.textContent = `${selectedDate} (${dayOfWeek}) 까지`;
+			selectedDateText.style.display = "inline";
+			selectedDateText.style.marginLeft = '15px';
+			button.style.display = "none";
+			taskEndDateSpan.style.display = 'none';
+			hiddenSelectedDate.value = selectedDate;
+			modal.style.display = "none";
+		};
+	}
+
+
+	// Todo 수정 시 담당자 modal
+	function initializeManagerModalForEditTodo() {
+		const modal = document.getElementById("div_add_manager_modal");
+		const button = document.getElementById("todoEditManager");
+		const managerNameElement = document.getElementById("todoManagerName");
+		const managerIdxElement = document.getElementById("todoManagerIdx");
+
+		button.addEventListener("click", function(event) {
+			event.stopPropagation();
+			modal.style.display = "block";
+			modal.style.right = '846px';
+			modal.style.top = '189px';
+		});
+
+		document.getElementById("managerForm").addEventListener("submit", function(event) {
+			event.preventDefault();
+			const selectedManager = document.querySelector('.manager_item[data-id]');
+			if (selectedManager) {
+				const id = selectedManager.getAttribute('data-id');
+				const name = selectedManager.querySelector('.manager_name').innerText;
+				managerIdxElement.value = id;
+				managerNameElement.innerText = name;
+			}
+			modal.style.display = "none";
+		});
+
+		window.onclick = function(event) {
+			if (event.target == modal) {
+				modal.style.display = "none";
+			}
+		};
+	}
+
+	// Todo 수정 시 마감일 변경 Modal
+	function initializeEndDateModalForEditTodo() {
+		const modal = document.getElementById("todoDiv_calendar_modal");
+		const button = document.getElementById("todoEndDate");
+		const datePicker = document.getElementById("todoDatepicker");
+		const selectedDateText = document.getElementById("todoSelectedDateText");
+		const todoDeadLineSpan = document.getElementById("todoDeadLine");
+		
+		console.log(todoDeadLineSpan);
+		flatpickr(datePicker, {
+			enableTime: false,
+			dateFormat: "Y-m-d",
+		});
+
+		button.onclick = function() {
+			modal.style.display = "block";
+			modal.style.left = '32px';
+			modal.style.top = '106px';
+			datePicker._flatpickr.open();
+		};
+
+		modal.querySelector(".close1").onclick = function() {
+			modal.style.display = "none";
+		};
+
+		window.onclick = function(event) {
+			if (event.target == modal) {
+				modal.style.display = "none";
+			}
+		};
+
+		document.getElementById("todoSelectDate").onclick = function(event) {
+			event.preventDefault();
+			const selectedDate = datePicker.value;
+			const dayOfWeek = new Date(selectedDate).toLocaleDateString('ko-KR', { weekday: 'short' });
+			selectedDateText.textContent = `${selectedDate} (${dayOfWeek}) 까지`;
+			selectedDateText.style.display = "inline";
+			selectedDateText.style.marginLeft = '15px';
+			button.style.display = "none";
+			todoDeadLineSpan.style.display = "none";
+			modal.style.display = "none";
+		};
+	}
+
+	// Task 수정 시 하위 업무 추가 및 핸들러 초기화
+	function initializeLowerTaskHandlersForEditTask() {
+		document.getElementById('addLowerTask').addEventListener('click', function() {
+			addLowerTask();
+		});
+
+		function addLowerTask(name = '', condition = '1') {
+			const taskContainer = document.querySelector('#taskContainer .subtask_ul');
+			const lowerTasks = taskContainer.querySelectorAll('.subtask_li');
+
+			if (lowerTasks.length >= 5) {
+				alert('하위 업무는 최대 5개까지만 추가할 수 있습니다.');
+				return;
+			}
+
+			const newTaskLi = document.createElement('li');
+			newTaskLi.className = 'subtask_li';
+
+			newTaskLi.innerHTML = `
+            <div class="subtask_li_div" style="width:95%;">
+                <input type="hidden" class="lowertask_state_value" name="lowerTaskConditions" value="${condition}" />
+                <button type="button" class="subtask_state_btn ${getTaskConditionClass(condition)}" value="${condition}">${getTaskConditionText(condition)}</button>
+                <div class="subtask_input">
+                    <input type="text" class="lowertask_name" name="lowerTaskNames" value="${name}" placeholder="업무명 입력(Enter로 업무 연속 등록 가능)" style="border:none;"/>
+                </div>
+                <button type="button" class="remove-btn" style="position: relative; right: -190px;">x</button>
+            </div>
+        `;
+
+			const inputField = newTaskLi.querySelector('.lowertask_name');
+
+			inputField.addEventListener('keypress', function(event) {
+				if (event.key === 'Enter') {
+					event.preventDefault();
+					addLowerTaskAndFocus();
+				}
+			});
+
+			newTaskLi.querySelector('.remove-btn').addEventListener('click', function() {
+				newTaskLi.remove();
+			});
+
+			newTaskLi.querySelector('.subtask_state_btn').addEventListener('click', function() {
+				const currentCondition = this.value;
+				const newCondition = (currentCondition === '1') ? '2' : '1'; // Assuming you have only two conditions (1 and 2)
+				this.value = newCondition;
+				this.textContent = getTaskConditionText(newCondition);
+				this.className = `subtask_state_btn ${getTaskConditionClass(newCondition)}`;
+				newTaskLi.querySelector('.lowertask_state_value').value = newCondition;
+			});
+
+			taskContainer.appendChild(newTaskLi);
+
+			return inputField;
+		}
+
+		function addLowerTaskAndFocus() {
+			const newInput = addLowerTask();
+			if (newInput) {
+				newInput.focus();
+			}
+		}
+
+		// 데이터 로드 후 하위 업무 추가
+		function loadLowerTasks(lowerTasks) {
+			const lowerTaskContainer = document.querySelector('#taskContainer .subtask_ul');
+			lowerTaskContainer.innerHTML = '';
+			lowerTasks.forEach(task => {
+				addLowerTask(task.lowerTaskName, task.lowerTaskCondition);
+			});
+		}
+
+		// 외부에서 호출할 수 있도록 loadLowerTasks 함수를 반환
+		return {
+			loadLowerTasks
+		};
+	}
+	
+	// Todo 수정 시 할 일 추가 및 핸들러 초기화
+	function initializeTodoHandlersForEditTodo() {
+		document.getElementById('addTodoButton').addEventListener('click', function() {
+			addTodoItem();
+		});
+
+		function addTodoItem(name = '') {
+			const todoListContainer = document.getElementById('todoListContainer');
+			const todoItems = todoListContainer.querySelectorAll('.div_todo_edit');
+
+			// 최대 5개 제한
+			if (todoItems.length >= 5) {
+				alert('할 일은 최대 5개까지 추가할 수 있습니다.');
+				return null;
+			}
+
+			const todoDiv = document.createElement('div');
+			todoDiv.className = 'div_todo_edit';
+
+			todoDiv.innerHTML = `
+            <input type="text" placeholder="할 일 추가 (Enter 또는 Tab) / 최대 60자" class="todo_input" name="todoNames" value="${name}" />
+            <button type="button" class="removeTodoButton">x</button>
+        `;
+
+			todoListContainer.appendChild(todoDiv);
+
+			todoDiv.querySelector('.removeTodoButton').addEventListener('click', function() {
+				todoDiv.remove();
+			});
+
+			const inputField = todoDiv.querySelector('.todo_input');
+			inputField.addEventListener('keypress', function(event) {
+				if (event.key === 'Enter') {
+					event.preventDefault();
+					addTodoItemAndFocus();
+				}
+			});
+
+			return inputField;
+		}
+
+		function addTodoItemAndFocus() {
+			const newInput = addTodoItem();
+			if (newInput) {
+				newInput.focus();
+			}
+		}
+
+		// 데이터 로드 후 할 일 추가
+		function loadTodoItems(todoItems) {
+			const todoListContainer = document.getElementById('todoListContainer');
+			todoListContainer.innerHTML = '';
+			todoItems.forEach(item => {
+				addTodoItem(item.todoName, item.isFinished);
+			});
+		}
+
+		// 외부에서 호출할 수 있도록 loadTodoItems 함수를 반환
+		return {
+			loadTodoItems
+		};
+	}
+
+	
+	// 게시물 수정 클릭 시 모달 열기 함수
+	function openEditModal(projectIdx, postIdx) {
+		fetch(`/projectFeed/${projectIdx}/edit/${postIdx}`)
+			.then(response => response.json())
+			.then(data => {
+				document.getElementById('projectIdx').value = projectIdx;
+				document.getElementById('postIdx').value = postIdx;
+				document.getElementById('editTabType').value = data.fileType;
+				document.getElementById('editOpenRange').value = data.openRange;
+
+				document.getElementById('paragraphFields').style.display = 'none';
+				document.getElementById('taskFields').style.display = 'none';
+				document.getElementById('scheduleFields').style.display = 'none';
+				document.getElementById('todoFields').style.display = 'none';
+				document.getElementById('voteFields').style.display = 'none';
+
+				if (data.fileType === 1) { // Paragraph
+					document.getElementById('paragraphFields').style.display = 'block';
+					document.getElementById('editTitle').value = data.title;
+					document.getElementById('editContent').value = data.content;
+				} else if (data.fileType === 2) { // Task
+					document.getElementById('taskFields').style.display = 'block';
+					document.getElementById('editTaskTitle').value = data.taskName;
+					document.getElementById('editTaskContent').value = data.content;
+					document.getElementsByName('condition').forEach(btn => {
+						if (btn.value == data.condition) {
+							btn.classList.add('active');
+						} else {
+							btn.classList.remove('active');
+						}
+					});
+
+					const managerNameElement = document.getElementById('managerName');
+					if (managerNameElement) {
+						managerNameElement.innerText = data.managerName;
+					} else {
+						console.error('Manager name element not found.');
+					}
+
+					document.getElementById('managerIdx').value = data.managerIdx;
+					document.getElementById('taskEndDate').innerText = new Date(data.taskEndDate).toISOString().slice(0, 10);
+
+					const taskHandlers = initializeLowerTaskHandlersForEditTask();
+					taskHandlers.loadLowerTasks(data.lowerTasks);
+
+					initializeTaskStateButtons();
+					initializeManagerModalForEditTask();
+					initializeEndDateModalForEditTask();
+				} else if (data.fileType === 3) { // Schedule
+					document.getElementById('scheduleFields').style.display = 'block';
+					document.getElementById('title').value = data.title;
+					document.getElementById('start').value = new Date(data.startDatetime).toISOString().slice(0, 16);
+					document.getElementById('end').value = new Date(data.endDatetime).toISOString().slice(0, 16);
+					document.getElementById('place').value = data.place;
+					document.getElementById('content').value = data.content;
+					document.getElementById('place-id').value = data.place_id;
+					document.getElementById('place-lat').value = data.place_lat;
+					document.getElementById('place-lng').value = data.place_lng;
+
+					// 장소 및 지도 초기화
+					if (data.place_lat && data.place_lng) {
+						initPostMap('map', parseFloat(data.place_lat), parseFloat(data.place_lng));
+					}
+
+					// Google Maps API 로드 및 초기화
+					if (!googleMapsScriptLoaded) {
+						loadScript('https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initialize', () => {
+							googleMapsScriptLoaded = true;
+						});
+					} else {
+						initialize();
+					}
+				} else if (data.fileType === 4) { // Todo
+					document.getElementById('todoFields').style.display = 'block';
+					document.getElementById('todoTitle').value = data.title;
+					document.getElementById('todoManagerName').innerText = data.managerName;
+					document.getElementById('todoManagerIdx').value = data.managerIdx;
+					document.getElementById('todoDeadLine').innerText = new Date(data.deadLine).toISOString().slice(0, 10);
+
+					const todoHandlers = initializeTodoHandlersForEditTodo();
+					todoHandlers.loadTodoItems(data.todoNames);
+
+					initializeManagerModalForEditTodo();
+					initializeEndDateModalForEditTodo();
+				} else if (data.fileType === 5) { // Vote
+					document.getElementById('voteFields').style.display = 'block';
+					document.getElementById('voteDetail').value = data.voteDetail;
+					document.getElementById('voteEnddate').value = new Date(data.voteEnddate).toISOString().slice(0, 10);
+					document.getElementById('isplural').checked = data.isplural;
+					document.getElementById('isanonymous').checked = data.isanonymous;
+					const voteItemsContainer = document.getElementById('voteItems');
+					voteItemsContainer.innerHTML = '';
+					data.voteItems.forEach(item => {
+						const itemDiv = document.createElement('div');
+						itemDiv.className = 'vote-item';
+						itemDiv.innerHTML = `<input type="text" name="voteItems" value="${item.itemName}" />`;
+						voteItemsContainer.appendChild(itemDiv);
+					});
+				}
+
+				document.getElementById('postReviseModal').style.display = 'block';
+			})
+			.catch(error => console.error('Error:', error));
+	}
+
+
+	function initializeTaskStateButtons() {
+		document.querySelectorAll('.task_state_btn').forEach(button => {
+			button.addEventListener('click', function() {
+				document.querySelectorAll('.task_state_btn').forEach(btn => btn.classList.remove('active'));
+				this.classList.add('active');
+				document.getElementById('hiddenCondition').value = this.value;
+			});
+		});
+	}
+
+	// 폼 제출 이벤트 리스너 추가
+	document.getElementById('postEditForm').addEventListener('submit', function(event) {
+		event.preventDefault();
+
+		const formData = new FormData(this);
+		const projectIdx = document.getElementById('projectIdx').value;
+		const postIdx = document.getElementById('postIdx').value;
+		const tabType = document.getElementById('editTabType').value;
+
+		console.log('projectIdx:', projectIdx);
+		console.log('postIdx:', postIdx);
+		console.log('tabType:', tabType);
+
+		if (!projectIdx || !postIdx || !tabType) {
+			alert('프로젝트 ID, 게시글 ID 또는 탭 타입이 설정되지 않았습니다.');
+			return;
+		}
+
+		let data = {
+			projectIdx,
+			postIdx,
+			tabType
+		};
+
+		if (tabType === '1') {
+			data.title = formData.get('title') || document.getElementById('editTitle').value;
+			data.content = formData.get('content') || document.getElementById('editContent').value;
+		} else if (tabType === '2') {
+			data.title = formData.get('title') || document.getElementById('editTaskTitle').value;
+			data.content = formData.get('content') || document.getElementById('editTaskContent').value;
+			data.condition = formData.get('condition') || document.querySelector('.task_state_btn.active').value;
+			data.managerIdx = formData.get('managerIdx') || document.getElementById('managerIdx').value;
+			data.selectedDate = formData.get('taskDatepicker') || document.getElementById('taskEndDate').innerText;
+			data.lowerTaskConditions = [];
+			data.lowerTaskNames = [];
+
+			formData.forEach((value, key) => {
+				if (key.startsWith('lowerTaskConditions')) {
+					data.lowerTaskConditions.push(value);
+				} else if (key.startsWith('lowerTaskNames')) {
+					data.lowerTaskNames.push(value);
+				}
+			});
+		} else if (tabType === '3') {
+			data.title = formData.get('title') || document.getElementById('title').value;
+			data.startDatetime = formData.get('startDatetime') || document.getElementById('start').value;
+			data.endDatetime = formData.get('endDatetime') || document.getElementById('end').value;
+			data.place = formData.get('place') || document.getElementById('place').value;
+			data.place_id = formData.get('place_id') || document.getElementById('place-id').value;
+			data.place_lat = formData.get('place_lat') || document.getElementById('place-lat').value;
+			data.place_lng = formData.get('place_lng') || document.getElementById('place-lng').value;
+			data.content = formData.get('content') || document.getElementById('content').value;
+
+			data.startDatetime = new Date(data.startDatetime).getTime();
+			data.endDatetime = new Date(data.endDatetime).getTime();
+		} else if (tabType === '4') {
+			data.title = formData.get('todoTitle') || document.getElementById('title').value;
+			data.managerIdx = formData.get('todoManagerIdx') || document.getElementById('todoManagerIdx').value;
+			data.deadLine = formData.get('todoDatepicker') || document.getElementById('todoDeadLine').value;
+			data.todoNames = [];
+			formData.forEach((value, key) => {
+				if (key.startsWith('todoNames')) {
+					data.todoNames.push(value);
+				}
+			});
+		} else if (tabType === '5') {
+			data.title = formData.get('title') || document.getElementById('title').value;
+			data.voteDetail = formData.get('voteDetail') || document.getElementById('vote_detail').value;
+			data.voteEnddate = formData.get('voteEnddate') || document.getElementById('voteEnddate').value;
+			data.isplural = formData.get('isplural') || document.querySelector('input[name="isplural"]:checked').value;
+			data.isanonymous = formData.get('isanonymous') || document.querySelector('input[name="isanonymous"]:checked').value;
+			data.voteItems = [];
+			formData.forEach((value, key) => {
+				if (key.startsWith('voteItems')) {
+					data.voteItems.push(value);
+				}
+			});
+		}
+
+		console.log('Collected Data:', JSON.stringify(data));
+		const url = `/projectFeed/${projectIdx}/edit/${postIdx}`;
+		fetch(url, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(data)
+		})
+			.then(response => {
+				if (!response.ok) {
+					return response.json().then(error => { throw new Error(error.message); });
+				}
+				return response.json();
+			})
+			.then(data => {
+				if (data.success) {
+					document.getElementById('postReviseModal').style.display = 'none';
+					location.reload();
+				} else {
+					alert('게시글 수정에 실패했습니다.');
+				}
+			})
+			.catch(error => console.error('Error:', error));
+	});
+	
+	
+    /////////////////////////////////////  담당자 지정  ///////////////////////////////////////
 
     // 모달 외부를 클릭하면 닫히도록 설정
 
@@ -834,8 +1627,8 @@ document.addEventListener('DOMContentLoaded', function() {
             managermodal.style.display = "none";
         }
 	})
+
     // 담당자 리스트에서 선택 시 처리
-    
     function toggleAddManagerSelectedList(id, name) {
         console.log("toggleSelectedList 호출됨:", id, name); // 디버깅용 로그
         const managerList = document.querySelector('.selectManager');
@@ -892,30 +1685,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 icon.src = 'https://flow.team/flow-renewal/assets/images/icons/icon_check.png?v=7f39425e224a53bff0043caff9f6446b14c0f667';
             });
         }
-	
-	function observeTaskIconBox2() {
-        const targetNode = document.body;
-        const config = { childList: true, subtree: true };
 
-        const callback = function(mutationsList, observer) {
-            for (let mutation of mutationsList) {
-                if (mutation.type === 'childList') {
-                    const managerSelection = document.querySelector('.task_icon_box2');
-                    if (managerSelection) {
-                        console.log('task_icon_box2 element found');
-                        observer.disconnect(); // 요소가 발견되면 observer를 중지합니다.
-                        initializeFormSubmit();
-                    }
-                }
-            }
-        };
-
-        const observer = new MutationObserver(callback);
-        observer.observe(targetNode, config);
-    }
 	
-	
-	////////////////////// 구글 api ////////////////////////////
+	////////////////////////////////////// 구글 api ////////////////////////////////////
 	let map;
 	let marker;
 	let autocomplete;
@@ -1034,7 +1806,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		initialize();
 	}
 	
-	/////////////////////////// 댓글, 포스트 반응 /////////////////////////////////
+	///////////////////////////////////////////// 댓글, 포스트 반응 ///////////////////////////////////////////
 	const postReactions = document.querySelectorAll('.post_reaction');
 
     postReactions.forEach(postReaction => {
@@ -1054,7 +1826,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	});
 
-	/////////////////////////////// 댓글 좋아요 설정 ///////////////////////////////////
+	//////////////////////////////////////// 댓글 좋아요 설정 //////////////////////////////////////////
 	const commentReacts = document.querySelectorAll('.comment_react');
 
 	commentReacts.forEach(commentReact => {
@@ -1105,7 +1877,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	});
 
-	/////////////////////////////// 댓글 좋아요 취소 //////////////////////////////////////
+	///////////////////////////////////////// 댓글 좋아요 취소 //////////////////////////////////////////////
 	const commentReactsCancel = document.querySelectorAll('.comment_react_on');
 
 	commentReactsCancel.forEach(commentReactCancel => {
@@ -1154,9 +1926,61 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	});
 	
+	////////////////////////////////////////// 할 일 체크 ///////////////////////////////////////////////
+	const iconCheckBoxes = document.querySelectorAll('.icon_checkbox');
+	const projectIdx = document.querySelector('#projectIdx').value;
+	
+	iconCheckBoxes.forEach(function(checkbox) {
+		checkbox.addEventListener('click', function() {
+			const postIdx = checkbox.previousElementSibling.value;
+			const todoItem = this.closest('.todo_item');
+			if (!todoItem) {
+				console.error('todo_item element not found');
+				return;
+			}
+
+			const todonameIdx = todoItem.getAttribute('data-todo-name-id');
+			if (!todonameIdx) {
+				console.error('data-todo-name-id attribute not found');
+				return;
+			}
+
+			const isDone = this.classList.contains('on') ? 0 : 1;
+
+			fetch(`/todo/update/${todonameIdx}?isDone=${isDone}`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+				},
+			})
+				.then(response => {
+					if (!response.ok) {
+						return response.json().then(data => {
+							throw new Error(data.message || 'Failed to update todo status');
+						});
+					}
+					return response.json();
+				})
+				.then(data => {
+					if (data.success) {
+						this.classList.toggle('on');
+							window.location.href = projectIdx + "#postIdx_" + postIdx;
+					} else {
+						alert(data.message);
+					}
+				})
+				.catch(error => {
+					console.error(error);
+				});
+		});
+	});
+
+	
+// 'DOMContentLoaded' 끝나는 시점
 });
 
-/////////////////////////// 게시글 삭제 ///////////////////////////////////////////
+
+///////////////////////////////////// 게시글 삭제 //////////////////////////////////////
 function deletePost(postIdx) {
 	if (confirm('정말 이 게시글을 삭제하시겠습니까?')) {
 		fetch(`/${postIdx}`, {
@@ -1181,7 +2005,7 @@ function deletePost(postIdx) {
 	}
 }
 
-///////////////////////// Task Condition 변경 ///////////////////////////////////////
+///////////////////////////// Task Condition 변경 ///////////////////////////////////////
 function updateTaskCondition(button, newCondition) {
     const postIdx = Number(button.closest('.task_icon_box1').getAttribute('data-post-idx'));
     const nowActiveButton = button.closest('.task_icon_box1').querySelector('.active');
@@ -1256,7 +2080,7 @@ document.querySelectorAll('.your-button-class').forEach(button => {
     });
 });
 
-////////////////////// Schedule Attendance 변경 ///////////////////////
+////////////////////////////// Schedule Attendance 변경 /////////////////////////////////
 function checkScheduleAttendance(button, attendance) {
     // 이미 'on' 클래스가 있는 버튼을 클릭한 경우 동작 중지
     if (button.classList.contains('on')) {
@@ -1287,4 +2111,36 @@ function checkScheduleAttendance(button, attendance) {
         alert('Failed to update attendance status.');
         console.error('Error:', error);
     });
+}
+
+function deleteComment(commentId, commentInput) {
+	if (confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
+		fetch(`/comments/${commentId}`, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json',
+			}
+		})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				return response.json();
+			})
+			.then(data => {
+				console.log('Received response:', data); // 디버깅을 위해 추가
+				if (data.success) {
+					// 댓글을 삭제한 후 댓글 목록을 다시 불러옵니다.
+					const postIdx = commentInput.getAttribute('data-post-id');
+					fetchComments(postIdx, commentInput);
+				} else {
+					console.error('댓글 삭제에 실패했습니다:', data);
+					alert('댓글 삭제에 실패했습니다.');
+				}
+			})
+			.catch(error => {
+				console.error('댓글 삭제 중 오류가 발생했습니다:', error);
+				alert('댓글 삭제 중 오류가 발생했습니다.');
+			});
+	}
 }

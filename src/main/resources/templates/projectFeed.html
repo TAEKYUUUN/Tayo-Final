@@ -7,6 +7,12 @@
 	<script th:src="@{/js/projectFeed.js}"></script>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+	<script>
+		const user = {
+			id: '[[${member.memberIdx}]]',
+			name: '[[${member.name}]]'
+		};
+	</script>
 </head>
 <body>
 	<div id="div_side1">
@@ -199,6 +205,7 @@
 						<div th:if="${#lists.size(postsData) > 0}">
 							<div th:each="postData, iterStat  : ${postsData}">
 								<a th:id="|postIdx_${postData.post.postIdx}|"></a>
+								<input type="hidden" id="projectIdx" th:value="${project.projectIdx}"/>
 								<div th:switch="${postData.post.fileType}">
 									<!-- fileType=1 , Paragraph -->
 									<div th:case="'1'">
@@ -214,7 +221,7 @@
 										        <div class="post_option">
 										            <div><img th:src="@{/img/post_fix_icon.png}" /></div>
 										            <div><img th:src="@{/img/post_option_icon.png}" class="post-option-toggle" th:data-id="${iterStat.index}"/></div>
-													<ul class="post_option_ul" th:id="'postOptionUl' + ${iterStat.index}">
+													<ul class="post_option_ul" th:id="'postOptionUl' + ${iterStat.index}" th:data-post-idx="${postData.post.postIdx}" th:data-project-idx="${project.projectIdx}">
 														<li class="post_option_li">
 															<div class="post_option_icon">
 																<img src="https://flow.team/flow-renewal/assets/images/post-edit.svg?v=c06cb6e58429b61cca539fee4a6e6f982aa1c660" />
@@ -291,7 +298,7 @@
 													<div class="cmt_read_area">
 														<div class="comment_count_area">
 															<span>댓글</span>
-															<span th:text="${#lists.size(postData.comments)}"></span>
+															<span id="commentCount" th:text="${#lists.size(postData.comments)}"></span>
 										                </div>
 										                <div class="read_count_area">
 										                    <span>읽음</span>
@@ -326,7 +333,7 @@
 																		<em  class="comment_like_cancel on">좋아요 취소</em>
 																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
 																	</span>
-																	<button class="delete_comment_btn" th:if="${member == comment.comment.member}">삭제</button>
+																	<button class="delete_comment_btn" th:data-comment-id="${comment.comment.commentsIdx}" th:if="${member == comment.comment.member}">삭제</button>
 																</div>
 																<div th:text="${comment.comment.contents}"></div>
 															</div>
@@ -361,7 +368,7 @@
 									            <div class="post_option">
 									                <div><img th:src="@{/img/post_fix_icon.png}" /></div>
 													<div><img th:src="@{/img/post_option_icon.png}" class="post-option-toggle" th:data-id="${iterStat.index}" /></div>
-													<ul class="post_option_ul" th:id="'postOptionUl' + ${iterStat.index}">
+													<ul class="post_option_ul" th:id="'postOptionUl' + ${iterStat.index}" th:data-post-idx="${postData.post.postIdx}" th:data-project-idx="${project.projectIdx}">
 														<li class="post_option_li">
 															<div class="post_option_icon">
 																<img src="https://flow.team/flow-renewal/assets/images/post-edit.svg?v=c06cb6e58429b61cca539fee4a6e6f982aa1c660" />
@@ -511,29 +518,35 @@
 															<div class="comment_container">
 																<div class="comment_user_area">
 																	<span class="user_name" th:text="${comment.comment.member.name}"></span>
-																	<span class="record_date" th:text="${#dates.format(comment.comment.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
+																	<span class="record_date"
+																		th:text="${#dates.format(comment.comment.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
 																	<span class="comment_react_on" th:if="${comment.isLiked}"
 																		th:attr="data-comment-id=${comment.comment.commentsIdx}">
 																		<em class="comment_like_cancel on">좋아요 취소</em>
-																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}"
+																			th:if="${comment.likeCount > 0}"></span>
 																	</span>
-																	<span class="comment_react" th:if="${comment.isLiked}" th:attr="data-comment-id=${comment.comment.commentsIdx}"
-																		style="display:none;">
+																	<span class="comment_react" th:if="${comment.isLiked}"
+																		th:attr="data-comment-id=${comment.comment.commentsIdx}" style="display:none;">
 																		<em class="comment_like">좋아요</em>
-																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}"
+																			th:if="${comment.likeCount > 0}"></span>
 																	</span>
-															
+													
 																	<span class="comment_react" th:if="${!comment.isLiked}"
 																		th:attr="data-comment-id=${comment.comment.commentsIdx}">
 																		<em class="comment_like">좋아요</em>
-																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}"
+																			th:if="${comment.likeCount > 0}"></span>
 																	</span>
 																	<span class="comment_react_on" th:if="${!comment.isLiked}"
 																		th:attr="data-comment-id=${comment.comment.commentsIdx}" style="display:none;">
 																		<em class="comment_like_cancel on">좋아요 취소</em>
-																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}"
+																			th:if="${comment.likeCount > 0}"></span>
 																	</span>
-																	<button class="delete_comment_btn" th:if="${member == comment.comment.member}">삭제</button>
+																	<button class="delete_comment_btn" th:data-comment-id="${comment.comment.commentsIdx}"
+																		th:if="${member == comment.comment.member}">삭제</button>
 																</div>
 																<div th:text="${comment.comment.contents}"></div>
 															</div>
@@ -568,7 +581,7 @@
 												<div class="post_option">
 													<div><img th:src="@{/img/post_fix_icon.png}" /></div>
 													<div><img th:src="@{/img/post_option_icon.png}" class="post-option-toggle" th:data-id="${iterStat.index}" /></div>
-													<ul class="post_option_ul" th:id="'postOptionUl' + ${iterStat.index}">
+													<ul class="post_option_ul" th:id="'postOptionUl' + ${iterStat.index}" th:data-post-idx="${postData.post.postIdx}" th:data-project-idx="${project.projectIdx}">
 														<li class="post_option_li">
 															<div class="post_option_icon">
 																<img src="https://flow.team/flow-renewal/assets/images/post-edit.svg?v=c06cb6e58429b61cca539fee4a6e6f982aa1c660" />
@@ -719,29 +732,35 @@
 															<div class="comment_container">
 																<div class="comment_user_area">
 																	<span class="user_name" th:text="${comment.comment.member.name}"></span>
-																	<span class="record_date" th:text="${#dates.format(comment.comment.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
+																	<span class="record_date"
+																		th:text="${#dates.format(comment.comment.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
 																	<span class="comment_react_on" th:if="${comment.isLiked}"
 																		th:attr="data-comment-id=${comment.comment.commentsIdx}">
 																		<em class="comment_like_cancel on">좋아요 취소</em>
-																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}"
+																			th:if="${comment.likeCount > 0}"></span>
 																	</span>
-																	<span class="comment_react" th:if="${comment.isLiked}" th:attr="data-comment-id=${comment.comment.commentsIdx}"
-																		style="display:none;">
+																	<span class="comment_react" th:if="${comment.isLiked}"
+																		th:attr="data-comment-id=${comment.comment.commentsIdx}" style="display:none;">
 																		<em class="comment_like">좋아요</em>
-																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}"
+																			th:if="${comment.likeCount > 0}"></span>
 																	</span>
-															
+													
 																	<span class="comment_react" th:if="${!comment.isLiked}"
 																		th:attr="data-comment-id=${comment.comment.commentsIdx}">
 																		<em class="comment_like">좋아요</em>
-																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}"
+																			th:if="${comment.likeCount > 0}"></span>
 																	</span>
 																	<span class="comment_react_on" th:if="${!comment.isLiked}"
 																		th:attr="data-comment-id=${comment.comment.commentsIdx}" style="display:none;">
 																		<em class="comment_like_cancel on">좋아요 취소</em>
-																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}"
+																			th:if="${comment.likeCount > 0}"></span>
 																	</span>
-																	<button class="delete_comment_btn" th:if="${member == comment.comment.member}">삭제</button>
+																	<button class="delete_comment_btn" th:data-comment-id="${comment.comment.commentsIdx}"
+																		th:if="${member == comment.comment.member}">삭제</button>
 																</div>
 																<div th:text="${comment.comment.contents}"></div>
 															</div>
@@ -773,71 +792,71 @@
 									                <strong th:text="${postData.member.name}"></strong>
 									                <span th:text="${#dates.format(postData.post.uploadDate, 'yyyy-MM-dd HH:mm')}"></span>
 									            </div>
-												<div class="post_option">
-													<div><img th:src="@{/img/post_fix_icon.png}" /></div>
-													<div><img th:src="@{/img/post_option_icon.png}" class="post-option-toggle" th:data-id="${iterStat.index}" /></div>
-													<ul class="post_option_ul" th:id="'postOptionUl' + ${iterStat.index}">
-														<li class="post_option_li">
-															<div class="post_option_icon">
-																<img src="https://flow.team/flow-renewal/assets/images/post-edit.svg?v=c06cb6e58429b61cca539fee4a6e6f982aa1c660" />
-																게시글 수정
-															</div>
-														</li>
-														<li class="post_option_li" th:onclick="'deletePost(' + ${postData.post.postIdx} + ')'">
-															<div class="post_option_icon">
-																<img src="https://cdn-icons-png.flaticon.com/512/11081/11081117.png" />
-																게시글 삭제
-															</div>
-														</li>
-													</ul>
-												</div>
+									            <div class="post_option">
+									                <div><img th:src="@{/img/post_fix_icon.png}" /></div>
+									                <div><img th:src="@{/img/post_option_icon.png}" class="post-option-toggle" th:data-id="${iterStat.index}" /></div>
+									                <ul class="post_option_ul" th:id="'postOptionUl' + ${iterStat.index}" th:data-post-idx="${postData.post.postIdx}" th:data-project-idx="${project.projectIdx}">
+									                    <li class="post_option_li">
+									                        <div class="post_option_icon">
+									                            <img src="https://flow.team/flow-renewal/assets/images/post-edit.svg?v=c06cb6e58429b61cca539fee4a6e6f982aa1c660" />
+									                            게시글 수정
+									                        </div>
+									                    </li>
+									                    <li class="post_option_li" th:onclick="'deletePost(' + ${postData.post.postIdx} + ')'">
+									                        <div class="post_option_icon">
+									                            <img src="https://cdn-icons-png.flaticon.com/512/11081/11081117.png" />
+									                            게시글 삭제
+									                        </div>
+									                    </li>
+									                </ul>
+									            </div>
 									        </div>
 									        <div class="post_title_area">
-									            <h4 th:text="${postData != null && postData['data'] != null ? postData['data'].title : ''}"></h4>
+									            <h4 th:text="${postData.data != null ? postData.data.title : ''}"></h4>
 									        </div>
 									        <div class="post_card_container">
 									            <div class="post_card_content">
 									                <div class="todo_status_area">
-														<div class="todo_progress_header">
-															<!-- 여기 -->
-															<div class="todo_wrap_div">
-																<div style="display:flex; align-items:center; font-size:16px; height:fit-content;">
-																	<div class="task_icon_box2">
-																		<img th:src="@{https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d}"
-																			style="margin-right: 16px;" />
-																	</div>
-																	<div class="task_manager_box">
-																		<span class="manager_item" style="margin:0;">
-																			<span class="worker_profile">
-																				<img th:src="@{https://flow.team/flow-renewal/assets/images/profile-default.png}"/>
-																			</span>
-																			<span class="manager_name" th:text="${postData['data'].todoManagerName}"></span>
-																		</span>
-																	</div>
-																</div>
-																<div class="task_icon_box1" style="margin:0;">
-																	<img th:src="@{https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=cfae9e268527a6f7007fe81fd49cab2c9659eea3}"
-																		style="margin-right:16px;" />
-																	<p th:text="${postData != null && postData['data'] != null ? postData['data'].deadLine : ''}" style="font-size:14px; font-weight: 500;"></p>
-																</div>
-															</div>
+									                    <div class="todo_progress_header">
+									                        <div class="todo_wrap_div">
+									                            <div style="display:flex; align-items:center; font-size:16px; height:fit-content;">
+									                                <div class="task_icon_box2">
+									                                    <img th:src="@{https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d}"
+									                                        style="margin-right: 16px;" />
+									                                </div>
+									                                <div class="task_manager_box">
+									                                    <span class="manager_item" style="margin:0;">
+									                                        <span class="worker_profile">
+									                                            <img th:src="${postData.data.todoManagerProfileImg != null ? postData.data.todoManagerProfileImg : 'https://flow.team/flow-renewal/assets/images/profile-default.png'}" />
+									                                        </span>
+									                                        <span class="manager_name" th:text="${postData.data.todoManagerName}"></span>
+									                                    </span>
+									                                </div>
+									                            </div>
+									                            <div class="task_icon_box1" style="margin:0;">
+									                                <img th:src="@{https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=cfae9e268527a6f7007fe81fd49cab2c9659eea3}"
+									                                    style="margin-right:16px;" />
+									                                <p th:text="${postData.data.deadLine}" style="font-size:14px; font-weight: 500;"></p>
+									                            </div>
+									                        </div>
 															<div class="progress_header_left">
-									                            <span class="progress_count">0</span>
-									                            <span class="progress_total" th:text="'/' + ${#lists.size(postData.data.todoNames)}"></span>
-									                        </div>
-									                        <div class="progress_header_right">
-									                            <span class="progress_percent">0%</span>
-									                        </div>
+															    <span class="progress_count" th:text="${postData.data.finishedCount}"></span>
+															    <span class="progress_total" th:text="'/' + ${postData.data.totalCount}"></span>
+															</div>
+															<div class="progress_header_right">
+															    <span class="progress_percent" th:text="${postData.data.completionRate} + '%'"></span>
+															</div>
 									                    </div>
 									                    <div class="todo_progress_bar">
-									                        <span style="width:0%;"></span>
+									                        <span class="todo_progress_bar_span" th:style="'width:' + ${postData.data.completionRate} + '%'"></span>
 									                    </div>
 									                    <ul class="todo_ul">
-															<li class="todo_item" th:each="todoName : ${postData.data.todoNames}">
+									                        <li class="todo_item" th:each="todoName : ${postData.data.todoNames}" th:data-todo-name-id="${todoName.todoNameIdx}">
 									                            <div class="todo_list_area">
 									                                <div class="todo_text">
-									                                    <div class="icon_checkbox"></div>
-									                                    <span class="todo_text_area" th:text="${todoName.todoName}"></span>
+																		<input type="hidden" id="postIdx" th:value="${postData.post.postIdx}"/>
+																		<div class="icon_checkbox" th:classappend="${todoName.isCurrentUserDone} ? 'on' : ''"></div>
+									                                    <span class="todo_text_area" th:text="${todoName.todoName}" th:classappend="${todoName.isCurrentUserDone} ? 'completed' : ''"></span>
 									                                </div>
 									                                <span class="todo_manager_profile">
 									                                    <i>
@@ -866,40 +885,40 @@
 									                        <span>다시 알림</span>
 									                    </div>
 									                </div>
-													<div class="post_react_selection" id="postReact">
-														<ul>
-															<li class="add-reaction" data="1">
-																<a href="#" role="button">
-																	<i class="icon-emoji like"></i>
-																	<p class="emoji-text">좋아요</p>
-																</a>
-															</li>
-															<li class="add-reaction" data="2">
-																<a href="#" role="button">
-																	<i class="icon-emoji please"></i>
-																	<p class="emoji-text">부탁해요</p>
-																</a>
-															</li>
-															<li class="add-reaction" data="3">
-																<a href="#" role="button">
-																	<i class="icon-emoji sad"></i>
-																	<p class="emoji-text">힘들어요</p>
-																</a>
-															</li>
-															<li class="add-reaction" data="4">
-																<a href="#" role="button">
-																	<i class="icon-emoji great"></i>
-																	<p class="emoji-text">훌륭해요</p>
-																</a>
-															</li>
-															<li class="add-reaction" data="5">
-																<a href="#" role="button">
-																	<i class="icon-emoji thank"></i>
-																	<p class="emoji-text">감사해요</p>
-																</a>
-															</li>
-														</ul>
-													</div>
+									                <div class="post_react_selection" id="postReact">
+									                    <ul>
+									                        <li class="add-reaction" data="1">
+									                            <a href="#" role="button">
+									                                <i class="icon-emoji like"></i>
+									                                <p class="emoji-text">좋아요</p>
+									                            </a>
+									                        </li>
+									                        <li class="add-reaction" data="2">
+									                            <a href="#" role="button">
+									                                <i class="icon-emoji please"></i>
+									                                <p class="emoji-text">부탁해요</p>
+									                            </a>
+									                        </li>
+									                        <li class="add-reaction" data="3">
+									                            <a href="#" role="button">
+									                                <i class="icon-emoji sad"></i>
+									                                <p class="emoji-text">힘들어요</p>
+									                            </a>
+									                        </li>
+									                        <li class="add-reaction" data="4">
+									                            <a href="#" role="button">
+									                                <i class="icon-emoji great"></i>
+									                                <p class="emoji-text">훌륭해요</p>
+									                            </a>
+									                        </li>
+									                        <li class="add-reaction" data="5">
+									                            <a href="#" role="button">
+									                                <i class="icon-emoji thank"></i>
+									                                <p class="emoji-text">감사해요</p>
+									                            </a>
+									                        </li>
+									                    </ul>
+									                </div>
 									                <div class="cmt_read_area">
 									                    <div class="comment_count_area">
 									                        <span>댓글</span>
@@ -911,49 +930,55 @@
 									                    </div>
 									                </div>
 									            </div>
-												<div class="post_comment_area">
-													<ul class="post_comment_list">
-														<li class="post_comment_item" th:each="comment : ${postData.comments}">
-															<div class="comment_profile">
-																<img src="https://flow.team/flow-renewal/assets/images/profile-default.png" />
-															</div>
-															<div class="comment_container">
-																<div class="comment_user_area">
-																	<span class="user_name" th:text="${comment.comment.member.name}"></span>
-																	<span class="record_date" th:text="${#dates.format(comment.comment.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
-																	<span class="comment_react_on" th:if="${comment.isLiked}"
-																		th:attr="data-comment-id=${comment.comment.commentsIdx}">
-																		<em class="comment_like_cancel on">좋아요 취소</em>
-																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
-																	</span>
-																	<span class="comment_react" th:if="${comment.isLiked}" th:attr="data-comment-id=${comment.comment.commentsIdx}"
-																		style="display:none;">
-																		<em class="comment_like">좋아요</em>
-																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
-																	</span>
-															
-																	<span class="comment_react" th:if="${!comment.isLiked}"
-																		th:attr="data-comment-id=${comment.comment.commentsIdx}">
-																		<em class="comment_like">좋아요</em>
-																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
-																	</span>
-																	<span class="comment_react_on" th:if="${!comment.isLiked}"
-																		th:attr="data-comment-id=${comment.comment.commentsIdx}" style="display:none;">
-																		<em class="comment_like_cancel on">좋아요 취소</em>
-																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
-																	</span>
-																	<button class="delete_comment_btn" th:if="${member == comment.comment.member}">삭제</button>
-																</div>
-																<div th:text="${comment.comment.contents}"></div>
-															</div>
-														</li>
-													</ul>
-												</div>
-												<div class="post_comment_input_area">
-													<div class="comment_profile">
-														<img th:src="@{https://flow.team/flow-renewal/assets/images/profile-default.png}" />
-													</div>
-													<div class="comment_input">
+									            <div class="post_comment_area">
+									                <ul class="post_comment_list">
+									                    <li class="post_comment_item" th:each="comment : ${postData.comments}">
+									                        <div class="comment_profile">
+									                            <img th:src="@{https://flow.team/flow-renewal/assets/images/profile-default.png}" />
+									                        </div>
+									                        <div class="comment_container">
+									                            <div class="comment_user_area">
+									                                <span class="user_name" th:text="${comment.comment.member.name}"></span>
+									                                <span class="record_date"
+									                                    th:text="${#dates.format(comment.comment.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
+									                                <span class="comment_react_on" th:if="${comment.isLiked}"
+									                                    th:attr="data-comment-id=${comment.comment.commentsIdx}">
+									                                    <em class="comment_like_cancel on">좋아요 취소</em>
+									                                    <span class="comment_like_cnt" th:text="${comment.likeCount}"
+									                                        th:if="${comment.likeCount > 0}"></span>
+									                                </span>
+									                                <span class="comment_react" th:if="${comment.isLiked}"
+									                                    th:attr="data-comment-id=${comment.comment.commentsIdx}" style="display:none;">
+									                                    <em class="comment_like">좋아요</em>
+									                                    <span class="comment_like_cnt" th:text="${comment.likeCount}"
+									                                        th:if="${comment.likeCount > 0}"></span>
+									                                </span>
+
+									                                <span class="comment_react" th:if="${!comment.isLiked}"
+									                                    th:attr="data-comment-id=${comment.comment.commentsIdx}">
+									                                    <em class="comment_like">좋아요</em>
+									                                    <span class="comment_like_cnt" th:text="${comment.likeCount}"
+									                                        th:if="${comment.likeCount > 0}"></span>
+									                                </span>
+									                                <span class="comment_react_on" th:if="${!comment.isLiked}"
+									                                    th:attr="data-comment-id=${comment.comment.commentsIdx}" style="display:none;">
+									                                    <em class="comment_like_cancel on">좋아요 취소</em>
+									                                    <span class="comment_like_cnt" th:text="${comment.likeCount}"
+									                                        th:if="${comment.likeCount > 0}"></span>
+									                                </span>
+									                                <button class="delete_comment_btn" th:data-comment-id="${comment.comment.commentsIdx}"
+									                                    th:if="${member == comment.comment.member}">삭제</button>
+									                            </div>
+									                            <div th:text="${comment.comment.contents}"></div>
+									                        </div>
+									                    </li>
+									                </ul>
+									            </div>
+									            <div class="post_comment_input_area">
+									                <div class="comment_profile">
+									                    <img th:src="@{https://flow.team/flow-renewal/assets/images/profile-default.png}" />
+									                </div>
+									                <div class="comment_input">
 									                    <input class="cmt_input" type="text" id="commentInput" th:data-post-id="${postData.post.postIdx}" placeholder="줄바꿈 Shift + Enter / 입력 Enter 입니다.">
 									                    <div class="file_upload_box">
 									                        <img id="submitComment" th:src="@{https://cdn-icons-png.flaticon.com/512/14562/14562390.png}" />
@@ -977,7 +1002,7 @@
 												<div class="post_option">
 													<div><img th:src="@{/img/post_fix_icon.png}" /></div>
 													<div><img th:src="@{/img/post_option_icon.png}" class="post-option-toggle" th:data-id="${iterStat.index}" /></div>
-													<ul class="post_option_ul" th:id="'postOptionUl' + ${iterStat.index}">
+													<ul class="post_option_ul" th:id="'postOptionUl' + ${iterStat.index}" th:data-post-idx="${postData.post.postIdx}" th:data-project-idx="${project.projectIdx}">
 														<li class="post_option_li">
 															<div class="post_option_icon">
 																<img src="https://flow.team/flow-renewal/assets/images/post-edit.svg?v=c06cb6e58429b61cca539fee4a6e6f982aa1c660" />
@@ -1008,7 +1033,7 @@
 									                </div>
 									            </div>
 									            <div class="vote_duedate_wrap">
-									                <p>2024-06-11 (금)까지</p>
+									                <p th:text="${postData['data'].voteEndDate + ' 까지'}"></p>
 									                <span class="active"  th:if="${postData['data'].isPlural != null and postData['data'].isPlural.toString().equals('1')}">복수선택</span>
 									                <span class="active" th:if="${postData['data'].isAnonymous != null and postData['data'].isAnonymous.toString().equals('1')}">익명투표</span>
 									            </div>
@@ -1119,29 +1144,35 @@
 															<div class="comment_container">
 																<div class="comment_user_area">
 																	<span class="user_name" th:text="${comment.comment.member.name}"></span>
-																	<span class="record_date" th:text="${#dates.format(comment.comment.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
+																	<span class="record_date"
+																		th:text="${#dates.format(comment.comment.writeTime, 'yyyy-MM-dd HH:mm')}"></span>
 																	<span class="comment_react_on" th:if="${comment.isLiked}"
 																		th:attr="data-comment-id=${comment.comment.commentsIdx}">
 																		<em class="comment_like_cancel on">좋아요 취소</em>
-																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}"
+																			th:if="${comment.likeCount > 0}"></span>
 																	</span>
-																	<span class="comment_react" th:if="${comment.isLiked}" th:attr="data-comment-id=${comment.comment.commentsIdx}"
-																		style="display:none;">
+																	<span class="comment_react" th:if="${comment.isLiked}"
+																		th:attr="data-comment-id=${comment.comment.commentsIdx}" style="display:none;">
 																		<em class="comment_like">좋아요</em>
-																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}"
+																			th:if="${comment.likeCount > 0}"></span>
 																	</span>
-															
+													
 																	<span class="comment_react" th:if="${!comment.isLiked}"
 																		th:attr="data-comment-id=${comment.comment.commentsIdx}">
 																		<em class="comment_like">좋아요</em>
-																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}"
+																			th:if="${comment.likeCount > 0}"></span>
 																	</span>
 																	<span class="comment_react_on" th:if="${!comment.isLiked}"
 																		th:attr="data-comment-id=${comment.comment.commentsIdx}" style="display:none;">
 																		<em class="comment_like_cancel on">좋아요 취소</em>
-																		<span class="comment_like_cnt" th:text="${comment.likeCount}" th:if="${comment.likeCount > 0}"></span>
+																		<span class="comment_like_cnt" th:text="${comment.likeCount}"
+																			th:if="${comment.likeCount > 0}"></span>
 																	</span>
-																	<button class="delete_comment_btn" th:if="${member == comment.comment.member}">삭제</button>
+																	<button class="delete_comment_btn" th:data-comment-id="${comment.comment.commentsIdx}"
+																		th:if="${member == comment.comment.member}">삭제</button>
 																</div>
 																<div th:text="${comment.comment.contents}"></div>
 															</div>
@@ -1302,10 +1333,10 @@
 				</div>
 				<div class="modal-content">
 					<div class="input-group1">
-						<input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
+						<input type="text" id="postTitle" name="title" placeholder="제목을 입력하세요." />
 					</div>
 					<div class="input-group2">
-						<textarea id="content" name="content" placeholder="내용을 입력하세요."></textarea>
+						<textarea id="postContent" name="content" placeholder="내용을 입력하세요."></textarea>
 					</div>
 				</div>
 				<div class="modal-footer">
@@ -1315,6 +1346,209 @@
 					</select>
 					<button class="save-draft">임시저장</button>
 					<button class="submit" style="width:100px;">등록</button>
+				</div>
+			</form>
+		</div>
+		<!-- 게시글 수정 Modal -->
+		<div id="postReviseModal" class="modal" style="display: none;">
+		    <form id="postEditForm" enctype="application/x-www-form-urlencoded">
+		        <input type="hidden" id="projectIdx" name="projectIdx" value="${project.projectIdx}"/>
+		        <input type="hidden" id="editTabType" name="tabType"/>
+		        <input type="hidden" id="postIdx" name="postIdx"/>
+		        <div class="modal-header">
+		            <div class="modal-title">게시물 수정</div>
+		            <div class="project-name">
+		                <div id="editProjectColor" class="project-icon" th:style="'background-color:' + ${project.color}"></div>
+		                <span id="editProjectName" th:text="${project.projectName}"></span>
+		            </div>
+		            <div class="close-btn">&times;</div>
+		        </div>
+		        <!-- Paragraph Fields -->
+		        <div class="modal-content" id="paragraphFields" style="height:645px; display:none; overflow-y:auto;">
+		            <div class="input-group1">
+		                <input type="text" id="editTitle" name="title" placeholder="제목을 입력하세요." />
+		            </div>
+		            <div class="input-group2">
+		                <textarea id="editContent" name="content" placeholder="내용을 입력하세요."></textarea>
+		            </div>
+		        </div>
+		        <!-- Task Fields -->
+		        <div class="modal-content" id="taskFields" style="height:645px; display:none; overflow-y:auto;">
+		            <div class="input-group1">
+		                <input type="text" id="editTaskTitle" name="title" placeholder="제목을 입력하세요." />
+		            </div>
+		            <div class="input-group2" style="max-height: 400px;">
+		                <input type="hidden" id="hiddenCondition" name="condition" value="1">
+		                <div class="task_icon_box1">
+		                    <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-status.svg?v=b3a5b7f86f05f658d1ce954c34f8c33a61ea8873" style="margin-right: 10px;" />
+		                    <button type="button" class="task_state_btn request" name="condition" value="1">요청</button>
+		                    <button type="button" class="task_state_btn progress" name="condition" value="2">진행</button>
+		                    <button type="button" class="task_state_btn feedback" name="condition" value="3">피드백</button>
+		                    <button type="button" class="task_state_btn completion" name="condition" value="4">완료</button>
+		                    <button type="button" class="task_state_btn hold" name="condition" value="5">보류</button>
+		                </div>
+		                <div class="task_icon_box3">
+		                    <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d" style="margin-right: 16px;" />
+		                    <span class="manager_item">
+		                        <span class="selected_profile">
+		                            <img src="https://flow.team/flow-renewal/assets/images/profile-default.png" />
+		                        </span>
+		                        <span class="manager_name" id="managerName"></span>
+		                    </span>
+		                    <input type="hidden" id="managerIdx" name="managerIdx">
+		                    <button type="button" class="update_btn" name="editManager" id="editManager">담당자 변경</button>
+		                </div>
+		                <div class="task_icon_box1">
+		                    <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=cfae9e268527a6f7007fe81fd49cab2c9659eea3" style="margin-right:16px;" />
+		                    <span id="selectedDateText" name="newTaskEndDate" style="display:none; font-size:14px;"></span>
+		                    <span id="taskEndDate" style="font-size: 14px; margin-left: 12px;"></span>
+		                    <button type="button" class="update_btn" id="endDate" name="endDate">마감일 변경</button>
+		                    <div id="div_calendar_modal" class="calendar-modal">
+		                        <div class="calendar-modal-content">
+		                            <span class="close1">&times;</span>
+		                            <input type="text" id="taskDatepicker" name="taskDatepicker" placeholder="날짜를 선택하세요">
+		                            <button id="selectDate">선택</button>
+		                        </div>
+		                    </div>
+		                </div>
+		                <div class="div_textarea" style="height:270px;">
+		                    <textarea id="editTaskContent" name="content" placeholder="내용을 입력하세요." style="height:270px;"></textarea>
+		                </div>
+		                <div class="subtask_header">
+		                    <span class="subtask_title" style="font-size:14px;">
+		                        <img src="/img/subtask_icon.png" />
+		                        하위업무
+		                    </span>
+		                </div>
+		                <div id="taskContainer">
+		                    <ul class="subtask_ul">
+		                        <!-- 하위 업무 추가되는 공간 -->
+		                    </ul>
+		                    <button type="button" class="add_lowertask" id="addLowerTask">추가</button>
+		                </div>
+		            </div>
+		        </div>
+		        <!-- Schedule Fields -->
+		        <div class="modal-content" id="scheduleFields" style="height:645px; display:none; overflow-y:auto;">
+		            <div class="input-group1">
+		                <input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
+		            </div>
+		            <div class="input-group2" style="max-height: 400px;">
+		                <div class="task_icon_box1">
+		                    <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=cfae9e268527a6f7007fe81fd49cab2c9659eea3" style="margin-right: 16px;" />
+		                    <input type="datetime-local" id="start" name="startDatetime" />&ensp;-&ensp;
+		                    <input type="datetime-local" id="end" name="endDatetime" />
+		                    <input type="checkbox" id="allDay" name="allDay" />
+		                    <label for="allDay">종일</label>
+		                </div>
+		                <div class="task_icon_box2">
+		                    <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d" style="margin-right: 16px;" />
+		                    <button type="button" class="update_btn" style="margin:0; padding:0; color:#555;">프로젝트 모든 구성원</button>
+		                </div>
+		                <div class="task_icon_box1" style="display:flex; flex-direction:column; align-items:flex-start;">
+		                    <div style="display:flex; width:100%;">
+		                        <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-place.svg?v=4475443d9f93bbbc02e906dbdac60bcfd1fd021d" style="margin-right : 16px;" />
+		                        <input type="text" placeholder="장소를 입력하세요" id="place" name="place" style="width:100%;" />
+		                    </div>
+		                    <div id="map" style="height: 200px; width: 100%; margin-top: 10px;"></div>
+		                    <input type="hidden" id="place-id" name="place_id">
+		                    <input type="hidden" id="place-lat" name="place_lat">
+		                    <input type="hidden" id="place-lng" name="place_lng">
+		                </div>
+		                <div class="div_textarea">
+		                    <textarea id="content" name="content" placeholder="내용을 입력하세요."></textarea>
+		                </div>
+		            </div>
+		        </div>
+				<!-- Todo Fields -->
+				<div class="modal-content" id="todoFields" style="height:645px; display:none; overflow-y:auto;">
+				    <div class="input-group1">
+				        <input type="text" id="todoTitle" name="todoTitle" placeholder="제목을 입력하세요." />
+				    </div>
+				    <div class="input-group2" style="max-height: 400px;">
+				        <div class="todo_icon_box2">
+				            <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-worker.svg?v=2bd86654bf591d842c49c9a76d76c11f1507ce8d" style="margin-right: 16px;" />
+				            <span class="manager_item">
+				                <span class="selected_profile">
+				                    <img src="https://flow.team/flow-renewal/assets/images/profile-default.png" />
+				                </span>
+				                <span class="manager_name" id="todoManagerName"></span>
+				            </span>
+				            <input type="hidden" id="todoManagerIdx" name="todoManagerIdx">
+				            <button type="button" class="update_btn" name="editManager" id="todoEditManager">담당자 변경</button>
+				        </div>
+				        <div class="todo_icon_box1" style="margin-bottom:30px;">
+				            <img src="https://flow.team/flow-renewal/assets/images/icons/icon-post-date.svg?v=cfae9e268527a6f7007fe81fd49cab2c9659eea3" style="margin-right:16px;" />
+				            <span id="todoSelectedDateText" name="newTodoDeadLine" style="display:none; font-size:14px;"></span>
+				            <span id="todoDeadLine" style="font-size: 14px; margin-left: 12px;"></span>
+				            <button type="button" class="update_btn" id="todoEndDate" name="todoEndDate">마감일 변경</button>
+				            <div id="todoDiv_calendar_modal" class="calendar-modal">
+				                <div class="calendar-modal-content">
+				                    <span class="close1">&times;</span>
+				                    <input type="text" id="todoDatepicker" name="todoDatepicker" placeholder="날짜를 선택하세요">
+				                    <button id="todoSelectDate">선택</button>
+				                </div>
+				            </div>
+						</div>
+				        <div id="todoListContainer"></div>
+				        <button type="button" class="add_todo" id="addTodoButton">할 일 추가</button>
+				    </div>
+				</div>
+				<!-- Vote Fields -->
+				<div class="modal-content" id="voteFields" style="dheight:645px; display:none; overflow-y:auto;">
+				    <div class="input-group1">
+				        <input type="text" id="title" name="title" placeholder="제목을 입력하세요." />
+				    </div>
+				    <div class="input-group2" style="max-height: 400px;">
+				        <input type="text" id="vote_detail" name="voteDetail" placeholder="투표에 관한 설명 입력(옵션)" />
+				        <div class="div_voteitem_edit">
+				            <input type="text" placeholder="항목 추가 (Enter 또는 Tab) / 최대 60자" class="voteitem_input" id="voteitem" name="voteItems" />
+				        </div>
+				        <div class="div_voteitem_edit">
+				            <input type="text" placeholder="항목 추가 (Enter 또는 Tab) / 최대 60자" class="voteitem_input" id="voteitem" name="voteItems" />
+				        </div>
+				        <div class="voteContainer">
+				            <button type="button" class="add_voteitem" id="addVoteitem">투표 항목 추가</button>
+				        </div>
+				        <div class="vote_option_container">
+				            <div class="endDate vote_option">
+				                <div class="option_name">
+				                    <img src="/img/vote_enddate.png" />
+				                    <span>투표 마감일</span>
+				                </div>
+				                <button type="button" id="add_voteEndDate">마감일 추가</button>
+				            </div>
+				            <div class="pluralVote vote_option">
+				                <div class="option_name">
+				                    <img src="/img/vote_doublecheck.png" />
+				                    <span>복수 투표</span>
+				                </div>
+				                <label class="switch" style="margin-top:4px;">
+				                    <input type="hidden" name="isplural" value="0">
+				                    <input type="checkbox" name="isplural" value="1" checked>
+				                    <span class="slider round"></span>
+				                </label>
+				            </div>
+				            <div class="anonymousVote vote_option">
+				                <div class="option_name">
+				                    <img src="/img/vote_anonymous.png" />
+				                    <span>익명 투표</span>
+				                </div>
+				                <label class="switch" style="margin-top:4px;">
+				                    <input type="hidden" name="isanonymous" value="0">
+				                    <input type="checkbox" name="isanonymous" value="1" checked>
+				                    <span class="slider round"></span>
+				                </label>
+				            </div>
+				        </div>
+				    </div>
+				</div>
+				<div class="modal-footer">
+				    <select class="privacy" name="openRange" id="editOpenRange">
+				        <option value="1">전체 공개</option>
+				        <option value="2">프로젝트 관리자만</option>
+				    </select>
+				    <button type="submit" class="edit_submit" style="width:100px;">수정</button>
 				</div>
 			</form>
 		</div>

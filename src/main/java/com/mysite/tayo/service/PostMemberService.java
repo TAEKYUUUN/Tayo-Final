@@ -1,6 +1,7 @@
 package com.mysite.tayo.service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -8,29 +9,27 @@ import org.springframework.stereotype.Service;
 import com.mysite.tayo.entity.ProjectMember;
 import com.mysite.tayo.entity.ScheduleAttender;
 import com.mysite.tayo.entity.Task;
-import com.mysite.tayo.repository.CommentsReactRepository;
-import com.mysite.tayo.repository.CommentsRepository;
-import com.mysite.tayo.repository.PostMemberRepository;
-import com.mysite.tayo.repository.PostReactRepository;
-import com.mysite.tayo.repository.PostRepository;
+import com.mysite.tayo.entity.Todo;
+import com.mysite.tayo.entity.TodoMember;
+import com.mysite.tayo.entity.TodoName;
 import com.mysite.tayo.repository.ScheduleAttenderRepository;
-import com.mysite.tayo.repository.ScheduleRepository;
 import com.mysite.tayo.repository.TaskRepository;
+import com.mysite.tayo.repository.TodoMemberRepository;
+import com.mysite.tayo.repository.TodoNameRepository;
+import com.mysite.tayo.repository.TodoRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
 public class PostMemberService {
 	
-	private final PostMemberRepository postMemberRepository;
-	private final CommentsRepository commentsRepository;
-	private final CommentsReactRepository commentsReactRepository;
-	private final PostRepository postRepository;
-	private final PostReactRepository PostReactRepository;
 	private final TaskRepository taskRepository;
-	private final ScheduleRepository scheduleRepository;
 	private final ScheduleAttenderRepository scheduleAttenderRepository;
+	private final TodoRepository todoRepository;
+	private final TodoNameRepository todoNameRepository;
+	private final TodoMemberRepository todoMemberRepository;
 	
 	// Task - 진행상태 변경
 	public void updateTaskCondition(Long postIdx, int newCondition, Long memberIdx) {
@@ -77,6 +76,43 @@ public class PostMemberService {
 		}
 
 	}
+	
+	// Todo - 할 일 체크
+	@Transactional
+	public boolean updateTodoMemberStatus(Long todonameIdx, Long memberIdx, Integer isDone) {
+	    Optional<TodoMember> todoMemberOptional = todoMemberRepository.findByTodoNameTodoNameIdxAndMemberMemberIdx(todonameIdx, memberIdx);
+	    if (todoMemberOptional.isPresent()) {
+	        TodoMember todoMember = todoMemberOptional.get();
+	        todoMember.setIsDone(isDone);
+	        todoMemberRepository.save(todoMember);
+
+	        // Check if all TodoMember for the TodoName are done
+	        TodoName todoName = todoMember.getTodoName();
+	        boolean allMembersDone = todoName.getTodoMembers().stream()
+	                                         .allMatch(member -> Objects.equals(member.getIsDone(), 1));
+	        if (allMembersDone) {
+	            todoName.setIsFinished(1);
+	        } else {
+	            todoName.setIsFinished(0);
+	        }
+	        todoNameRepository.save(todoName);
+
+	        // Check if all TodoName for the Todo are finished
+	        Todo todo = todoName.getTodo();
+	        boolean allTodoNamesFinished = todo.getTodoNames().stream()
+	                                           .allMatch(name -> Objects.equals(name.getIsFinished(), 1));
+	        if (allTodoNamesFinished) {
+	            todo.setIsEnded(1);
+	        } else {
+	            todo.setIsEnded(0);
+	        }
+	        todoRepository.save(todo);
+
+	        return true;
+	    }
+	    return false;
+	}
+	
 	
 	// Vote - 복수투표 기능, 익명투표는 -> 투표자가 안보이는걸로..? 제일 마지막에 합시다
 	
