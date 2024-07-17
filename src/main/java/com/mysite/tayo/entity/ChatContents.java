@@ -65,5 +65,13 @@ public class ChatContents {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "is_reply")
     private ChatContents isReply;
+    
+    public String getFileUrl() {
+        return this.hasFile != null ? "/uploads/" + this.hasFile.getFileName() : null;
+    }
+
+    public boolean isImage() {
+        return this.hasFile != null && (this.hasFile.getFileType().equals("image/png") || this.hasFile.getFileType().equals("image/jpeg"));
+    }
 
 }

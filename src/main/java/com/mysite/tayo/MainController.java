@@ -73,7 +73,7 @@ public class MainController {
 		model.addAttribute("member", member);
 		List<ProjectMember> myProject = projectService.getMyProject(member.getMemberIdx());
 		List<Member> companyMember = memberService.getListByCompanyIdx(member.getCompany().getCompanyIdx());
-		List<Chat> chatList = chatService.getList();
+		List<Chat> chatList = chatService.getList(member);
 		List<Alarm> alarmList = alarmService.findAlarmByMemberIdx(member);
 		model.addAttribute("chatList", chatList);	
 		model.addAttribute("myproject", myProject);
