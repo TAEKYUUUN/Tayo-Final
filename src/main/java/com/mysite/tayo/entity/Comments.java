@@ -1,7 +1,10 @@
 package com.mysite.tayo.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -32,6 +35,7 @@ public class Comments {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_idx", referencedColumnName = "post_idx")
+	@JsonBackReference
 	private Post post;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -51,5 +55,11 @@ public class Comments {
     private boolean isLiked;
 	
 	@OneToMany(mappedBy = "comments", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<CommentsReact> commentsReacts;
+	private List<UncheckComments> uncheckComments = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "comments", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<CommentsReact> commentsReacts = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "comments", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Alarm> alarms = new ArrayList<>();
 }

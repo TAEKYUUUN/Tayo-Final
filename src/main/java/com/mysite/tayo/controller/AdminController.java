@@ -59,7 +59,7 @@ public class AdminController {
 			Integer count = 0;
 			List<Post> postList = projectList.get(i).getPostList();
 			for (int j = 0; j < postList.size(); j++) {
-				count += postList.get(j).getCommentsList().size();
+				count += postList.get(j).getComments().size();
 			}
 			commentsCount.add(count);
 		}

@@ -1,5 +1,6 @@
 package com.mysite.tayo.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -92,40 +93,48 @@ public class Member {
    private Integer isCompanyManager;
 
    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
-   private List<ChatMember> chatMemberList;
+   private List<ChatMember> chatMemberList = new ArrayList<>();
 
    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
    private List<ChatDeleteOnlyForMe> chatDeleteOnlyForMe;
    
    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
-   private List<UserSession> userSessionList;
+   private List<UserSession> userSessionList = new ArrayList<>();
 
    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-   private List<PostMember> postMembers;
+   private List<PostMember> postMembers = new ArrayList<>();
    
    @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL, orphanRemoval = true)
-   private List<Task> managers;
+   private List<Task> managers = new ArrayList<>();
    
    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-   private List<ScheduleAttender> scheduleAttenders;
+   private List<ScheduleAttender> scheduleAttenders = new ArrayList<>();
    
    @OneToMany(mappedBy = "todoManager", cascade = CascadeType.ALL, orphanRemoval = true)
-   private List<Todo> todoManagers;
+   private List<Todo> todoManagers = new ArrayList<>();
    
    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-   private List<TodoMember> todoMembers;
+   private List<TodoMember> todoMembers = new ArrayList<>();
    
    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-   private List<Voter> voters;
+   private List<Voter> voters = new ArrayList<>();
    
    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-   private List<Comments> comments;
+   private List<Comments> comments = new ArrayList<>();
    
    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-   private List<CommentsReact> commentsReacts;
+   private List<CommentsReact> commentsReacts = new ArrayList<>();
    
    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-   private List<PostReact> postReacts;
+   private List<PostReact> postReacts = new ArrayList<>();
+   
+   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+   private List<Alarm> alarms = new ArrayList<>();
+   
+   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+   private List<UncheckCommentsReact> uncheckCommentsReacts = new ArrayList<>();
+   
+   
 
    
    

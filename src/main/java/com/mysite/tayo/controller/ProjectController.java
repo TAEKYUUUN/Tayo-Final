@@ -25,7 +25,6 @@ import com.mysite.tayo.entity.Member;
 import com.mysite.tayo.entity.Post;
 import com.mysite.tayo.entity.Project;
 import com.mysite.tayo.entity.ProjectMember;
-import com.mysite.tayo.entity.ScheduleAttender;
 import com.mysite.tayo.repository.PostRepository;
 import com.mysite.tayo.repository.ProjectMemberRepository;
 import com.mysite.tayo.repository.ProjectRepository;
@@ -153,7 +152,7 @@ public class ProjectController {
 				}
 				break;
 			case 4:
-				Map<String, Object> todoData = postService.getTodo(post.getPostIdx());
+				Map<String, Object> todoData = postService.getTodo(post.getPostIdx(), member.getMemberIdx());
 				if (todoData != null) {
 					postData.put("data", todoData);
 				} else {

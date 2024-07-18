@@ -27,12 +27,39 @@ public class ProjectService {
 	private final ProjectMemberRepository projectMemberRepository;
 	private final MemberRepository memberRepository;
 	private final AlarmRepository alarmRepository;
-		
+	
+	// 해당프로젝트의 모든 멤버 Get
+	public List<ProjectMember> getAllProjectMember(Long projectIdx){
+		return this.projectMemberRepository.findByProjectProjectIdx(projectIdx);
+	}
+	
+	// 내가 참여중인 프로젝트 리스트 Get
+	public List<ProjectMember> getMyProject(Long memberIdx) {
+		return this.projectMemberRepository.findByMemberMemberIdx(memberIdx);
+	}
+
+	// 내가 참여중인 프로젝트들의 참여자 수 Get
+	public ArrayList<Long> getCountProjectMember(List<ProjectMember> projectList) {
+		ArrayList<Long> countMember = new ArrayList<>();
+
+		for (int i = 0; i < projectList.size(); i++) {
+			countMember
+					.add(projectMemberRepository.countProjectMember(projectList.get(i).getProject().getProjectIdx()));
+		}
+		return countMember;
+	}
+
+	// 회사멤버 중 해당 프로젝트에 참여하지 않는 멤버들의 리스트 Get
+	public List<Member> findMembersNotInProject(Long projectIdx, Long companyIdx) {
+		return memberRepository.findMembersNotInProject(companyIdx, projectIdx);
+	}
+
 	// 프로젝트 생성
-	public void createProject(String projectName, Integer mainTab, Integer projectType, Integer withoutConfirm, Long memberIdx, Company company) {
+	public void createProject(String projectName, Integer mainTab, Integer projectType, Integer withoutConfirm,
+			Long memberIdx, Company company) {
 		Date date = new Date();
 		Optional<Member> optionalMember = memberRepository.findById(memberIdx);
-		
+
 		Project project = new Project();
 		project.setProjectName(projectName);
 		project.setMainTab(mainTab);
@@ -43,7 +70,7 @@ public class ProjectService {
 		project.setColor("#8b00EA");
 		project.setCompany(company);
 		this.projectRepository.save(project);
-		
+
 		ProjectMember projectMember = new ProjectMember();
 		projectMember.setIsManager(1);
 		projectMember.setProject(project);
@@ -51,41 +78,21 @@ public class ProjectService {
 		projectMember.setCompany(optionalMember.get().getCompany());
 		this.projectMemberRepository.save(projectMember);
 	}
-	
-	// 내가 참여중인 프로젝트 리스트 Get
-	public List<ProjectMember> getMyProject(Long memberIdx) {
-		return this.projectMemberRepository.findByMemberMemberIdx(memberIdx);
-	}
-	
-	// 내가 참여중인 프로젝트들의 참여자 수 Get
-	public ArrayList<Long> getCountProjectMember(List<ProjectMember> projectList) {
-		ArrayList<Long> countMember = new ArrayList<>();
-		
-		for(int i=0; i<projectList.size(); i++) {
-			countMember.add(projectMemberRepository.countProjectMember(projectList.get(i).getProject().getProjectIdx()));
-		}
-		return countMember;
-	}
-	
-	// 회사멤버 중 해당 프로젝트에 참여하지 않는 멤버들의 리스트 Get
-	public List<Member> findMembersNotInProject(Long projectIdx, Long companyIdx) {
-		return memberRepository.findMembersNotInProject(companyIdx, projectIdx);
-	}
 
 	// 프로젝트 멤버 추가
 	public void addProjectMembers(List<Member> members, Long projectIdx) {
 		Optional<Project> projects = projectRepository.findById(projectIdx);
-		if(projects.isPresent()) {
+		if (projects.isPresent()) {
 			Project project = projects.get();
 			Date date = new Date();
-			
+
 			// 멤버를 ProjectMember 엔티티로 변환하여 DB에 저장
-			for(Member member : members) {
+			for (Member member : members) {
 				ProjectMember projectMember = new ProjectMember();
 				projectMember.setMember(member);
 				projectMember.setProject(project);
 				this.projectMemberRepository.save(projectMember);
-				
+
 				Alarm alarm = new Alarm();
 				alarm.setAlarmTime(date);
 				alarm.setMember(member);
@@ -93,6 +100,6 @@ public class ProjectService {
 				alarm.setAlarmType(6);
 				this.alarmRepository.save(alarm);
 			}
-		} 
+		}
 	}
 }

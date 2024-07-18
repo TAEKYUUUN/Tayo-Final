@@ -245,6 +245,7 @@ a {
 	align-items: center;
 	margin-bottom: -24px;
 	color: #CCC;
+	cursor: pointer;
 }
 
 #div_left_menu1>div:hover {
@@ -984,14 +985,14 @@ a {
 }
 
 .cmt_read_area {
-	width: 91.22px;
+	width: fit-content;
 	height: 30px;
 	display: flex;
 	align-items: center;
 }
 
 .comment_count_area {
-	width: 35.61px;
+	width: fit-content;
 	height: 30px;
 	padding: 5px 0px;
 	font-size: 13px;
@@ -1952,8 +1953,13 @@ a {
 	height: 20px;
 	margin: 10px 0 30px 0;
 	background: #b3e9ff;
-	-webkit-border-radius: 900px;
 	border-radius: 900px;
+}
+.todo_progress_bar_span{
+    display: inline-block;
+    height: 20px;
+    background: #00b2ff;
+    border-radius: 900px;
 }
 
 .todo_list_area {
@@ -1966,6 +1972,10 @@ a {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+}
+
+.todo_list_area:hover {
+	background: #f9f5ff;
 }
 
 .todo_text {
@@ -1986,13 +1996,67 @@ a {
 }
 
 .icon_checkbox {
-	width: 24px;
-	height: 24px;
-	margin-right: 7px;
-	border: 1px solid #00b2ff;
-	border-radius: 6px;
-	background: #fff;
-	vertical-align: middle;
+    width: 24px;
+    height: 24px;
+    margin-right: 7px;
+    border: 1px solid #00b2ff;
+    border-radius: 6px;
+    background: #fff;
+    vertical-align: middle;
+    position: relative; /* 부모 요소를 상대적으로 위치시킵니다. */
+}
+
+.icon_checkbox::after {
+    content: '';
+    position: absolute; /* 가상 요소를 절대적으로 위치시킵니다. */
+    top: 50%; /* 부모 요소의 가운데로 이동합니다. */
+    left: 50%; /* 부모 요소의 가운데로 이동합니다. */
+    width: 80%;
+    height: 80%;
+    transform: translate(-50%, -50%); /* 중앙 정렬을 위해 이동합니다. */
+    background-size: contain; /* 이미지가 컨테이너에 맞게 조정 */
+    background-position: center; /* 이미지가 가운데에 위치 */
+    background-repeat: no-repeat; /* 이미지가 반복되지 않도록 설정 */
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+
+.icon_checkbox:hover::after {
+    background-image: url(https://cdn-icons-png.flaticon.com/512/403/403474.png);
+    opacity: 1;
+}
+
+.icon_checkbox.on {
+    width: 24px;
+    height: 24px;
+    margin-right: 7px;
+    border: 1px solid #00b2ff;
+    border-radius: 6px;
+    background: #00b2ff;
+    vertical-align: middle;
+    position: relative; /* 부모 요소를 상대적으로 위치시킵니다. */
+}
+
+.icon_checkbox.on::after {
+    content: '';
+    position: absolute; /* 가상 요소를 절대적으로 위치시킵니다. */
+    top: 50%; /* 부모 요소의 가운데로 이동합니다. */
+    left: 50%; /* 부모 요소의 가운데로 이동합니다. */
+    width: 80%;
+    height: 80%;
+    transform: translate(-50%, -50%); /* 중앙 정렬을 위해 이동합니다. */
+    background-size: contain; /* 이미지가 컨테이너에 맞게 조정 */
+    background-position: center; /* 이미지가 가운데에 위치 */
+    background-repeat: no-repeat; /* 이미지가 반복되지 않도록 설정 */
+    transition: opacity 0.3s ease;
+    background-image: url(https://cdn-icons-png.flaticon.com/512/403/403474.png);
+    filter:invert(100%) brightness(1000%);
+    opacity: 1;
+}
+
+.completed {
+    text-decoration: line-through;
+    color : #999999;
 }
 
 .todo_deadline {
@@ -2371,6 +2435,15 @@ a {
 	cursor: pointer;
 }
 
+.edit_submit {
+	background-color: #6200ee;
+	color: white;
+	padding: 8px 16px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
 .modal-footer select,
 .modal-footer button {
 	padding: 8px 16px;
@@ -2387,7 +2460,8 @@ a {
 	border: 1px solid #e0e0e0;
 }
 
-.modal-footer button.submit {
+.modal-footer button.submit,
+.modal-footer button.edit_submit {
 	background-color: #6200ee;
 	color: white;
 	border: none;
@@ -2547,6 +2621,38 @@ a {
 	color: #6449fc;
 }
 
+.add_todo {
+	height: 28px;
+	margin-top: 5px;
+	padding: 0 10px 0 24px;
+	border: 1px solid #999;
+	border-radius: 4px;
+	font-size: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	background-color: white;
+	cursor: pointer;
+}
+
+.add_todo::before {
+	content: "+";
+	position: absolute;
+	left: 10px;
+	font-size: 14px;
+	color: #000;
+}
+
+.add_todo:hover {
+	color: #6449fc;
+	border-color: #6449fc;
+}
+
+.add_todo:hover::before {
+	color: #6449fc;
+}
+
 .input_lowertask {
 	width: 605px;
 	height: 48px;
@@ -2590,7 +2696,7 @@ a {
 
 #start,
 #end {
-	width: 178px;
+	width: 190px;
 	padding: 5px 2px;
 	font-size: 15px;
 	font-weight: 700;
@@ -2635,6 +2741,16 @@ a {
 	cursor: pointer;
 	position: absolute;
 	right: 20px;
+}
+
+.removeTodoButton {
+	position:absolute;
+	right: 20px;
+	background: none;
+	border : none;
+	color: #888;
+	font-size: 16px;
+	cursor: pointer;
 }
 
 #vote_detail {
@@ -3275,11 +3391,14 @@ input:checked+.slider:before {
 	padding: 20px;
 	border: 1px solid #888;
 	width: 300px;
+	display: flex;
+	align-items: center;
 }
 
 .close1 {
+	position : absolute;
+	right : 205px;
 	color: #aaa;
-	float: right;
 	font-size: 28px;
 	font-weight: bold;
 }

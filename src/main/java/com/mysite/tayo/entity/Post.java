@@ -1,7 +1,10 @@
 package com.mysite.tayo.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -68,15 +71,16 @@ public class Post {
     @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Vote vote;
     
-    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-	 private List<Comments> commentsList;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+	private List<Comments> comments = new ArrayList<>();
     
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostMember> postMembers;
+    private List<PostMember> postMembers = new ArrayList<>();
     
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Alarm> alarms;
+    private List<Alarm> alarms = new ArrayList<>();
     
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostReact> postReacts;
+    private List<PostReact> postReacts = new ArrayList<>();
 }

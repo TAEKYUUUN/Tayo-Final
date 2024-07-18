@@ -1,5 +1,7 @@
 package com.mysite.tayo.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,4 +21,13 @@ public interface CommentsReactRepository extends JpaRepository<CommentsReact, Lo
     boolean existsByCommentsAndMember(@Param("commentsIdx") Long commentsIdx, @Param("memberIdx") Long memberIdx);
 	
 	void deleteByCommentsCommentsIdxAndMemberMemberIdx(Long commentsIdx, Long memberIdx);
+	
+	@Transactional
+	void deleteByCommentsCommentsIdx(Long commentsIdx);
+	
+	@Query("SELECT COUNT(cr) > 0 FROM CommentsReact cr WHERE cr.comments.commentsIdx = :commentsIdx")
+	boolean existByCommentsCommentsIdx(@Param("commentsIdx") Long commentsIdx);
+	
+	@Query("SELECT cr.commentsReactIdx FROM CommentsReact cr WHERE cr.comments.commentsIdx = :commentsIdx")
+    List<Long> findIdxsByCommentsIdx(@Param("commentsIdx") Long commentsIdx);
 }

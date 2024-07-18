@@ -49,5 +49,5 @@ public class Todo {
 	private Date deadline;
 	
 	@OneToMany(mappedBy = "todo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<TodoName> todoNames = new ArrayList<>();
+    private List<TodoName> todoNames;
 }
