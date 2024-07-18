@@ -19,7 +19,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -96,6 +95,9 @@ public class Member {
    private List<ChatMember> chatMemberList;
 
    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+   private List<ChatDeleteOnlyForMe> chatDeleteOnlyForMe;
+   
+   @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
    private List<UserSession> userSessionList;
 
    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -125,4 +127,6 @@ public class Member {
    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
    private List<PostReact> postReacts;
 
+   
+   
 }

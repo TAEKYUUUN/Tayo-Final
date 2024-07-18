@@ -1,6 +1,12 @@
 package com.mysite.tayo.entity;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import com.mysite.tayo.TimeAgo;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -11,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 @Getter
@@ -36,5 +43,42 @@ public class Chat {
 	
 	@OneToMany(mappedBy = "chat", cascade = CascadeType.REMOVE)
 	private List<ChatContents> chatContentsList;
+	
 
+	@Transient 
+	private ChatContents lastChatContents;
+ 
+	@Transient
+    private String lastChatTime;
+	
+    public ChatContents getLastChatContents() {
+        if (chatContentsList == null || chatContentsList.isEmpty()) {
+            return null;
+        }
+        return chatContentsList.stream()
+                .max(Comparator.comparing(ChatContents::getTime))
+                .orElse(null);
+    }
+
+    public String getLastChatTime() {
+        ChatContents lastContent = getLastChatContents();
+        if (lastContent != null) {
+            LocalDateTime lastTime = lastContent.getTime().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+            return TimeAgo.toRelative(lastTime);
+        }
+        return "없음";
+    }
+
+    @Transient
+    private int unreadCount;
+
+    public int getUnreadCount(Member member) {
+        return (int) chatContentsList.stream()
+                .flatMap(chatContents -> chatContents.getChatUnreaderList().stream())
+                .filter(chatUnreader -> chatUnreader.getMember() != null && chatUnreader.getMember().equals(member))
+                .count();
+    }
+	
 }

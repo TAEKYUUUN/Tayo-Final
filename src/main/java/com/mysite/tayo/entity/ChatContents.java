@@ -65,6 +65,9 @@ public class ChatContents {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "is_reply")
     private ChatContents isReply;
+
+    @OneToMany(mappedBy = "chatContents", cascade = CascadeType.REMOVE)
+    private List<ChatDeleteOnlyForMe> chatDeleteOnlyForMeList;
     
     public String getFileUrl() {
         return this.hasFile != null ? "/uploads/" + this.hasFile.getFileName() : null;
@@ -74,4 +77,5 @@ public class ChatContents {
         return this.hasFile != null && (this.hasFile.getFileType().equals("image/png") || this.hasFile.getFileType().equals("image/jpeg"));
     }
 
+    
 }

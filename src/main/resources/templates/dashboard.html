@@ -310,11 +310,11 @@
 								</span>
 							</div>
 						</div>
-						<span class="chat-last-content">아이사 반</span>
+						<span class="chat-last-content" th:text="${chat.lastChatContents != null ? chat.lastChatContents.text : '메시지 없음'}"></span>
 					</div>
 					<div class="mini-mode-chattng-type-3">
-						<div class="mini-mode-chattng-type-text-2">어제</div>
-						<div class="chat-contents-no-read">1</div>
+						<div class="mini-mode-chattng-type-text-2"  th:text="${chat.lastChatTime}"></div>
+						<div class="chat-contents-no-read" th:if="${chat.unreadCount > 0}" th:text="${chat.unreadCount}">1</div>
 					</div>
 				</div>
 			</div>
