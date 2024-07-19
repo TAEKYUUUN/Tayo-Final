@@ -33,12 +33,9 @@ public class ChatHandler extends TextWebSocketHandler {
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		String payload = message.getPayload();
-		System.out.println(payload);
 		log.info("payload : " + payload);
 		ObjectMapper objectMapper = new ObjectMapper();
 		// JSON 파싱
-
-		System.out.println(payload);
 		JsonNode jsonNode = objectMapper.readTree(payload);
 
 		Long chatIdx = Long.parseLong(jsonNode.get("chatIdx").asText());
@@ -47,13 +44,12 @@ public class ChatHandler extends TextWebSocketHandler {
 		String strReplyIdx = jsonNode.get("replyIdx").asText();
 		Optional<Member> member = memberRepository.findById(userIdx);
 		String strDelChatContentIdx = jsonNode.get("delChatContentIdx").asText();
+		String strDelAllChatContentIdx = jsonNode.get("delAllChatContentIdx").asText();
 
 		for (int i = 0; i < chatService.chatContentsList(chatIdx).size(); i++) {
 			Long chatContentsIdx = chatService.chatContentsList(chatIdx).get(i);
 			chatService.deleteChatUnreaders(chatContentsIdx, member.get());
 		}
-
-		System.out.println(chatContent + "오류 발견");
 		Long replyIdx = null;
 		if (!(strReplyIdx.equals("//~//null//~//"))) {
 			replyIdx = Long.parseLong(strReplyIdx);
@@ -97,6 +93,11 @@ public class ChatHandler extends TextWebSocketHandler {
 			if (!strDelChatContentIdx.equals("//~//null//~//")) {
 				Long delChatContentIdx = Long.parseLong(strDelChatContentIdx);
 				chatService.chatDeleteOnlyForMe(delChatContentIdx, userIdx);
+			}
+			
+			if (!strDelAllChatContentIdx.equals("//~//null//~//")) {
+				Long delAllChatContentIdx = Long.parseLong(strDelAllChatContentIdx);
+				chatService.chatDeleteAll(delAllChatContentIdx);
 			}
 
 	}

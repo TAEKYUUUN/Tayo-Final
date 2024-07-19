@@ -9,8 +9,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		const chatReplyAlert = document.querySelector('.chat-reply-alert');
 		const replyChatTxt = document.getElementById('reply-chat-txt');
 		const replyFrom = document.getElementById('reply-from');
-		const delOnlyForMebtns = document.querySelectorAll('.delOnlyForMe');
-		let delChatContentIdx;
+		const delOnlyForMeBtns = document.querySelectorAll('.delete-only-for-me');
+		const delAllBtns = document.querySelectorAll('.delete-all');
+		const delChatContentIdxStorage = document.getElementById('del-chat-content-idx-storage');
+		const delAllChatContentIdxStorage = document.getElementById('del-all-chat-content-idx-storage');
+
 
 		modalMoreBtns.forEach((btn, index) => {
 			const container = modalMores[index];
@@ -55,10 +58,25 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 		});
 
-		delOnlyForMebtns.forEach((btn) => {
+
+		delOnlyForMeBtns.forEach((btn) => {
+
 			btn.addEventListener('click', (e) => {
 				const chatTxtWr = e.target.closest('.chat-txt-wr');
-				delChatContentIdx = chatTxtWr.closest('li').querySelector('input').value;
+				const delChatContentIdx = chatTxtWr.closest('li').querySelector('input').value;
+				delChatContentIdxStorage.innerText = delChatContentIdx;
+				const chatLiParentNode = chatTxtWr.closest('.chat_li_parent_node');
+				chatLiParentNode.style.display = 'none';
+				send();
+			});
+		});
+		delAllBtns.forEach((btn) => {
+			btn.addEventListener('click', (e) => {
+				const chatTxtWr = e.target.closest('.chat-txt-wr');
+				const delAllChatContentIdx = chatTxtWr.closest('li').querySelector('input').value;
+				delAllChatContentIdxStorage.innerText = delAllChatContentIdx;
+				const chatLiParentNode = chatTxtWr.closest('.chat_li_parent_node');
+				chatLiParentNode.style.display = 'none';
 				send();
 			});
 		});
@@ -117,11 +135,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	const chatContainer = document.querySelector('.chat-container');
 	const iconFile = document.querySelectorAll('.icon-file');
 	const replyIdxInput = document.getElementById('reply-idx');
-	const delOnlyForMebtns = document.querySelectorAll('.delOnlyForMe');
-	let delChatContentIdx = '//~//null//~//';
-
-
-
+	const delOnlyForMeBtns = document.querySelectorAll('.delete-only-for-me');
+	const delAllBtns = document.querySelectorAll('.delete-all');
+	const delChatContentIdxStorage = document.getElementById('del-chat-content-idx-storage');
+	const delAllChatContentIdxStorage = document.getElementById('del-all-chat-content-idx-storage');
+	
 	let replyChatContentIdx;
 
 	scrollToBottom();
@@ -239,8 +257,19 @@ document.addEventListener('DOMContentLoaded', function() {
 		const msg = document.querySelector('.create-post-content');
 		chatContent = msg.innerText;
 
-		console.log(delChatContentIdx);
-		if(delChatContentIdx !== '//~//null//~//'){
+		var delChatContentIdx = delChatContentIdxStorage.innerText;
+		var delAllChatContentIdx = delAllChatContentIdxStorage.innerText;
+
+		// 채팅 나에게만 삭제 시 
+		if (delChatContentIdx === '') {
+			delChatContentIdx = '//~//null//~//';
+		} else {
+			chatContent = '//~//null//~//';
+		}
+		// 채팅 전체삭제 시
+		if (delAllChatContentIdx === '') {
+			delAllChatContentIdx = '//~//null//~//';
+		} else {
 			chatContent = '//~//null//~//';
 		}
 		const message = {
@@ -249,12 +278,15 @@ document.addEventListener('DOMContentLoaded', function() {
 			content: chatContent,
 			userIdx: userIdx,
 			replyIdx: replyIdx,
-			delChatContentIdx: delChatContentIdx
+			delChatContentIdx: delChatContentIdx,
+			delAllChatContentIdx: delAllChatContentIdx
 		};
 		console.log(message);
 		console.log(userName + ':' + msg.innerText);
 		websocket.send(JSON.stringify(message));
 		msg.innerText = '';
+		delChatContentIdxStorage.innerText = '';
+		delAllChatContentIdxStorage.innerText = '';
 	}
 
 	function onClose(evt) {
@@ -262,18 +294,20 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	function onOpen(evt) {
-		
+
 		console.log("websocket open")
 		chatContent = "//~//null//~//";
 		replyIdx = "//~//null//~//";
-		delChatContentIdx = '//~//null//~//';
+		var delChatContentIdx = '//~//null//~//';
+		var delAllChatContentIdx = '//~//null//~//';
 		const message = {
 			userName: userName,
 			chatIdx: chatIdx,
 			content: chatContent,
 			userIdx: userIdx,
 			replyIdx: replyIdx,
-			delChatContentIdx: delChatContentIdx
+			delChatContentIdx: delChatContentIdx,
+			delAllChatContentIdx: delAllChatContentIdx
 		};
 		console.log(message);
 		websocket.send(JSON.stringify(message));
@@ -301,6 +335,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				&& (replyChatContent === null)) {
 				// 내가 보낸경우
 				const str = `
+				<div class='chat_li_parent_node'>
 		          <li class='right-section'>
 					<input type="hidden" value='${maxChatContentIdx}'>
 		            <div>
@@ -319,15 +354,14 @@ document.addEventListener('DOMContentLoaded', function() {
 		                          <ul class='modal-more'>
 		                            <li><button class='copy'>복사</button></li>
 		                            <li><button class='notice'>공지설정</button></li>
-		                            <li class='delete-only-for-me'><button class='del delOnlyForMe'>나에게서만 삭제</button></li>
+		                            <li class='delete-only-for-me'><button class='del'>나에게서만 삭제</button></li>
 		                            <li class='delete-all'><button class='del'>전체삭제</button></li>
 		                          </ul>
 		                        </div>
 		                      </div>
 		                      <div class='user-time'>${chatContentTime}</div>
 		                    </div>
-		                    <div class='chat-read'>${chatUnreaders}</div>
-		                    <div class='chat-read-none'></div>
+		                    <div class='chat-read' ${chatUnreaders === 0 ? "style='display:none;'" : ""}>${chatUnreaders}</div>
 		                  </div>
 		                  <div class='chat-txt'>
 		                    <div>${message}</div>
@@ -335,7 +369,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		                </div>
 		              </div>
 		            </div>
-		          </li>`;
+		          </li>
+		          </div>`;
 				chatMsg.innerHTML += str;
 				scrollToBottom();
 
@@ -365,7 +400,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						                    <button>공지설정</button>
 						                  </li>
 						                  <li class='delete-only-for-me'>
-						                    <button class='del delOnlyForMe'>나에게서만 삭제</button>
+						                    <button class='del'>나에게서만 삭제</button>
 						                  </li>
 						                  <li class='delete-all'>
 						                    <button class='del'>전체삭제</button>
@@ -375,7 +410,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						            </div>
 						            <div class='user-time'>${chatContentTime}</div>
 						          </div>
-						          <div class='chat-read'>${chatUnreaders}</div>
+						          <div class='chat-read' ${chatUnreaders === 0 ? "style='display:none;'" : ""}>${chatUnreaders}</div>
 						          <div class='chat-read-none'></div>
 						        </div>
 						        <div class='reply-box'>
@@ -413,7 +448,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						          <div>${message}</div>
 						        </div>
 						        <div class='chat-btns'>
-						          <div class='chat-read'>${chatUnreaders}</div>
+						          <div class='chat-read' ${chatUnreaders === 0 ? "style='display:none;'" : ""}>${chatUnreaders}</div>
 						          <div class='chat-read-none'></div>
 						          <div>
 						            <div class='chat-btn-wrap'>
@@ -432,7 +467,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						                    <button type='submit'>공지설정</button>
 						                  </li>
 						                  <li class='delete-only-for-me'>
-						                    <button class='del delOnlyForMe'>나에게서만 삭제</button>
+						                    <button class='del'>나에게서만 삭제</button>
 						                  </li>
 						                  <li class='delete-all'>
 						                    <button class='del'>전체삭제</button>
@@ -474,7 +509,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						          </div>
 						        </div>
 						        <div class='chat-btns'>
-						          <div class='chat-read'>${chatUnreaders}</div>
+						          <div class='chat-read' ${chatUnreaders === 0 ? "style='display:none;'" : ""}>${chatUnreaders}</div>
 						          <div class='chat-read-none'></div>
 
 						          <div>
@@ -494,7 +529,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						                    <button type='submit'>공지설정</button>
 						                  </li>
 						                  <li class='delete-only-for-me'>
-						                    <button class='del delOnlyForMe'>나에게서만 삭제</button>
+						                    <button class='del'>나에게서만 삭제</button>
 						                  </li>
 						                  <li class='delete-all'>
 						                    <button class='del'>전체삭제</button>

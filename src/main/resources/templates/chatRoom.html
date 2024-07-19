@@ -55,9 +55,10 @@
 				<button class="button-samll notice-box-close-btn">접어두기</button>
 			</div>
 		</div>
+		<div id="del-chat-content-idx-storage" style="display: none;"></div>
+		<div id="del-all-chat-content-idx-storage" style="display: none;"></div>
 		<ul th:each="chat : ${chatList}" class="chat-container">
-			<div th:each="chatContents, innerIterStat : ${sortedChatContentsList}"
-				th:if="${chatContents.chatContentsIdx != chatDeleteOnlyForMe}">
+			<div class="chat_li_parent_node" th:each="chatContents, innerIterStat : ${sortedChatContentsList}">
 				<div th:if="${innerIterStat.index == 0 or
 					 	#dates.format(chatContents.time, 'yyyy-MM-dd') != 
 						#dates.format(sortedChatContentsList[innerIterStat.index - 1].time, 'yyyy-MM-dd')}">
@@ -566,7 +567,6 @@
 					</div>
 				</li>
 			</div>
-
 		</ul>
 		<footer th:each="chat : ${chatList}">
 			<div th:text="${member.name}" style="display: none;" id="senderName"></div>

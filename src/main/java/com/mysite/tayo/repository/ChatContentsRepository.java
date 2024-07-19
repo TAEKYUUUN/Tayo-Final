@@ -1,6 +1,7 @@
 package com.mysite.tayo.repository;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -8,9 +9,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.mysite.tayo.entity.ChatContents;
+import com.mysite.tayo.entity.Member;
 
 @Repository
 public interface ChatContentsRepository extends JpaRepository<ChatContents, Long>{
+	
+	void deleteAllByChatContentsIdx(Long chatContentsIdx);
+	
 	
 //	웹소켓에서 가장 최근에 보내진 채팅내용의IDX 를 뽑기
 	@Query

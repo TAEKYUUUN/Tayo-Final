@@ -1,11 +1,13 @@
 package com.mysite.tayo.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.hibernate.Remove;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,15 +45,25 @@ public class ChatController {
 	    List<ChatContents> sortedChatContentsList = chatList.getChatContentsList().stream()
 	        .sorted(Comparator.comparing(ChatContents::getTime))
 	        .collect(Collectors.toList());
-
+	    
 	    Long maxNotice = chatService.maxNotice(chatIdx);
-	    Long chatDeleteOnlyForMe = chatService.chatDeleteOnlyForMeChatContentIdx(member);
+	    ArrayList<Long> chatDeleteOnlyForMeArr = chatService.chatDeleteOnlyForMeChatContentIdx(member);
+	    List<Long> chatDeleteOnlyForMeList = chatDeleteOnlyForMeArr;
+	    System.out.println(chatDeleteOnlyForMeList);
+	    
+	    for(int i=0; i<chatDeleteOnlyForMeList.size(); i++) {
+	    	for(int j=0; j<sortedChatContentsList.size(); j++) {
+	    		if(chatDeleteOnlyForMeList.get(i) == sortedChatContentsList.get(j).getChatContentsIdx()) {
+	    			sortedChatContentsList.remove(j);
+	    		}
+	    	}
+	    }
 	    
 	    model.addAttribute("member", member);
 	    model.addAttribute("chatList", chatList);
 	    model.addAttribute("sortedChatContentsList", sortedChatContentsList);
 	    model.addAttribute("maxNotice", maxNotice);
-	    model.addAttribute("chatDeleteOnlyForMe", chatDeleteOnlyForMe);
+	    model.addAttribute("chatDeleteOnlyForMeList", chatDeleteOnlyForMeList);
 	    return "chatRoom";
 	}
 
