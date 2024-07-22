@@ -2082,6 +2082,7 @@ a {
 }
 
 .em_vote_proceed {
+	display : inline-block;
 	border: 1px solid #ff6651;
 	color: #ff6651;
 	height: 24px;
