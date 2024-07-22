@@ -9,8 +9,8 @@ document.addEventListener('DOMContentLoaded', function() {
 		const chatReplyAlert = document.querySelector('.chat-reply-alert');
 		const replyChatTxt = document.getElementById('reply-chat-txt');
 		const replyFrom = document.getElementById('reply-from');
-
-
+		const delOnlyForMebtns = document.querySelectorAll('.delOnlyForMe');
+		let delChatContentIdx;
 
 		modalMoreBtns.forEach((btn, index) => {
 			const container = modalMores[index];
@@ -55,6 +55,14 @@ document.addEventListener('DOMContentLoaded', function() {
 			});
 		});
 
+		delOnlyForMebtns.forEach((btn) => {
+			btn.addEventListener('click', (e) => {
+				const chatTxtWr = e.target.closest('.chat-txt-wr');
+				delChatContentIdx = chatTxtWr.closest('li').querySelector('input').value;
+				send();
+			});
+		});
+
 		// 이벤트 위임을 통해 동적 요소에도 이벤트 리스너 적용
 		document.body.addEventListener('click', function(e) {
 			if (e.target.classList.contains('copy')) {
@@ -64,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					if (chatTxt) {
 						const text = chatTxt.innerText;
 						navigator.clipboard.writeText(text).then(() => {
-							alert('텍스트가 복사되었습니다.');
+							console.log('텍스트가 복사되었습니다.');
 						}).catch((err) => {
 							console.error('텍스트 복사 실패:', err);
 						});
@@ -76,6 +84,8 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 			}
 		});
+
+
 
 		const btnCloseReply = document.querySelector('.btn-close-reply');
 		btnCloseReply.addEventListener('click', () => {
@@ -107,6 +117,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	const chatContainer = document.querySelector('.chat-container');
 	const iconFile = document.querySelectorAll('.icon-file');
 	const replyIdxInput = document.getElementById('reply-idx');
+	const delOnlyForMebtns = document.querySelectorAll('.delOnlyForMe');
+	let delChatContentIdx = '//~//null//~//';
+
+
 
 	let replyChatContentIdx;
 
@@ -118,7 +132,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		replyIdxInput.value = ''; // 답장 인덱스 값 초기화
 		replyChatContentIdx = undefined;
 		const chatContainerLastChild = chatContainer.lastElementChild;
-		chatContainerLastChild.style.paddingBottom = '20px';
+		if (chatContainerLastChild) {
+			chatContainerLastChild.style.paddingBottom = '20px';
+		} else {
+			console.warn('chatContainerLastChild element is null');
+		}
 	}
 
 	noticebtn.addEventListener('click', () => {
@@ -221,12 +239,17 @@ document.addEventListener('DOMContentLoaded', function() {
 		const msg = document.querySelector('.create-post-content');
 		chatContent = msg.innerText;
 
+		console.log(delChatContentIdx);
+		if(delChatContentIdx !== '//~//null//~//'){
+			chatContent = '//~//null//~//';
+		}
 		const message = {
 			userName: userName,
 			chatIdx: chatIdx,
 			content: chatContent,
 			userIdx: userIdx,
-			replyIdx: replyIdx
+			replyIdx: replyIdx,
+			delChatContentIdx: delChatContentIdx
 		};
 		console.log(message);
 		console.log(userName + ':' + msg.innerText);
@@ -236,51 +259,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function onClose(evt) {
 		console.log("websocket close")
-		/*const str = `<div class='chat-out'><span>${userName}님이 방을 나가셨습니다.</span></div>`;
-		chatMsg.innerHTML += str;
-		if (chatContent === undefined) {
-			chatContent = '//~//null//~//';
-		}
-		if (replyIdx === undefined) {
-			replyIdx = '//~//null//~//';
-		}
-
-		const message = {
-			userName: userName,
-			chatIdx: chatIdx,
-			content: chatContent,
-			userIdx: userIdx,
-			replyIdx: replyIdx
-		};
-		websocket.send(JSON.stringify(message));*/
-
 	}
 
 	function onOpen(evt) {
+		
 		console.log("websocket open")
-		/*const str = `<div class='chat-out'><span>${userName}님이 입장하셨습니다.</span></div>`;
-		chatMsg.innerHTML += str;
-		if (chatContent === undefined) {
-			chatContent = '//~//null//~//';
-		}
-		if (replyIdx === undefined) {
-			replyIdx = '//~//null//~//';
-		}
+		chatContent = "//~//null//~//";
+		replyIdx = "//~//null//~//";
+		delChatContentIdx = '//~//null//~//';
 		const message = {
 			userName: userName,
 			chatIdx: chatIdx,
 			content: chatContent,
 			userIdx: userIdx,
-			replyIdx: replyIdx
+			replyIdx: replyIdx,
+			delChatContentIdx: delChatContentIdx
 		};
 		console.log(message);
-		addEventListenersToButtons(); // 새로 추가된 요소에 이벤트 리스너 재적용
-		websocket.send(JSON.stringify(message));*/
+		websocket.send(JSON.stringify(message));
 	}
 
 	function onMessage(evt) {
 		const requestData = JSON.parse(evt.data);
-		const { curUserIdx, curChatContent, chatContentTime, maxChatContentIdx, replyChatContent, replyMemberName } = requestData;
+		const { curUserIdx, curChatContent, chatContentTime, maxChatContentIdx, replyChatContent, replyMemberName, chatUnreaders } = requestData;
 		console.log(curUserIdx, curChatContent, maxChatContentIdx, replyChatContent, replyMemberName);
 
 		let replyContent;
@@ -318,14 +319,14 @@ document.addEventListener('DOMContentLoaded', function() {
 		                          <ul class='modal-more'>
 		                            <li><button class='copy'>복사</button></li>
 		                            <li><button class='notice'>공지설정</button></li>
-		                            <li class='delete-only-for-me'><button class='del'>나에게서만 삭제</button></li>
+		                            <li class='delete-only-for-me'><button class='del delOnlyForMe'>나에게서만 삭제</button></li>
 		                            <li class='delete-all'><button class='del'>전체삭제</button></li>
 		                          </ul>
 		                        </div>
 		                      </div>
 		                      <div class='user-time'>${chatContentTime}</div>
 		                    </div>
-		                    <div class='chat-read'></div>
+		                    <div class='chat-read'>${chatUnreaders}</div>
 		                    <div class='chat-read-none'></div>
 		                  </div>
 		                  <div class='chat-txt'>
@@ -336,7 +337,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		            </div>
 		          </li>`;
 				chatMsg.innerHTML += str;
-				addEventListenersToButtons(); // 새로 추가된 요소에 이벤트 리스너 재적용
 				scrollToBottom();
 
 			} else if (sessionId == cur_session && message !== '//~//null//~//' && replyChatContent !== null) {
@@ -365,7 +365,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						                    <button>공지설정</button>
 						                  </li>
 						                  <li class='delete-only-for-me'>
-						                    <button class='del'>나에게서만 삭제</button>
+						                    <button class='del delOnlyForMe'>나에게서만 삭제</button>
 						                  </li>
 						                  <li class='delete-all'>
 						                    <button class='del'>전체삭제</button>
@@ -375,7 +375,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						            </div>
 						            <div class='user-time'>${chatContentTime}</div>
 						          </div>
-						          <div class='chat-read'></div>
+						          <div class='chat-read'>${chatUnreaders}</div>
 						          <div class='chat-read-none'></div>
 						        </div>
 						        <div class='reply-box'>
@@ -392,7 +392,6 @@ document.addEventListener('DOMContentLoaded', function() {
 						  </div>
 						</li>`
 				chatMsg.innerHTML += str;
-				addEventListenersToButtons();
 				scrollToBottom();
 			} else if (sessionId != cur_session && message !== '//~//null//~//'
 				&& (replyChatContent === null)) {
@@ -414,7 +413,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						          <div>${message}</div>
 						        </div>
 						        <div class='chat-btns'>
-						          <div class='chat-read'></div>
+						          <div class='chat-read'>${chatUnreaders}</div>
 						          <div class='chat-read-none'></div>
 						          <div>
 						            <div class='chat-btn-wrap'>
@@ -433,7 +432,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						                    <button type='submit'>공지설정</button>
 						                  </li>
 						                  <li class='delete-only-for-me'>
-						                    <button class='del'>나에게서만 삭제</button>
+						                    <button class='del delOnlyForMe'>나에게서만 삭제</button>
 						                  </li>
 						                  <li class='delete-all'>
 						                    <button class='del'>전체삭제</button>
@@ -449,7 +448,6 @@ document.addEventListener('DOMContentLoaded', function() {
 						  </div>
 						</li>`;
 				chatMsg.innerHTML += str;
-				addEventListenersToButtons();
 				scrollToBottom();
 			} else if (sessionId != cur_session && message !== '//~//null//~//' && replyChatContent !== null) {
 				// 상대가 보낸경우 + 답장인 경우
@@ -476,7 +474,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						          </div>
 						        </div>
 						        <div class='chat-btns'>
-						          <div></div>
+						          <div class='chat-read'>${chatUnreaders}</div>
 						          <div class='chat-read-none'></div>
 
 						          <div>
@@ -496,7 +494,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						                    <button type='submit'>공지설정</button>
 						                  </li>
 						                  <li class='delete-only-for-me'>
-						                    <button class='del'>나에게서만 삭제</button>
+						                    <button class='del delOnlyForMe'>나에게서만 삭제</button>
 						                  </li>
 						                  <li class='delete-all'>
 						                    <button class='del'>전체삭제</button>
@@ -512,10 +510,9 @@ document.addEventListener('DOMContentLoaded', function() {
 						  </div>
 						</li>`;
 				chatMsg.innerHTML += str;
-				addEventListenersToButtons();
 				scrollToBottom();
 			}
-
+			addEventListenersToButtons();
 		} catch (error) {
 			console.error('onMessage error:', error);
 		}

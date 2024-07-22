@@ -1,5 +1,7 @@
 package com.mysite.tayo.repository;
 
+import java.util.ArrayList;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -30,11 +32,13 @@ public interface ChatContentsRepository extends JpaRepository<ChatContents, Long
 	@Query
 	("SELECT TO_CHAR(c.time, 'AM HH12:MI') FROM ChatContents c WHERE c.chatContentsIdx = :chatContentIdx")
 	String findChatContentTimeByChatContentIdx(@Param("chatContentIdx") Long chatContentIdx);
-	
 //	가장 최신의 공지사항
 	@Query
 	("SELECT c.chatContentsIdx FROM ChatContents c WHERE c.time = (SELECT max(cc.time) FROM ChatContents cc WHERE cc.notice = 1) AND c.chat.chatIdx = :chatIdx")
 	Long findMaxNoticeChatContentIdxByChatContentIdx(@Param("chatIdx") Long chatIdx);
-	
+
+	@Query
+	("SELECT c.chatContentsIdx FROM ChatContents c WHERE c.chat.chatIdx = :chatIdx")
+	ArrayList<Long> findChatContentsListIdxByChatIdx(@Param("chatIdx") Long chatIdx);
 	
 }

@@ -45,12 +45,13 @@ public class ChatController {
 	        .collect(Collectors.toList());
 
 	    Long maxNotice = chatService.maxNotice(chatIdx);
-	    System.out.println(maxNotice);
-
+	    Long chatDeleteOnlyForMe = chatService.chatDeleteOnlyForMeChatContentIdx(member);
+	    
 	    model.addAttribute("member", member);
 	    model.addAttribute("chatList", chatList);
 	    model.addAttribute("sortedChatContentsList", sortedChatContentsList);
 	    model.addAttribute("maxNotice", maxNotice);
+	    model.addAttribute("chatDeleteOnlyForMe", chatDeleteOnlyForMe);
 	    return "chatRoom";
 	}
 
@@ -72,12 +73,6 @@ public class ChatController {
         return "redirect:/chatRoom/" + chatIdx;
     }
 	
-    @GetMapping("/chat")
-    public String chatGET(){
-        log.info("@ChatController, chat GET()");
-        return "chatRoom";
-    }
-
 	@GetMapping("/chatCollection")
 	public String chatCollection(Model model, Authentication authentication) {
 		Member member = memberService.infoFromLogin(authentication);

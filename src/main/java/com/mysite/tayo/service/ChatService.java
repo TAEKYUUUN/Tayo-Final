@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -13,16 +14,23 @@ import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.mysite.tayo.entity.Chat;
 import com.mysite.tayo.entity.ChatContents;
 import com.mysite.tayo.entity.ChatContentsHasFile;
+import com.mysite.tayo.entity.ChatDeleteOnlyForMe;
+import com.mysite.tayo.entity.ChatUnreader;
 import com.mysite.tayo.entity.Member;
 import com.mysite.tayo.repository.ChatContentsHasFileRepository;
 import com.mysite.tayo.repository.ChatContentsRepository;
+import com.mysite.tayo.repository.ChatDeleteOnlyForMeRepository;
+import com.mysite.tayo.repository.ChatMemberRepository;
 import com.mysite.tayo.repository.ChatRepository;
+import com.mysite.tayo.repository.ChatUnreaderRepository;
+import com.mysite.tayo.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,10 +38,15 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class ChatService {
 
+	private final MemberRepository memberRepository;
 	private final ChatRepository chatRepository;
 	private final ChatContentsRepository chatContentsRepository;
 	private final ChatContentsHasFileRepository chatContentsHasFileRepository;
-
+	private final ChatDeleteOnlyForMeRepository chatDeleteOnlyForMeRepository;
+	private final ChatMemberRepository chatMemberRepository;
+	private final ChatUnreaderRepository chatUnreaderRepository;
+	
+	
 	private static final String URL_REGEX = "((http|https)://)?(www\\.)?([\\w-]+)\\.+[\\w]{2,}(\\S*)?";
 
 //	 로그인한 사람의 채팅방 리스트
@@ -65,11 +78,60 @@ public class ChatService {
 		return chatContentsRepository.findMemberNameByReplyIdx(replyIdx);
 	}
 	
+//	가장 최근 공지사항
 	public Long maxNotice(Long chatIdx) {
 		return chatContentsRepository.findMaxNoticeChatContentIdxByChatContentIdx(chatIdx);
 	}
 	
-
+//	나에게만 삭제 된 채팅내용
+	public Long chatDeleteOnlyForMeChatContentIdx(Member member) {
+		return chatDeleteOnlyForMeRepository.findChatContentsIdxByMember(member);
+	}
+	
+//	채팅방에 포함된 사람들
+	public ArrayList<Long> chatMemberList(Long chatIdx, Long memberIdx) {
+		return chatMemberRepository.findMemberByChatIdx(chatIdx, memberIdx);
+	}
+//	채팅방 안에 채팅내용 리스트
+	public ArrayList<Long> chatContentsList(Long chatIdx) {
+		return chatContentsRepository.findChatContentsListIdxByChatIdx(chatIdx);
+	}
+	
+//	채팅 입력시 안읽은사람 추가
+	public void addChatUnreader(Long chatContentsIdx, Long memberIdx) {
+		Optional<Member> member = memberRepository.findById(memberIdx);
+		Optional<ChatContents> chatContents = chatContentsRepository.findById(chatContentsIdx);
+		Optional<ChatUnreader> existingUnreader = chatUnreaderRepository.findByChatContentsAndMember(chatContents, member);
+		if (existingUnreader.isEmpty()) {
+			ChatUnreader chatUnreader = new ChatUnreader();
+			chatUnreader.setMember(member.get());
+			chatUnreader.setChatContents(chatContents.get());
+			
+			chatUnreaderRepository.save(chatUnreader);
+		}
+	}
+//	채팅방 입장 시 안읽은 사람에서 제거
+	@Transactional
+	public void deleteChatUnreaders(Long chatContentsIdx, Member member) {
+		Optional<ChatContents> chatContents = chatContentsRepository.findById(chatContentsIdx);
+		
+		chatUnreaderRepository.deleteAllByChatContentsAndMember(chatContents, member);
+    }
+//	채팅 내용 마다 안읽은 사람 수
+	public Integer ChatUnreaderCount(Long chatContentsIdx) {
+		return chatUnreaderRepository.findChatUnreaderCountByChatContentsIdx(chatContentsIdx);
+	}
+//	채팅 나에게만 삭제
+	public void chatDeleteOnlyForMe(Long chatContentsIdx, Long memberIdx) {
+		Optional<ChatContents> chatContents = chatContentsRepository.findById(chatContentsIdx);
+		Optional<Member> member = memberRepository.findById(memberIdx);
+		
+		ChatDeleteOnlyForMe chatDelete = new ChatDeleteOnlyForMe();
+		chatDelete.setChatContents(chatContents.get());
+		chatDelete.setMember(member.get());
+		
+		chatDeleteOnlyForMeRepository.save(chatDelete);
+	}
 	
 //	chatContents 엔티티에 저장할 데이터들
 	  @Value("${file.upload-dir}")
