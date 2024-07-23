@@ -12,6 +12,10 @@ li {
 	list-style: none;
 }
 
+button {
+	border: none;
+}
+
 body {
 	overflow-y: hidden;
 }
@@ -883,7 +887,7 @@ ms wh #div_setwidget_btn>img {
 	border-bottom: 1.5px solid #000;
 }
 
-#alarmProfile > img {
+#alarmProfile>img {
 	width: 36px;
 	height: 36px;
 	border-radius: 16px;
@@ -1148,8 +1152,8 @@ body {
 	position: absolute;
 	right: 15px;
 	top: 1px;
-    display: flex;
-    gap: 10px;
+	display: flex;
+	gap: 10px;
 }
 
 .tab-menu li {
@@ -1170,14 +1174,14 @@ body {
 }
 
 .tab-menu li span.on {
-    position: absolute;
-    bottom: 0;
-    color: #333;
-    display: block;
-    width: 100%;
-    height: 31px;
-    top: -3px;
-    border-bottom: 3px solid black;
+	position: absolute;
+	bottom: 0;
+	color: #333;
+	display: block;
+	width: 100%;
+	height: 31px;
+	top: -3px;
+	border-bottom: 3px solid black;
 }
 
 .popup-button.chat:hover {
@@ -1191,8 +1195,8 @@ body {
 	color: #fff;
 	font-size: 13px;
 	padding: 0 13px;
-	    border-color: #6449fc;
-	        background: #6449fc;
+	border-color: #6449fc;
+	background: #6449fc;
 }
 
 .popup-button.chat .icon-chat {
@@ -1207,16 +1211,17 @@ body {
 }
 
 .popup-button.all-read {
-    position: relative;
-    width: auto;
-    height: auto;
-    border: 0;
-    top: 0;
-    font-size: 13px;
-    background-color: #fff;
+	position: relative;
+	width: auto;
+	height: auto;
+	border: 0;
+	top: 0;
+	font-size: 13px;
+	background-color: #fff;
 }
+
 .popup-button.all-read :hover {
-    color: #6449fc;
+	color: #6449fc;
 }
 
 .popup-button {
@@ -1224,4 +1229,310 @@ body {
 	line-height: 15px;
 	border: 1px solid #ddd;
 	border-radius: 4px;
+}
+
+/*채팅방 초대*/
+.invite-modal {
+	display: none;
+	/* Hidden by default */
+	position: fixed;
+	/* Stay in place */
+	z-index: 20000;
+	/* Sit on top */
+	padding-top: 100px;
+	/* Location of the box */
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	background-color: rgba(0, 0, 0, .6);
+}
+
+.invite-modal-content {
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 100%;
+	max-width: 650px;
+	min-width: 500px;
+	height: 680px;
+	margin: 0 auto;
+	padding: 0;
+	background: #fff;
+	overflow: hidden;
+	box-shadow: 20px 20px 40px rgba(0, 0, 0, 0.2);
+	border-radius: 10px;
+	position: absolute;
+	z-index: 4;
+	border: 1px solid #555;
+}
+
+.invite-modal-header,
+.invite-modal-footer {
+	padding: 10px;
+	text-align: center;
+}
+
+.invite-modal-nav {
+	height: 40px;
+	border-bottom: 1px solid #ddd;
+}
+
+.invite-modal-footer {
+	border-top: 1px solid #ddd;
+	height: 66px;
+}
+
+.invite-modal-body {
+	display: flex;
+	justify-content: space-between;
+	height: 508px;
+}
+
+.invite-modal-body .list,
+.invite-modal-body .selected-list {
+	width: 49%;
+}
+
+.selected-list {
+	padding: 10px 0px 0px 15px;
+	border-left: 1px solid #ddd;
+}
+
+.selected-list>h3 {
+	margin-top: 5px;
+	margin-bottom: 15px;
+}
+
+.list ul {
+	list-style-type: none;
+	padding: 0;
+}
+
+.list li {
+	padding: 10px;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 5px;
+	cursor: pointer;
+}
+
+.invite-modal-body li:hover {
+	background-color: #f0f0f0;
+}
+
+.invite-modal-body .selected-list li {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.invite-modal-body .selected-list li span {
+	flex-grow: 1;
+}
+
+.invite-modal-body .btn {
+	margin-top: 20px;
+	padding: 10px 20px;
+	background-color: #6449fc;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.invite-modal-header .close {
+	color: #aaa;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+}
+
+.invite-modal-header .close:hover,
+.invite-modal-header .close:focus {
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.search-wrapper {
+	position: relative;
+	width: fit-content;
+}
+
+.search-wrapper::before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 32px;
+	transform: translateY(-50%);
+	width: 20px;
+	height: 20px;
+	background: url('https://cdn-icons-png.flaticon.com/512/2319/2319177.png') no-repeat center center;
+	background-size: cover;
+}
+
+.invite_searchbar {
+	margin: 15px 20px;
+	padding-left: 40px;
+	width: 95%;
+	flex: 1;
+	height: 40px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+}
+
+.invite_searchbar:focus {
+	outline: none;
+	border: 1px solid #ddd;
+}
+
+.invite_list {
+	display: flex;
+	align-items: center;
+}
+
+.invite_list>div {
+	display: flex;
+}
+
+.invite_list>div dl {
+	width: 180px;
+	overflow: hidden;
+	display: inline-block;
+	width: 70%;
+	line-height: 18px;
+	margin-left: 10px;
+	vertical-align: middle;
+	text-align: left;
+}
+
+.invite_list>div dl dt {
+	display: flex;
+	color: #555;
+	line-height: 1.1;
+	align-items: center;
+}
+
+.invite_list>div dl dt strong {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	display: inline-block;
+	margin-right: 3px;
+	vertical-align: middle;
+	line-height: 18px;
+	max-width: 240px;
+}
+
+.invite_list>div dl dt em {
+	margin-left: 3px;
+	font-size: 14px;
+	display: inline-block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	vertical-align: middle;
+	line-height: 18px;
+	max-width: 50%;
+}
+
+.invite_list>div dl dd {
+	display: flex;
+	font-size: 12px;
+	color: #999;
+}
+
+.invite_list>div dl dd strong {
+	display: inline-block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	vertical-align: middle;
+	line-height: 18px;
+	max-width: 70%;
+	margin-right: 3px;
+}
+
+.invite_list>div dl dd span {
+	display: inline-block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	vertical-align: middle;
+	line-height: 18px;
+	max-width: 68%;
+}
+
+.invite_list>div span img {
+	width: 40px;
+	height: 40px;
+	border-radius: 10px;
+}
+
+.check_invte {
+	display: block;
+	background-size: 22px;
+	width: 22px;
+	height: 22px;
+	position: absolute;
+	top: 50%;
+	right: 0;
+	transform: translateY(-50%);
+	cursor: pointer;
+}
+
+.check_invite>img {
+	width: 22px;
+	height: 22px;
+}
+
+#employeeList li:hover .check_invite img {
+	content: url('https://flow.team/flow-renewal/assets/images/icons/icon_check_hover.png?v=5244c8bcd5a25963296eb4e51fc2a65bcc3dc376');
+}
+
+.company_member_info {
+	margin-left: 15px;
+}
+
+.selected_member {
+	width: auto;
+	height: 32px;
+	padding: 0 30px 0 34px;
+	margin: 5px 10px 5px 0;
+	position: relative;
+	float: left;
+	line-height: 29px;
+	background: #eee;
+	border: 1px solid #eee;
+	border-radius: 5px;
+	color: #555;
+	text-align: center;
+	overflow: hidden;
+	box-sizing: border-box;
+}
+
+.selected_member>img {
+	width: 30px;
+	height: 30px;
+	position: absolute;
+	left: 0px;
+}
+
+.invite_submit_btn {
+	display: inline-block;
+	width: 27%;
+	height: 36px;
+	line-height: 34px;
+	text-align: center;
+	background: #6449fc;
+	border: none;
+	border-radius: 4px;
+	color: #fff;
+	margin-left: 8px;
+	font-size: 13px;
+}
+
+.invite_submit_btn:hover {
+	background-color: #7163c3;
 }

@@ -284,7 +284,7 @@
 				<li id="contactBtn"><span>연락처</span></li>
 				<div class="chat-btn-wrap">
 					<button class="popup-button all-read">모두 읽음</button>
-					<button class="popup-button chat">
+					<button id="open_invite"- class="popup-button chat">
 						<i class="icon-chat"></i>새 채팅</button>
 				</div>
 			</ul>
@@ -320,6 +320,74 @@
 			</div>
 		</div>
 	</div>
+<!--	채팅방 초대		-->
+	<div
+	      id="invite-participants-modal"
+	      class="invite-modal">
+	      <form id="invite_form">
+	        <div class="invite-modal-content">
+	          <div class="invite-modal-header">
+	            <span class="close" onclick="closeInviteModal()">&times;</span>
+	            <h2 style="margin-top: 5px">참여자 초대</h2>
+	          </div>
+	          <div class="invite-modal-nav">
+	            <h4 style="margin-left: 20px">임직원</h4>
+	          </div>
+	          <div class="invite-modal-body">
+	            <div class="list">
+	              <div class="search-wrapper">
+	                <input
+	                  type="text"
+	                  class="invite_searchbar"
+	                  id="search"
+	                  placeholder="이름, 소속, 전화번호 검색" />
+	              </div>
+	              <ul th:push-my-id="${member.memberIdx}" id="employeeList">
+					
+	                <li
+	                  th:each="companyMember : ${companyMember}"
+					  th:if="${companyMember.memberIdx != member.memberIdx}"
+	                  th:data-id="${companyMember.memberIdx}"
+	                  th:data-name="${companyMember.name}"
+	                  class="invite_list">
+	                  <div class="check_invite">
+	                    <img
+	                      src="https://flow.team/flow-renewal/assets/images/icons/icon_check.png?v=7f39425e224a53bff0043caff9f6446b14c0f667" />
+	                  </div>
+	                  <div class="company_member_info">
+	                    <span
+	                      ><img
+	                        src="https://flow.team/flow-renewal/assets/images/profile-default.png"
+	                        alt=""
+	                    /></span>
+	                    <dl>
+	                      <dt>
+	                        <strong th:text="${companyMember.name}"></strong>
+	                        <em th:text="${companyMember.rankName}"></em>
+	                      </dt>
+	                      <dd>
+	                        <strong
+	                          th:text="${companyMember.company.companyName}"></strong>
+	                        <span
+	                          th:text="${companyMember.organization != null ? companyMember.organization.organizationName : '-'}"></span>
+	                      </dd>
+	                    </dl>
+	                  </div>
+	                </li>
+	              </ul>
+	            </div>
+	            <div class="selected-list">
+	              <h3>선택된 참여자</h3>
+	              <ul id="selectedList"></ul>
+	            </div>
+	          </div>
+	          <div class="invite-modal-footer">
+	            <button class="invite_submit_btn">초대하기</button>
+	          </div>
+	        </div>
+	      </form>
+	    </div>
+<!--	채팅방 초대 여기까지		-->
 </body>
 
 </html>

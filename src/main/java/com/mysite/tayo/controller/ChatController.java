@@ -7,14 +7,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.hibernate.Remove;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.mysite.tayo.entity.Chat;
@@ -83,6 +84,22 @@ public class ChatController {
         }
 
         return "redirect:/chatRoom/" + chatIdx;
+    }
+    
+    
+    @PostMapping("/chatRoomCreate")
+    public @ResponseBody Long chatRoomCreate(@RequestBody Long[] members,
+    								Authentication authentication) {
+    	Member member = memberService.infoFromLogin(authentication);
+    	Long companyIdx = member.getCompany().getCompanyIdx();
+    	chatService.addChatRoom(companyIdx);
+    	Long chatIdx = chatService.mexChatIdx();
+    	
+    	
+    	for(int i=0; i<members.length; i++) {
+    		chatService.addChatMember(chatIdx, members[i]);
+    	}
+    	return chatIdx;
     }
 	
 	@GetMapping("/chatCollection")

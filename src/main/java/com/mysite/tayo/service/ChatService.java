@@ -22,7 +22,9 @@ import com.mysite.tayo.entity.Chat;
 import com.mysite.tayo.entity.ChatContents;
 import com.mysite.tayo.entity.ChatContentsHasFile;
 import com.mysite.tayo.entity.ChatDeleteOnlyForMe;
+import com.mysite.tayo.entity.ChatMember;
 import com.mysite.tayo.entity.ChatUnreader;
+import com.mysite.tayo.entity.Company;
 import com.mysite.tayo.entity.Member;
 import com.mysite.tayo.repository.ChatContentsHasFileRepository;
 import com.mysite.tayo.repository.ChatContentsRepository;
@@ -30,6 +32,7 @@ import com.mysite.tayo.repository.ChatDeleteOnlyForMeRepository;
 import com.mysite.tayo.repository.ChatMemberRepository;
 import com.mysite.tayo.repository.ChatRepository;
 import com.mysite.tayo.repository.ChatUnreaderRepository;
+import com.mysite.tayo.repository.CompanyRepository;
 import com.mysite.tayo.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -45,7 +48,9 @@ public class ChatService {
 	private final ChatDeleteOnlyForMeRepository chatDeleteOnlyForMeRepository;
 	private final ChatMemberRepository chatMemberRepository;
 	private final ChatUnreaderRepository chatUnreaderRepository;
-
+	private final CompanyRepository companyRepository;
+	
+	
 	private static final String URL_REGEX = "((http|https)://)?(www\\.)?([\\w-]+)\\.+[\\w]{2,}(\\S*)?";
 
 //	 로그인한 사람의 채팅방 리스트
@@ -103,6 +108,32 @@ public class ChatService {
 		return chatContentsRepository.findChatContentsListIdxByChatIdx(chatIdx);
 	}
 
+	public void addChatRoom(Long companyIdx) {
+		Optional<Company> company = companyRepository.findById(companyIdx);
+		
+		Chat chat = new Chat();
+		chat.setCompany(company.get());
+		
+		chatRepository.save(chat);
+	}
+	
+	public Long mexChatIdx() {
+		return chatRepository.findMaxChatIdx();
+	}
+	
+	public void addChatMember(Long chatIdx, Long memberIdx) {
+		Optional<Chat> chat = chatRepository.findById(chatIdx);
+		Optional<Member> member = memberRepository.findById(memberIdx);
+		
+		ChatMember chatMember = new ChatMember();
+		chatMember.setChat(chat.get());
+		chatMember.setMember(member.get());
+		
+		chatMemberRepository.save(chatMember);
+		
+	}
+	
+	
 //	채팅 입력시 안읽은사람 추가
 	public void addChatUnreader(Long chatContentsIdx, Long memberIdx) {
 		Optional<Member> member = memberRepository.findById(memberIdx);

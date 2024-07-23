@@ -73,4 +73,7 @@ public class Company {
 	
 	@OneToMany(mappedBy = "company", cascade = CascadeType.REMOVE)
 	private List<Member> memberList;
+	
+	@OneToMany(mappedBy = "company", cascade = CascadeType.REMOVE)
+	private List<Chat> chatList;
 }
