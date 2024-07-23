@@ -63,11 +63,6 @@ public class ChatService {
 		return this.chatRepository.findById(chatIdx);
 	}
 
-//	보낸 사람의 가장 최근에 보낸 채팅내용 고유번호
-	public Long maxChatContentIdx(Long userIdx, Long chatIdx) {
-		return chatContentsRepository.findMaxChatContentIdxByUserIdx(userIdx, chatIdx);
-	}
-
 //	채팅내용 고유번호에대한 채팅내용 (링크여부 판별 후 링크를 띄워주기 위함)
 	public String curChatContent(Long chatContentIdx) {
 		return chatContentsRepository.findChatContentByChatContentIdx(chatContentIdx);
@@ -88,17 +83,12 @@ public class ChatService {
 		return chatContentsRepository.findMemberNameByReplyIdx(replyIdx);
 	}
 
-//	가장 최근 공지사항
-	public Long maxNotice(Long chatIdx) {
-		return chatContentsRepository.findMaxNoticeChatContentIdxByChatContentIdx(chatIdx);
-	}
-
 //	나에게만 삭제 된 채팅내용
 	public ArrayList<Long> chatDeleteOnlyForMeChatContentIdx(Member member) {
 		return chatDeleteOnlyForMeRepository.findChatContentsIdxByMember(member);
 	}
 
-//	채팅방에 포함된 사람들
+//	로그인 한사람을 제외한 채팅방에 포함된 사람들
 	public ArrayList<Long> chatMemberList(Long chatIdx, Long memberIdx) {
 		return chatMemberRepository.findMemberByChatIdx(chatIdx, memberIdx);
 	}
@@ -116,10 +106,19 @@ public class ChatService {
 		
 		chatRepository.save(chat);
 	}
-	
-	public Long mexChatIdx() {
+//	가장 최근 채팅방
+	public Long maxChatIdx() {
 		return chatRepository.findMaxChatIdx();
 	}
+//	가장 최근 공지사항
+	public Long maxNotice(Long chatIdx) {
+		return chatContentsRepository.findMaxNoticeChatContentIdxByChatContentIdx(chatIdx);
+	}
+//	가장 최근 채팅내용 고유번호
+	public Long maxChatContentIdx(Long userIdx, Long chatIdx) {
+		return chatContentsRepository.findMaxChatContentIdxByUserIdx(userIdx, chatIdx);
+	}
+
 	
 	public void addChatMember(Long chatIdx, Long memberIdx) {
 		Optional<Chat> chat = chatRepository.findById(chatIdx);
@@ -138,8 +137,7 @@ public class ChatService {
 	public void addChatUnreader(Long chatContentsIdx, Long memberIdx) {
 		Optional<Member> member = memberRepository.findById(memberIdx);
 		Optional<ChatContents> chatContents = chatContentsRepository.findById(chatContentsIdx);
-		Optional<ChatUnreader> existingUnreader = chatUnreaderRepository.findByChatContentsAndMember(chatContents,
-				member);
+		Optional<ChatUnreader> existingUnreader = chatUnreaderRepository.findByChatContentsAndMember(chatContents, member);
 		if (existingUnreader.isEmpty()) {
 			ChatUnreader chatUnreader = new ChatUnreader();
 			chatUnreader.setMember(member.get());

@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mysite.tayo.entity.Chat;
 import com.mysite.tayo.entity.ChatContents;
 import com.mysite.tayo.entity.Member;
@@ -79,27 +81,44 @@ public class ChatController {
         
         if (chatContentsIdx == null) {
             chatService.addChatContent(chatIdx, chatContents, member, replyIdx, file);
+            chatContentsIdx = chatService.maxChatContentIdx(member.getMemberIdx(), chatIdx);
+            
+            ArrayList<Long> chatMemberList = chatService.chatMemberList(chatIdx, member.getMemberIdx());
+            for(int i=0; i<chatMemberList.size(); i++) {
+            	chatService.addChatUnreader(chatContentsIdx, chatMemberList.get(i));
+            }
         } else {
             chatService.addNotice(chatContentsIdx, member);
         }
-
+        
+        
         return "redirect:/chatRoom/" + chatIdx;
     }
     
     
     @PostMapping("/chatRoomCreate")
-    public @ResponseBody Long chatRoomCreate(@RequestBody Long[] members,
-    								Authentication authentication) {
+    public @ResponseBody String chatRoomCreate(@RequestBody Long[] members,
+    								Authentication authentication) throws Exception {
     	Member member = memberService.infoFromLogin(authentication);
     	Long companyIdx = member.getCompany().getCompanyIdx();
     	chatService.addChatRoom(companyIdx);
-    	Long chatIdx = chatService.mexChatIdx();
+    	Long chatIdx = chatService.maxChatIdx();
+    	ObjectMapper objectMapper = new ObjectMapper();
     	
+    	String memberName = "";
     	
     	for(int i=0; i<members.length; i++) {
+    		memberName += "[" + memberService.findNameByMemberIdx(members[i]) + "]";
     		chatService.addChatMember(chatIdx, members[i]);
     	}
-    	return chatIdx;
+    	
+		ObjectNode responseNode = objectMapper.createObjectNode();
+		responseNode.put("chatIdx", chatIdx);
+		responseNode.put("memberName", memberName);
+		
+		String responseMessage = objectMapper.writeValueAsString(responseNode);
+    	
+    	return responseMessage;
     }
 	
 	@GetMapping("/chatCollection")

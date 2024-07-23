@@ -38,7 +38,7 @@ public class ChatContents {
     @Column(name = "link")
     private boolean link = false;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "has_file_idx", referencedColumnName = "has_file_idx")
     private ChatContentsHasFile hasFile;
 
@@ -59,14 +59,14 @@ public class ChatContents {
     @JoinColumn(name = "member_idx")
     private Member member;
 
-    @OneToMany(mappedBy = "chatContents", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "chatContents", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatUnreader> chatUnreaderList;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "is_reply")
     private ChatContents isReply;
 
-    @OneToMany(mappedBy = "chatContents", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "chatContents", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatDeleteOnlyForMe> chatDeleteOnlyForMeList;
     
     public String getFileUrl() {

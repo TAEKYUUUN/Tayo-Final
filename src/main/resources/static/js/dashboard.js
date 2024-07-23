@@ -284,6 +284,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	function inviteParticipants(event) {
 		event.preventDefault();
 
+
 		const employeeList = document.getElementById('employeeList');
 
 		const pushMyId = employeeList.getAttribute('push-my-id');
@@ -302,21 +303,69 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 
 
+
 		$.ajax({
 			url: "/chatRoomCreate",
 			type: 'POST',
 			contentType: 'application/json',
 			data: JSON.stringify(members),
 			success: function(response) {
-				alert(response);
+				const requestData = JSON.parse(response);
+				const { chatIdx, memberName } = requestData;
 				closeInviteModal()
-				
+				const chatList = document.querySelector('.chat-list');
+				if (chatList) {
+					const firstChild = chatList.firstElementChild;
+					const str = `<div class="chat-list-item">
+									<input type="hidden" value="${chatIdx}" />
+									<img src="https://via.placeholder.com/40" alt="User" />
+									<div class='flex-box'>
+									    <div>
+									      <span class='chat-name'></span>
+									      <div class='default-chat-name'>
+									        <span class='chat-name'>
+									          <span>${memberName}</span>
+									        </span>
+									      </div>
+									    </div>
+									    <span class='chat-last-content'>메시지 없음</span>
+									  </div>
+									<div class="mini-mode-chattng-type-3">
+										<div class="mini-mode-chattng-type-text-2" >없음</div>
+									</div>
+								</div>`
+					if (firstChild) {
+						firstChild.insertAdjacentHTML('beforebegin', str);
+					} else {
+						// 만약 chatList에 자식 요소가 없다면, 첫 번째 요소로 추가
+						chatList.innerHTML = str;
+					}
+				}
 			},
 			error: function(error) {
 				alert(error.responseText);
-				console.log(error.responseText);   
+				console.log(error.responseText);
 			}
 		});
+
+
+		//        fetch(`/chatRoomCreate`, {
+		//            method: 'POST',
+		//            headers: {
+		//                'Content-Type': 'application/json'
+		//            },
+		//            body: JSON.stringify(members)
+		//        })
+		//        .then(response => response.json())
+		//        .then(data => {
+		//			const requestData = JSON.parse(data);
+		//			const { chatIdx, memberName} = requestData;
+		//            alert(response);
+		//			closeInviteModal()
+		//        })
+		//        .catch((error) => {
+		//            console.error('오류:', error);
+		//        });
 
 
 	}

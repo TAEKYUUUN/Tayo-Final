@@ -92,13 +92,13 @@ public class Member {
    @Column(name="is_company_manager")
    private Integer isCompanyManager;
 
-   @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
    private List<ChatMember> chatMemberList = new ArrayList<>();
 
-   @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
    private List<ChatDeleteOnlyForMe> chatDeleteOnlyForMe;
    
-   @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+   @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
    private List<UserSession> userSessionList = new ArrayList<>();
 
    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)

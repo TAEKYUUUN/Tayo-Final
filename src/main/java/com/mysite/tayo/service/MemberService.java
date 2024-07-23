@@ -48,6 +48,10 @@ public class MemberService {
         return this.memberRepository.findByCompanyCompanyIdx(companyIdx);
     }
     
+    public String findNameByMemberIdx(Long memberIdx) {
+    	Optional<Member> member = memberRepository.findById(memberIdx);
+    	return member.get().getName();
+    }
     // 특정 회사에 그 이름에 맞는 org인지 확인해서 추가하는 기능 필요할 것. 이름에서 역으로 찾아가기 때문에, 이름은 unique 해야할것.
     // 일단 company도 임시로 고정으로 들어가도록 설정해둠. 수정 요망
     public void create(String name, String email, Long OrganizationIdx, String pw, String rank,  String phone, Authentication authentication) {

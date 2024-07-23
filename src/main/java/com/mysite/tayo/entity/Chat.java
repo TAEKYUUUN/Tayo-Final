@@ -44,10 +44,10 @@ public class Chat {
 	@Column(name = "project_idx")
 	private Integer projectIdx;
 	
-	@OneToMany(mappedBy = "chat", cascade = CascadeType.REMOVE) 
+	@OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true) 
     private List<ChatMember> chatMemberList; 
 	
-	@OneToMany(mappedBy = "chat", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ChatContents> chatContentsList;
 	
 

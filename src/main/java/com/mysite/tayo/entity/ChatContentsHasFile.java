@@ -30,6 +30,6 @@ public class ChatContentsHasFile {
     private String fileType;
 
     @Lob
-    @Column(name = "data", columnDefinition = "CLOB")
+    @Column(name = "data", columnDefinition = "BLOB")
     private byte[] data;
 }

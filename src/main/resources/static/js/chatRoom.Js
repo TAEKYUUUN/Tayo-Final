@@ -334,43 +334,42 @@ document.addEventListener('DOMContentLoaded', function() {
 			if (sessionId == cur_session && message !== '//~//null//~//'
 				&& (replyChatContent === null)) {
 				// 내가 보낸경우
-				const str = `
-				<div class='chat_li_parent_node'>
-		          <li class='right-section'>
-					<input type="hidden" value='${maxChatContentIdx}'>
-		            <div>
-		              <div class='chat-right clearfix'>
-		                <div class='chat-txt-wr'>
-		                  <div class='chat-btns'>
-		                    <div>
-		                      <div class='chat-btn-wrap'>
-		                        <button class='reply-open-btn'>
-		                          <img src='/img/chat-btn-left.png' alt='' />
-		                        </button>
-		                        <div class='medal-more-wrap'>
-		                          <button class='modal-more-btn'>
-		                            <img src='/img/chat-btn-right.png' alt='' />
-		                          </button>
-		                          <ul class='modal-more'>
-		                            <li><button class='copy'>복사</button></li>
-		                            <li><button class='notice'>공지설정</button></li>
-		                            <li class='delete-only-for-me'><button class='del'>나에게서만 삭제</button></li>
-		                            <li class='delete-all'><button class='del'>전체삭제</button></li>
-		                          </ul>
-		                        </div>
-		                      </div>
-		                      <div class='user-time'>${chatContentTime}</div>
-		                    </div>
-		                    <div class='chat-read' ${chatUnreaders === 0 ? "style='display:none;'" : ""}>${chatUnreaders}</div>
-		                  </div>
-		                  <div class='chat-txt'>
-		                    <div>${message}</div>
-		                  </div>
-		                </div>
-		              </div>
-		            </div>
-		          </li>
-		          </div>`;
+				const str = `<div class='chat_li_parent_node'>
+					          <li class='right-section'>
+								<input type="hidden" value='${maxChatContentIdx}'>
+					            <div>
+					              <div class='chat-right clearfix'>
+					                <div class='chat-txt-wr'>
+					                  <div class='chat-btns'>
+					                    <div>
+					                      <div class='chat-btn-wrap'>
+					                        <button class='reply-open-btn'>
+					                          <img src='/img/chat-btn-left.png' alt='' />
+					                        </button>
+					                        <div class='medal-more-wrap'>
+					                          <button class='modal-more-btn'>
+					                            <img src='/img/chat-btn-right.png' alt='' />
+					                          </button>
+					                          <ul class='modal-more'>
+					                            <li><button class='copy'>복사</button></li>
+					                            <li><button class='notice'>공지설정</button></li>
+					                            <li class='delete-only-for-me'><button class='del'>나에게서만 삭제</button></li>
+					                            <li class='delete-all'><button class='del'>전체삭제</button></li>
+					                          </ul>
+					                        </div>
+					                      </div>
+					                      <div class='user-time'>${chatContentTime}</div>
+					                    </div>
+					                    <div class='chat-read' ${chatUnreaders === 0 ? "style='display:none;'" : ""}>${chatUnreaders}</div>
+					                  </div>
+					                  <div class='chat-txt'>
+					                    <div>${message}</div>
+					                  </div>
+					                </div>
+					              </div>
+					            </div>
+					          </li>
+					          </div>`;
 				chatMsg.innerHTML += str;
 				scrollToBottom();
 
