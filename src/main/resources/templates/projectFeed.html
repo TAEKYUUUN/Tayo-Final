@@ -1020,10 +1020,10 @@
 									        </div>
 									        <div class="post_title_area" style="flex-direction: column;">
 												<h4>
-												    <span class="em_vote_proceed" th:if="${postData.data != null && postData.data.endVote != null && postData.data.endVote == 0}">
+												    <span class="em_vote_proceed" th:if="${postData.data.endVote == '0'}">
 												        진행중
 												    </span>
-												    <span class="em_vote_proceed" th:if="${postData.data != null && postData.data.endVote != null && postData.data.endVote == 1}">
+												    <span class="em_vote_proceed" th:if="${postData.data.endVote == '1'}">
 												        종료
 												    </span>
 												    <span th:text="${postData != null && postData['data'] != null ? postData['data'].title : ''}"></span>
