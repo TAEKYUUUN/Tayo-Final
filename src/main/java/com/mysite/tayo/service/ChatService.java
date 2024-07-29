@@ -49,8 +49,7 @@ public class ChatService {
 	private final ChatMemberRepository chatMemberRepository;
 	private final ChatUnreaderRepository chatUnreaderRepository;
 	private final CompanyRepository companyRepository;
-	
-	
+
 	private static final String URL_REGEX = "((http|https)://)?(www\\.)?([\\w-]+)\\.+[\\w]{2,}(\\S*)?";
 
 //	 로그인한 사람의 채팅방 리스트
@@ -98,40 +97,41 @@ public class ChatService {
 		return chatContentsRepository.findChatContentsListIdxByChatIdx(chatIdx);
 	}
 
-	public void addChatRoom(Long companyIdx) {
-		Optional<Company> company = companyRepository.findById(companyIdx);
-		
-		Chat chat = new Chat();
-		chat.setCompany(company.get());
-		
-		chatRepository.save(chat);
-	}
 //	가장 최근 채팅방
 	public Long maxChatIdx() {
 		return chatRepository.findMaxChatIdx();
 	}
+
 //	가장 최근 공지사항
 	public Long maxNotice(Long chatIdx) {
 		return chatContentsRepository.findMaxNoticeChatContentIdxByChatContentIdx(chatIdx);
 	}
+
 //	가장 최근 채팅내용 고유번호
 	public Long maxChatContentIdx(Long userIdx, Long chatIdx) {
 		return chatContentsRepository.findMaxChatContentIdxByUserIdx(userIdx, chatIdx);
 	}
 
-	
 	public void addChatMember(Long chatIdx, Long memberIdx) {
 		Optional<Chat> chat = chatRepository.findById(chatIdx);
 		Optional<Member> member = memberRepository.findById(memberIdx);
-		
+
 		ChatMember chatMember = new ChatMember();
 		chatMember.setChat(chat.get());
 		chatMember.setMember(member.get());
-		
+
 		chatMemberRepository.save(chatMember);
-		
 	}
-	
+
+//	채팅방 생성
+	public void addChatRoom(Long companyIdx) {
+		Optional<Company> company = companyRepository.findById(companyIdx);
+
+		Chat chat = new Chat();
+		chat.setCompany(company.get());
+
+		chatRepository.save(chat);
+	}
 	
 //	채팅 입력시 안읽은사람 추가
 	public void addChatUnreader(Long chatContentsIdx, Long memberIdx) {
@@ -146,7 +146,38 @@ public class ChatService {
 			chatUnreaderRepository.save(chatUnreader);
 		}
 	}
-	
+
+
+//	채팅방명 추가
+	public void updateChatName(String chatName, Long memberIdx, Long chatIdx) {
+
+		Long chatMemberIdx = chatMemberRepository.findChatMemberIdxByChatIdxAndMemberIdx(chatIdx, memberIdx);
+
+		Optional<ChatMember> optionalChatMember = chatMemberRepository.findById(chatMemberIdx);
+
+		if (optionalChatMember.isPresent()) {
+			ChatMember chatMember = optionalChatMember.get();
+			chatMember.setChatName(chatName);
+			chatMemberRepository.save(chatMember);
+		}
+	}
+// 알람설정
+	public void updateAlarm(Integer alaramSetting, Long memberIdx, Long chatIdx) {
+
+		Long chatMemberIdx = chatMemberRepository.findChatMemberIdxByChatIdxAndMemberIdx(chatIdx, memberIdx);
+
+		Optional<ChatMember> optionalChatMember = chatMemberRepository.findById(chatMemberIdx);
+
+		if (optionalChatMember.isPresent()) {
+			ChatMember chatMember = optionalChatMember.get();
+			if (chatMember.getAlarm() == null) {
+				chatMember.setAlarm(alaramSetting);
+			} else {
+				chatMember.setAlarm(null);
+			}
+			chatMemberRepository.save(chatMember);
+		}
+	}
 	@Transactional
 	public void chatDeleteAll(Long chatContentsIdx) {
 		chatContentsRepository.deleteAllByChatContentsIdx(chatContentsIdx);

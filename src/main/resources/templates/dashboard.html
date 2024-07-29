@@ -299,7 +299,7 @@
 					<input type="hidden" th:value="${chat.chatIdx}" />
 					<img src="https://via.placeholder.com/40" alt="User" />
 					<div class="flex-box">
-						<div th:each="chatmember : ${chat.chatMemberList}" th:if="${chatmember.member.memberIdx == 1}">
+						<div th:each="chatmember : ${chat.chatMemberList}" th:if="${chatmember.member.memberIdx == member.memberIdx}">
 							<span class="chat-name" th:if="${chatmember.chatName != null}"
 								th:utext="${chatmember.chatName}" + ","></span>
 							<div class="default-chat-name">

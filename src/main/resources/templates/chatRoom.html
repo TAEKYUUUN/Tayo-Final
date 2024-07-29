@@ -19,11 +19,30 @@
 	<input id="login-member" type="hidden" th:value="${member.memberIdx}" />
 	<div class="chat-wr">
 		<header>
-			<div>
+			<div th:each="chatList : ${chatList}">
 				<img src="/img/chat_profile.png" alt="" />
-				<span>채팅방명</span>
+				<div th:each="chatMember : ${chatList.chatMemberList}"
+					th:if="${chatMember.member.memberIdx == member.memberIdx}">
+					<span class="chat-name" th:if="${chatMember.chatName != null}" th:utext="${chatMember.chatName}"
+						+ ","></span>
+					<div class="default-chat-name">
+						<span class="chat-name" th:unless="${chatMember.chatName != null}"
+							th:each="memberName : ${chatList.chatMemberList}">
+							<span th:if="${memberName.member.memberIdx != 1}"
+								th:utext="'[' + ${memberName.member.name} + ']' "></span>
+						</span>
+					</div>
+				</div>
 			</div>
-			<div>
+			<div th:each="chatList : ${chatList}">
+				<div th:each="chatMember : ${chatList.chatMemberList}" th:if="${chatMember.member == member}">
+					<span th:if="${chatMember.alarm == null}">
+						<img src="/img/chat_alarm_icon.png" alt="" width="19px" />
+					</span>
+					<span th:unless="${chatMember.alarm == null}">
+						<img src="/img/chat_alarm_off_icon.png" alt="" width="19px" />
+					</span>
+				</div>
 				<button>
 					<img src="/img/chat_search_icon.png" alt="" />
 				</button>
@@ -32,8 +51,9 @@
 				</button>
 			</div>
 		</header>
-		<button th:if="maxNotice != null" class="small-notice-button">
-		</button>
+		<button th:each="chatContent : ${sortedChatContentsList}" th:if="${chatContent.chatContentsIdx == maxNotice}"
+			class="small-notice-button"></button>
+		<button class="small-notice-button" style="display: none;"></button>
 		<div th:each="chat : ${chatList}" class="notice-box">
 			<div th:each="chatContent : ${chat.chatContentsList}" th:if="${chatContent.chatContentsIdx == maxNotice}"
 				class="notice-top">
@@ -636,7 +656,11 @@
 						</ul>
 					</div>
 					<div th:each="chat : ${chatList}" class="menu-contents">
-						<button class="btn-type-01">초대하기</button>
+						<form id="chat-invite-form-${chat.chatIdx}" th:action="@{|/chatInvite/${chat.chatIdx}|}"
+							method="post" target="chatInviteWindow-${chat.chatIdx}">
+							<input id="invite-input-${chat.chatIdx}" type="hidden" th:value="${chat.chatIdx}" />
+							<button type="button" id="invite-btn-${chat.chatIdx}" class="btn-type-01">초대하기</button>
+						</form>
 						<div>
 							<b>참여자</b>
 							<span>(2)</span>
@@ -656,7 +680,33 @@
 							</li>
 						</ul>
 					</div>
-					<div class="menu-bottom"></div>
+
+					<div class="menu-bottom">
+						<div class="change-name-wrab">
+							<form class="change-name-form" method="post" th:action="@{|/chatRoom/${chatList.chatIdx}|}">
+								<input class="change-name-input" type="text" name="chatName"
+									placeholder="   변경 할 채팅방 이름을 입력해주세요." />
+								<button id="change-name-submit" type="submit">변경</button>
+								<button id="change-name-cencel" type="button">취소</button>
+							</form>
+						</div>
+						<div class="menu-bottom-btns">
+							<div class="medal-more-wrap">
+								<button class="modal-more-btn"><img src="/img/chat_setting_icon.png" alt=""
+										height="22px" /></button>
+								<ul class="modal-more">
+									<li class="change-name"><button>채팅방이름 변경</button></li>
+									<li class="alarm-setting">
+										<form method="post" th:action="@{|/chatRoom/${chatList.chatIdx}|}">
+											<input type="hidden" name="alarmSetting" value="1" />
+											<button type="submit">알람설정</button>
+										</form>
+									</li>
+								</ul>
+							</div>
+							<button><img src="/img/exit_icon.png" alt="" height="24px" /></button>
+						</div>
+					</div>
 				</div>
 				<div class="menu-container" style="display: none"></div>
 			</article>

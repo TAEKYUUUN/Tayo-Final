@@ -26,7 +26,7 @@ public class ChatMember {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "chat_member_seq")
 	@SequenceGenerator(name = "chat_member_seq", sequenceName = "CHAT_MEMBER_SEQ", allocationSize = 1)
 	@Column(name = "chat_member_idx")
-	private Long chat_member_idx;	
+	private Long chatMemberIdx;	
 	
 	@Column(name = "leader")
 	private Integer leader;

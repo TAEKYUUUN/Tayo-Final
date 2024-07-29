@@ -672,9 +672,45 @@
       }
 
       .menu-contents {
-      	height: calc(100% - 130px);
+      	height: calc(100% - 140px);
       	padding: 10px 20px;
       }
+
+      .menu-bottom {
+      	position: relative;
+      	height: 34px;
+      	border-top: 1px solid #80808045;
+      	background-color: #8080802b;
+      }
+
+      .change-name-wrab {
+		display: none;
+      	background-color: #8080802b;
+      	top: -42px;
+      	position: absolute;
+      	width: 100%;
+      	height: 40px;
+      	align-items: center;
+      	justify-content: center;
+      }
+
+      .change-name-input {
+      	font-size: 15px;
+      	height: 24px;
+      	width: 250px;
+      	border: 1px solid #dddddd;
+      	background-color: #f6f5fb;
+
+      }
+
+      .menu-bottom-btns {
+      	padding: 0 8px;
+      	align-items: center;
+      	display: flex;
+      	gap: 8px;
+      	justify-content: flex-end;
+      }
+
 
       .btn-type-01 {
       	width: 100%;

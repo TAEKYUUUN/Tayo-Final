@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		const delChatContentIdxStorage = document.getElementById('del-chat-content-idx-storage');
 		const delAllChatContentIdxStorage = document.getElementById('del-all-chat-content-idx-storage');
 
-
 		modalMoreBtns.forEach((btn, index) => {
 			const container = modalMores[index];
 			btn.addEventListener('click', () => {
@@ -139,7 +138,25 @@ document.addEventListener('DOMContentLoaded', function() {
 	const delAllBtns = document.querySelectorAll('.delete-all');
 	const delChatContentIdxStorage = document.getElementById('del-chat-content-idx-storage');
 	const delAllChatContentIdxStorage = document.getElementById('del-all-chat-content-idx-storage');
-	
+	const changeName = document.querySelector('.change-name');
+	const changeNameSubmit = document.getElementById('change-name-submit');
+	const changeNameInput = document.querySelector('.change-name-input');
+	const inviteBtns = document.querySelectorAll('button[id^="invite-btn-"]');
+
+	changeName.addEventListener('click', () => {
+		const changeNameWrab = document.querySelector('.change-name-wrab');
+		changeNameWrab.style.display = 'flex';
+	});
+
+	changeNameSubmit.addEventListener('click', (event) => {
+		const inputValue = changeNameInput.value.trim();
+		if (inputValue === "" || changeNameInput.value.startsWith(" ")) {
+			event.preventDefault(); // 폼 제출을 막음
+			alert("유효한 채팅방 이름을 입력해주세요."); // 사용자에게 알림
+		}
+	});
+
+
 	let replyChatContentIdx;
 
 	scrollToBottom();
@@ -203,6 +220,19 @@ document.addEventListener('DOMContentLoaded', function() {
 		});
 	});
 
+	inviteBtns.forEach(btn => {
+		btn.addEventListener('click', function() {
+			const chatIdx = this.id.split('-')[2];
+			const form = document.getElementById(`chat-invite-form-${chatIdx}`);
+			const newWindow = window.open(
+				'',
+				`chatInviteWindow-${chatIdx}`,
+				'width=650,height=680'
+			);
+			form.submit();
+		});
+	});
+
 	iconFile.forEach((icon) => {
 		const fileType = icon.innerText;
 		if (fileType === 'application/haansofthwp') {
@@ -212,8 +242,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			'application/vnd.openxmlformats-officedocument.presentationml.presentation'
 		) {
 			icon.classList.add('icon-ppt');
-		} else if (fileType === 'application/msword') {
-			icon.classList.add('icon-etc');
 		} else if (
 			fileType ===
 			'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
@@ -223,6 +251,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			icon.classList.add('icon-pdf');
 		} else if (fileType === 'application/x-zip-compressed') {
 			icon.classList.add('icon-zip');
+		} else {
+			icon.classList.add('icon-etc');
 		}
 	});
 

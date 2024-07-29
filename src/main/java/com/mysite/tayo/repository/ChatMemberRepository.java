@@ -15,4 +15,8 @@ public interface ChatMemberRepository extends JpaRepository<ChatMember, Long>{
 	@Query
 	("SELECT cm.member.memberIdx FROM ChatMember cm WHERE cm.chat.chatIdx = :chatIdx AND cm.member.memberIdx != :memberIdx")
 	ArrayList<Long> findMemberByChatIdx(@Param("chatIdx") Long chatIdx, @Param("memberIdx") Long memberIdx);
+
+	@Query
+	("SELECT cm.chatMemberIdx FROM ChatMember cm WHERE cm.chat.chatIdx = :chatIdx AND cm.member.memberIdx = :memberIdx")
+	Long findChatMemberIdxByChatIdxAndMemberIdx(@Param("chatIdx") Long chatIdx, @Param("memberIdx") Long memberIdx);
 }

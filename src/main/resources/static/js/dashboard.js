@@ -348,26 +348,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		});
 
-
-		//        fetch(`/chatRoomCreate`, {
-		//            method: 'POST',
-		//            headers: {
-		//                'Content-Type': 'application/json'
-		//            },
-		//            body: JSON.stringify(members)
-		//        })
-		//        .then(response => response.json())
-		//        .then(data => {
-		//			const requestData = JSON.parse(data);
-		//			const { chatIdx, memberName} = requestData;
-		//            alert(response);
-		//			closeInviteModal()
-		//        })
-		//        .catch((error) => {
-		//            console.error('오류:', error);
-		//        });
-
-
 	}
 
 	document.querySelector('.invite_submit_btn').addEventListener('click', inviteParticipants);
