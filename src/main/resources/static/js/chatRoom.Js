@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	document.querySelectorAll('.menu-btns li').forEach(function(item) {
 		item.addEventListener('click', function() {
 			window.open(
-				'http://teamtayo.co.kr/chatCollection',
+				'https://teamtayo.co.kr/chatCollection',
 				'_blank',
 				'width=640,height=800'
 			);
