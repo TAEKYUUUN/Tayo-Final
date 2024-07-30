@@ -305,7 +305,7 @@
 							<div class="default-chat-name">
 								<span class="chat-name" th:unless="${chatmember.chatName != null}"
 									th:each="memberName : ${chat.chatMemberList}">
-									<span th:if="${memberName.member.memberIdx != 1}"
+									<span th:if="${memberName.member.memberIdx != member.memberIdx}"
 										th:utext="'[' + ${memberName.member.name} + ']' "></span>
 								</span>
 							</div>

@@ -156,8 +156,10 @@ public class ChatController {
 		String memberName = "";
 
 		for (int i = 0; i < members.length; i++) {
-			memberName += "[" + memberService.findNameByMemberIdx(members[i]) + "]";
 			chatService.addChatMember(chatIdx, members[i]);
+			if(members[i] != member.getMemberIdx()) {
+				memberName += "[" + memberService.findNameByMemberIdx(members[i]) + "]";
+			}
 		}
 
 		ObjectNode responseNode = objectMapper.createObjectNode();

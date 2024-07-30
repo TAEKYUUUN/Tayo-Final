@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	document.querySelectorAll('.menu-btns li').forEach(function(item) {
 		item.addEventListener('click', function() {
 			window.open(
-				'http://localhost:8095/chatCollection',
+				'http://teamtayo.co.kr/chatCollection',
 				'_blank',
 				'width=640,height=800'
 			);
@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	let replyIdx;
 	let chatContent;
 
-	const websocket = new WebSocket('ws://localhost:8095/ws/chat');
+	const websocket = new WebSocket('ws://teamtayo.co.kr/ws/chat');
 
 	// 주기적으로 상태 확인
 	setInterval(() => {
