@@ -6,6 +6,8 @@
 
 큰 틀은 협업툴 flow(flow.team)를 참고하여 제작했습니다.
 
+TAYO 페이지 : teamtayo.co.kr
+
 제작 기간 : 2024년 4월 21일 ~ 7월
 
 ## 사용한 기술
@@ -27,6 +29,7 @@
 
 -Open API(google, naver, kakao, google maps)
 
+-AWS
 
 ## 기능
 - 동일한 회사로 등록되어있는 사람들이 협업할 수 있는 구조
