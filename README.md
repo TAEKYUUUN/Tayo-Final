@@ -3,6 +3,7 @@
 
 4조 김민성, 우태균, 이태호의 프로젝트 페이지 협업툴 TAYO입니다.
 
+기능명세 : https://tarry-second-590.notion.site/TAYO-e9328666b67a4ca3a5b60330d82e513a?pvs=4
 
 큰 틀은 협업툴 flow(flow.team)를 참고하여 제작했습니다.
 
