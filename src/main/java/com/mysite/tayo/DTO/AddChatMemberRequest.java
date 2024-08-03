@@ -11,5 +11,4 @@ public class AddChatMemberRequest {
     private Long chatIdx;
     private List<Long> members;
 
-    // getters and setters
 }

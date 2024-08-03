@@ -56,7 +56,6 @@ public class ChatController {
 		Long maxNotice = chatService.maxNotice(chatIdx);
 		ArrayList<Long> chatDeleteOnlyForMeArr = chatService.chatDeleteOnlyForMeChatContentIdx(member);
 		List<Long> chatDeleteOnlyForMeList = chatDeleteOnlyForMeArr;
-		System.out.println(chatDeleteOnlyForMeList);
 
 		for (int i = 0; i < chatDeleteOnlyForMeList.size(); i++) {
 			for (int j = 0; j < sortedChatContentsList.size(); j++) {
